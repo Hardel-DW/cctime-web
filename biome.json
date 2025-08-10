@@ -1,0 +1,80 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+    "files": {
+        "includes": [
+            "src/**",
+            "!src/routeTree.gen.ts"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "lineWidth": 140,
+        "attributePosition": "auto"
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
+    },
+    "css": {
+        "formatter": {
+            "enabled": false
+        },
+        "linter": {
+            "enabled": false
+        }
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "suspicious": {
+                "noExplicitAny": "off"
+            },
+            "complexity": {
+                "noBannedTypes": "off"
+            },
+            "nursery": {},
+            "a11y": {
+                "noSvgWithoutTitle": "off",
+                "useKeyWithClickEvents": "off"
+            },
+            "recommended": true,
+            "style": {
+                "useComponentExportOnlyModules": {
+                    "level": "warn",
+                    "options": {
+                        "allowExportNames": [
+                            "metadata",
+                            "viewport",
+                            "generateStaticParams",
+                            "Route"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "semicolons": "always",
+            "arrowParentheses": "always",
+            "bracketSameLine": true,
+            "quoteStyle": "double",
+            "attributePosition": "auto",
+            "trailingCommas": "none"
+        }
+    },
+    "json": {
+        "formatter": {
+            "trailingCommas": "none"
+        }
+    }
+}
