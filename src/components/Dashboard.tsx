@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { loadDashboardData } from "@/lib/data-service";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { useFilterStore } from "@/lib/store";
@@ -25,7 +24,7 @@ function WelcomeScreen() {
 
     const username = React.useMemo(() => {
         if (customUsername.trim()) return customUsername.trim();
-        
+
         const platform = navigator.platform.toLowerCase();
         if (platform.includes('win')) {
             return 'Username';

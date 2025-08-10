@@ -18,11 +18,13 @@ export function IndexComponent() {
                 } as React.CSSProperties
             }>
             <AppSidebar />
-            <SidebarInset>
-                <SiteHeader />
-                <div className="flex flex-1 flex-col">
-                    <div className="@container/main flex flex-1 flex-col">
-                        <Dashboard />
+            <SidebarInset className="p-2 bg-sidebar">
+                <div className="flex flex-1 flex-col bg-background rounded-xl overflow-hidden">
+                    <SiteHeader />
+                    <div className="flex flex-1 flex-col p-6">
+                        <div className="@container/main flex flex-1 flex-col">
+                            <Dashboard />
+                        </div>
                     </div>
                 </div>
             </SidebarInset>

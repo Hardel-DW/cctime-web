@@ -12,8 +12,7 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarRail
+    SidebarMenuItem
 } from "@/components/ui/sidebar";
 
 const data = {
@@ -93,7 +92,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SettingsPopover />
                 </SidebarMenu>
             </SidebarFooter>
-            <SidebarRail />
         </Sidebar>
     );
 }
