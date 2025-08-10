@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Calendar, Coins, FolderOpen, Timer, TrendingUp } from "lucide-react";
+import { BarChart3, Calendar, Coins, FolderOpen, Github, Timer, TrendingUp } from "lucide-react";
 import type * as React from "react";
 
 import { NavMain } from "@/components/NavMain";
@@ -77,6 +77,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <a
+                                href="https://github.com/claude-code/cctime"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2"
+                            >
+                                <Github className="size-4" />
+                                <span>GitHub</span>
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SettingsPopover />
                 </SidebarMenu>
             </SidebarFooter>

@@ -1,5 +1,4 @@
 import { FilterBar } from "@/components/FilterBar";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -11,21 +10,12 @@ export function SiteHeader() {
                 <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
                 <h1 className="text-base font-medium">Analytics Dashboard</h1>
 
-                <div className="flex-1 flex justify-center">
+                <div className="flex-1"></div>
+
+                <div className="flex items-center gap-2">
                     <FilterBar />
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-                        <a
-                            href="https://github.com/claude-code/cctime"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                            className="dark:text-foreground">
-                            GitHub
-                        </a>
-                    </Button>
-                </div>
             </div>
         </header>
     );
