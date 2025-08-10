@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Bot, Database, FolderOpen, TrendingUp } from "lucide-react";
+import { Bot, Copy, Database, FolderOpen, TrendingUp, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { loadDashboardData } from "@/lib/data-service";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { useFilterStore } from "@/lib/store";
@@ -11,8 +15,39 @@ import { ProjectChart } from "./charts/ProjectChart";
 import { FilterIndicator } from "./FilterIndicator";
 import { DirectorySelector } from "./SettingsPopover";
 import { StatsCards } from "./StatsCards";
+import React from "react";
 
 function WelcomeScreen() {
+    const [customUsername, setCustomUsername] = React.useState(() => {
+        if (typeof window === 'undefined') return '';
+        return localStorage.getItem('claude-username') || '';
+    });
+
+    const username = React.useMemo(() => {
+        if (customUsername.trim()) return customUsername.trim();
+        
+        const platform = navigator.platform.toLowerCase();
+        if (platform.includes('win')) {
+            return 'Username';
+        } else {
+            return 'username';
+        }
+    }, [customUsername]);
+
+    const handleUsernameChange = (value: string) => {
+        setCustomUsername(value);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('claude-username', value);
+        }
+    };
+
+    const copyToClipboard = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    };
     return (
         <div className="flex flex-1 items-center justify-center p-6">
             <Card className="w-full max-w-2xl">
@@ -26,10 +61,58 @@ function WelcomeScreen() {
                 <CardContent className="space-y-6">
                     <div className="text-center text-muted-foreground">
                         <p>To get started, please select your Claude data directory.</p>
-                        <p className="text-sm mt-1">
-                            Default location: <code className="bg-muted px-2 py-1 rounded">~/.claude</code> or{" "}
-                            <code className="bg-muted px-2 py-1 rounded">%USERPROFILE%\.claude</code>
-                        </p>
+                        <div className="text-sm mt-3 space-y-2 text-left">
+                            <div className="flex items-center justify-between gap-4">
+                                <p className="font-medium">Examples of Claude data paths:</p>
+                                <div className="flex items-center gap-2">
+                                    <User className="h-3 w-3 text-muted-foreground" />
+                                    <Input
+                                        placeholder="username"
+                                        value={customUsername}
+                                        onChange={(e) => handleUsernameChange(e.target.value)}
+                                        className="h-6 w-24 text-xs px-2"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
+                                    <Badge variant="outline">Windows</Badge>
+                                    <code className="text-sm font-mono flex-1">C:\Users\{username}\.claude</code>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-6 w-6 p-0"
+                                        onClick={() => copyToClipboard(`C:\\Users\\${username}\\.claude`)}
+                                    >
+                                        <Copy className="h-3 w-3" />
+                                    </Button>
+                                </div>
+                                <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
+                                    <Badge variant="outline">macOS</Badge>
+                                    <code className="text-sm font-mono flex-1">/Users/{username}/.claude</code>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-6 w-6 p-0"
+                                        onClick={() => copyToClipboard(`/Users/${username}/.claude`)}
+                                    >
+                                        <Copy className="h-3 w-3" />
+                                    </Button>
+                                </div>
+                                <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
+                                    <Badge variant="outline">Linux</Badge>
+                                    <code className="text-sm font-mono flex-1">/home/{username.toLowerCase()}/.claude</code>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-6 w-6 p-0"
+                                        onClick={() => copyToClipboard(`/home/${username.toLowerCase()}/.claude`)}
+                                    >
+                                        <Copy className="h-3 w-3" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-3">
