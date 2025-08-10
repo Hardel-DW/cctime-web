@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { CalendarDays, FolderOpen, X } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -70,7 +69,7 @@ export function FilterBar() {
                         size="sm"
                         className={cn("h-8 justify-start text-left font-normal", !startDate && "text-muted-foreground")}>
                         <CalendarDays className="mr-2 h-4 w-4" />
-                        {startDate ? format(new Date(startDate), "PP") : "Start date"}
+                        {startDate ? new Intl.DateTimeFormat('fr-FR').format(new Date(startDate)) : "Start date"}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -78,7 +77,7 @@ export function FilterBar() {
                         mode="single"
                         selected={startDate ? new Date(startDate) : undefined}
                         onSelect={(date: Date | undefined) => {
-                            setStartDate(date ? format(date, "yyyy-MM-dd") : null);
+                            setStartDate(date ? date.toISOString().split('T')[0] : null);
                             setStartDateOpen(false);
                         }}
                         disabled={(date: Date) => date > new Date() || (endDate ? date > new Date(endDate) : false)}
@@ -95,7 +94,7 @@ export function FilterBar() {
                         size="sm"
                         className={cn("h-8 justify-start text-left font-normal", !endDate && "text-muted-foreground")}>
                         <CalendarDays className="mr-2 h-4 w-4" />
-                        {endDate ? format(new Date(endDate), "PP") : "End date"}
+                        {endDate ? new Intl.DateTimeFormat('fr-FR').format(new Date(endDate)) : "End date"}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -103,7 +102,7 @@ export function FilterBar() {
                         mode="single"
                         selected={endDate ? new Date(endDate) : undefined}
                         onSelect={(date: Date | undefined) => {
-                            setEndDate(date ? format(date, "yyyy-MM-dd") : null);
+                            setEndDate(date ? date.toISOString().split('T')[0] : null);
                             setEndDateOpen(false);
                         }}
                         disabled={(date: Date) => date > new Date() || (startDate ? date < new Date(startDate) : false)}

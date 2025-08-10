@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { useFilterStore } from "@/lib/store";
 
@@ -19,9 +18,9 @@ export function FilterIndicator() {
 
             {selectedProject && <Badge variant="secondary">Project: {selectedProject}</Badge>}
 
-            {startDate && <Badge variant="secondary">From: {format(new Date(startDate), "MMM d, yyyy")}</Badge>}
+            {startDate && <Badge variant="secondary">From: {new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(startDate))}</Badge>}
 
-            {endDate && <Badge variant="secondary">To: {format(new Date(endDate), "MMM d, yyyy")}</Badge>}
+            {endDate && <Badge variant="secondary">To: {new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(endDate))}</Badge>}
         </div>
     );
 }
