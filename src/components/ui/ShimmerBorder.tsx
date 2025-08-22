@@ -51,10 +51,15 @@ export const ShimmerBorder = React.forwardRef<
                 <div
                     className="-z-30 blur-[2px] absolute inset-0 overflow-visible [container-type:size]"
                 >
-                    {/* spark */}
+                    {/* spark 1 */}
                     <div className="absolute inset-0 h-[100cqh] animate-shimmer-slide [aspect-ratio:1] [border-radius:0] [mask:none]">
                         {/* spark before */}
                         <div className="absolute -inset-full w-auto rotate-0 animate-spin-around [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,var(--shimmer-color)_var(--spread),transparent_var(--spread))] [translate:0_0]" />
+                    </div>
+                    {/* spark 2 - offset by 180deg */}
+                    <div className="absolute inset-0 h-[100cqh] animate-shimmer-slide [aspect-ratio:1] [border-radius:0] [mask:none]">
+                        {/* spark before */}
+                        <div className="absolute -inset-full w-auto rotate-0 animate-spin-around [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,var(--shimmer-color)_var(--spread),transparent_var(--spread))] [translate:0_0]" style={{animationDelay: '-10s'}} />
                     </div>
                 </div>
                 {children}

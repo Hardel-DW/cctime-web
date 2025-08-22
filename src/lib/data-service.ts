@@ -4,6 +4,13 @@ import type { DailyConversation, DashboardData, HourlyActivity, ProjectActivity 
 import { type ISOTimestamp, loadAllUsageData, type UsageData } from "./web-data-loader";
 
 /**
+ * Filter entries that have a valid timestamp
+ */
+function hasValidTimestamp(entry: UsageData): entry is UsageData & { timestamp: ISOTimestamp } {
+    return typeof entry.timestamp === 'string' && entry.timestamp.length > 0;
+}
+
+/**
  * Format date from ISO timestamp to YYYY-MM-DD using local timezone
  */
 function formatDate(timestamp: ISOTimestamp): string {
@@ -75,7 +82,7 @@ export const loadDashboardData = async (): Promise<DashboardData> => {
         // Appliquer les filtres depuis le store
         const { selectedProject, startDate, endDate } = useFilterStore.getState();
 
-        let filteredEntries = allEntries;
+        let filteredEntries = allEntries.filter(hasValidTimestamp);
 
         // Filtrer par projet
         if (selectedProject) {
@@ -113,7 +120,11 @@ export const loadDashboardData = async (): Promise<DashboardData> => {
         // Créer les conversations quotidiennes
         const conversations: DailyConversation[] = [];
 
-        for (const [date, entries] of dailyGroups) {
+        for (const [date, allEntries] of dailyGroups) {
+            if (allEntries.length === 0) continue;
+
+            // Filter entries that have valid timestamps
+            const entries = allEntries.filter(hasValidTimestamp);
             if (entries.length === 0) continue;
 
             entries.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());

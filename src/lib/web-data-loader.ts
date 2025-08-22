@@ -154,7 +154,7 @@ async function processJsonlFile(fileHandle: any, filePath: string, projects: Map
                 name: projectName,
                 path: filePath,
                 messageCount: 0,
-                lastActivity: entries[0].timestamp
+                lastActivity: entries[0].timestamp || ""
             });
         }
 
@@ -164,8 +164,8 @@ async function processJsonlFile(fileHandle: any, filePath: string, projects: Map
 
         // Mettre à jour la dernière activité
         for (const entry of entries) {
-            if (new Date(entry.timestamp) > new Date(project.lastActivity)) {
-                project.lastActivity = entry.timestamp;
+            if (new Date(entry.timestamp || "") > new Date(project.lastActivity)) {
+                project.lastActivity = entry.timestamp || "";
             }
         }
     } catch (error) {
@@ -192,7 +192,7 @@ export async function loadAllUsageData(): Promise<UsageData[]> {
         const allEntries: UsageData[] = [];
         await collectAllEntries(directoryHandle, "", allEntries);
 
-        return allEntries.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+        return allEntries.sort((a, b) => new Date(a.timestamp || "").getTime() - new Date(b.timestamp || "").getTime());
     } catch (error) {
         console.error("Error loading usage data:", error);
         throw error;
