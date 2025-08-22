@@ -39,7 +39,7 @@ const data = {
         },
         {
             title: "Sessions",
-            url: "#",
+            url: "/sessions",
             icon: Timer
         },
         {

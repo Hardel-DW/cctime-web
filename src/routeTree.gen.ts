@@ -10,12 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TokenUsageRouteImport } from './routes/token-usage'
+import { Route as SessionsRouteImport } from './routes/sessions'
+import { Route as SessionDetailsRouteImport } from './routes/session-details'
 import { Route as DailyActivityRouteImport } from './routes/daily-activity'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TokenUsageRoute = TokenUsageRouteImport.update({
   id: '/token-usage',
   path: '/token-usage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionsRoute = SessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionDetailsRoute = SessionDetailsRouteImport.update({
+  id: '/session-details',
+  path: '/session-details',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DailyActivityRoute = DailyActivityRouteImport.update({
@@ -32,30 +44,54 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily-activity': typeof DailyActivityRoute
+  '/session-details': typeof SessionDetailsRoute
+  '/sessions': typeof SessionsRoute
   '/token-usage': typeof TokenUsageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily-activity': typeof DailyActivityRoute
+  '/session-details': typeof SessionDetailsRoute
+  '/sessions': typeof SessionsRoute
   '/token-usage': typeof TokenUsageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daily-activity': typeof DailyActivityRoute
+  '/session-details': typeof SessionDetailsRoute
+  '/sessions': typeof SessionsRoute
   '/token-usage': typeof TokenUsageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/daily-activity' | '/token-usage'
+  fullPaths:
+    | '/'
+    | '/daily-activity'
+    | '/session-details'
+    | '/sessions'
+    | '/token-usage'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/daily-activity' | '/token-usage'
-  id: '__root__' | '/' | '/daily-activity' | '/token-usage'
+  to:
+    | '/'
+    | '/daily-activity'
+    | '/session-details'
+    | '/sessions'
+    | '/token-usage'
+  id:
+    | '__root__'
+    | '/'
+    | '/daily-activity'
+    | '/session-details'
+    | '/sessions'
+    | '/token-usage'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyActivityRoute: typeof DailyActivityRoute
+  SessionDetailsRoute: typeof SessionDetailsRoute
+  SessionsRoute: typeof SessionsRoute
   TokenUsageRoute: typeof TokenUsageRoute
 }
 
@@ -66,6 +102,20 @@ declare module '@tanstack/react-router' {
       path: '/token-usage'
       fullPath: '/token-usage'
       preLoaderRoute: typeof TokenUsageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sessions': {
+      id: '/sessions'
+      path: '/sessions'
+      fullPath: '/sessions'
+      preLoaderRoute: typeof SessionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session-details': {
+      id: '/session-details'
+      path: '/session-details'
+      fullPath: '/session-details'
+      preLoaderRoute: typeof SessionDetailsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily-activity': {
@@ -88,6 +138,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyActivityRoute: DailyActivityRoute,
+  SessionDetailsRoute: SessionDetailsRoute,
+  SessionsRoute: SessionsRoute,
   TokenUsageRoute: TokenUsageRoute,
 }
 export const routeTree = rootRouteImport
