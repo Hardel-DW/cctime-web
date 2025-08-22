@@ -60,7 +60,7 @@ export interface UserToUserGap {
 
 export interface DashboardData {
     conversations: DailyConversation[];
-    allEntries: Array<UsageData & { sessionId: string; filePath: string; cwd?: string }>;
+    allEntries: import('./web-data-loader').UsageData[];
     hourlyActivity: HourlyActivity[];
     projectActivity: ProjectActivity[];
     sessionDetails: SessionDetail[];

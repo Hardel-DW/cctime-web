@@ -1,20 +1,16 @@
 import { z } from "zod";
 import { getCachedDirectoryHandle } from "./directory-storage";
 import { formatProjectName, getProjectNameFromPath } from "./project-utils";
-
-// Types basés sur la version CLI
 export const isoTimestampSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/, "Invalid ISO timestamp");
 
-// Enhanced schema for todo items in toolUseResult
 const todoItemSchema = z.looseObject({
     id: z.string().optional(),
     content: z.string().optional(),
     status: z.enum(["pending", "in_progress", "completed"]).optional(),
     createdAt: z.string().optional(),
     updatedAt: z.string().optional()
-}); // Allow additional properties
+});
 
-// Enhanced schema for file operations in toolUseResult
 const fileOperationSchema = z.looseObject({
     filePath: z.string().optional(),
     content: z.string().optional(),
@@ -27,24 +23,20 @@ const fileOperationSchema = z.looseObject({
     encoding: z.string().optional()
 });
 
-// Enhanced schema for message content (supports different content types)
 const messageContentSchema = z.looseObject({
     type: z.enum(["text", "tool_use", "tool_result", "image"]).optional(),
     text: z.string().optional(),
 
-    // Tool use content
     tool_use_id: z.string().optional(),
     id: z.string().optional(),
     name: z.string().optional(),
     input: z.record(z.string(), z.any()).optional(),
 
-    // Tool result content
     output: z.any().optional(),
     content: z.union([z.string(), z.array(z.any())]).optional(),
     is_error: z.boolean().optional(),
     error: z.string().optional(),
 
-    // Image content
     source: z
         .object({
             type: z.string().optional(),
@@ -53,7 +45,6 @@ const messageContentSchema = z.looseObject({
         })
         .optional(),
 
-    // Additional metadata
     cache_control: z
         .object({
             type: z.string().optional()
@@ -61,7 +52,6 @@ const messageContentSchema = z.looseObject({
         .optional()
 });
 
-// Enhanced schema for usage statistics
 const usageStatsSchema = z.looseObject({
     input_tokens: z.number().optional(),
     output_tokens: z.number().optional(),
@@ -71,50 +61,43 @@ const usageStatsSchema = z.looseObject({
     total_tokens: z.number().optional(),
     prompt_tokens: z.number().optional(),
     completion_tokens: z.number().optional(),
-    // Nouveaux champs de cache éphémère (Claude Code v1.0.73+)
     cache_creation: z.looseObject({
         ephemeral_5m_input_tokens: z.number().optional(),
         ephemeral_1h_input_tokens: z.number().optional()
     }).optional()
 });
 
-// Enhanced main message schema (follows Anthropic's message format)
 const messageSchema = z.looseObject({
     id: z.string().optional(),
     type: z.string().optional(),
     role: z.enum(["user", "assistant", "system"]).optional(),
     content: z
         .union([
-            z.string(), // Simple text content
-            z.array(messageContentSchema) // Complex content with tool use
+            z.string(),
+            z.array(messageContentSchema)
         ])
         .optional(),
-    model: z.string().optional(), // e.g., "claude-sonnet-4-20250514"
+    model: z.string().optional(),
     stop_reason: z.string().nullable().optional(),
     stop_sequence: z.string().nullable().optional(),
     usage: usageStatsSchema.optional(),
     metadata: z.record(z.string(), z.any()).optional(),
 
-    // System prompt and parameters
     system: z.string().optional(),
     temperature: z.number().optional(),
     max_tokens: z.number().optional(),
 
-    // Tool use specific
     tool_calls: z.array(z.any()).optional(),
     tool_use_id: z.string().optional(),
 
-    // Streaming and processing
     stream: z.boolean().optional(),
     partial: z.boolean().optional(),
     finished: z.boolean().optional(),
 
-    // Timing and performance
     created_at: z.string().optional(),
     processing_time: z.number().optional()
 });
 
-// Enhanced toolUseResult schema
 const toolUseResultSchema = z.looseObject({
     type: z.string().optional(),
     oldTodos: z.array(todoItemSchema).optional(),
@@ -131,73 +114,61 @@ const toolUseResultSchema = z.looseObject({
 });
 
 export const usageDataSchema = z.looseObject({
-    // Core fields from Claude Code JSONL structure
     timestamp: isoTimestampSchema.optional(),
     cwd: z.string().optional(),
     sessionId: z.string().optional(),
     parentUuid: z.string().nullable().optional(),
     uuid: z.string().optional(),
     isSidechain: z.boolean().optional(),
-    userType: z.string().optional(), // "external" for regular users
-    version: z.string().optional(), // Claude Code version (e.g., "1.0.58")
-    type: z.string().optional(), // Message type: "user", "assistant", "tool_use", "summary", etc.
+    userType: z.string().optional(),
+    version: z.string().optional(),
+    type: z.string().optional(),
 
-    // Git and project context
     gitBranch: z.string().optional(),
     projectHash: z.string().optional(),
     workspaceType: z.string().optional(),
 
-    // Message content (follows Anthropic's message format)
     message: messageSchema.optional(),
 
-    // Tool usage and results
     toolUseResult: toolUseResultSchema.optional(),
     toolCalls: z.array(z.any()).optional(),
 
-    // Usage tracking and costs
     costUSD: z.number().optional(),
     tokenUsage: usageStatsSchema.optional(),
-    model: z.string().optional(), // e.g., "claude-sonnet-4-20250514"
+    model: z.string().optional(),
 
-    // Error handling
     isApiErrorMessage: z.boolean().optional(),
     error: z.string().optional(),
     errorCode: z.string().optional(),
 
-    // Session and conversation context
     conversationId: z.string().optional(),
     turnId: z.string().optional(),
     messageIndex: z.number().optional(),
     requestId: z.string().optional(),
 
-    // System and environment
     platform: z.string().optional(),
     userAgent: z.string().optional(),
     environment: z.record(z.string(), z.any()).optional(),
 
-    // Additional metadata
     metadata: z.record(z.string(), z.any()).optional(),
     context: z.record(z.string(), z.any()).optional(),
     source: z.string().optional(),
     event: z.string().optional(),
     data: z.any().optional(),
 
-    // Summary and analytics
     summary: z.string().optional(),
     duration: z.number().optional(),
     completed: z.boolean().optional(),
 
-    // Resume and continuation
     resumeState: z.record(z.string(), z.any()).optional(),
     continuationData: z.any().optional()
-}) // Allow any additional properties not explicitly defined
-.transform((data) => {
-    // Provide fallback timestamp if missing
-    if (!data.timestamp) {
-        data.timestamp = new Date().toISOString();
-    }
-    return data;
-});
+})
+    .transform((data) => {
+        if (!data.timestamp) {
+            data.timestamp = new Date().toISOString();
+        }
+        return data;
+    });
 
 export type UsageData = z.infer<typeof usageDataSchema>;
 export type ISOTimestamp = z.infer<typeof isoTimestampSchema>;
@@ -256,7 +227,6 @@ export async function loadProjectsFromDirectory(): Promise<Project[]> {
 
         const projects = new Map<string, Project>();
 
-        // Parcourir récursivement le dossier pour trouver les fichiers .jsonl
         await processDirectory(directoryHandle, "", projects);
 
         return Array.from(projects.values()).sort((a, b) => b.messageCount - a.messageCount);
@@ -296,10 +266,8 @@ async function processJsonlFile(fileHandle: any, filePath: string, projects: Map
 
         if (entries.length === 0) return;
 
-        // Déterminer le projet depuis le chemin ou le cwd des entrées
         let projectName = getProjectNameFromPath(filePath);
 
-        // Si on peut pas déterminer depuis le path, utiliser le cwd des entrées
         const cwdProjects = new Set(
             entries
                 .map((entry) => entry.cwd)
@@ -311,7 +279,6 @@ async function processJsonlFile(fileHandle: any, filePath: string, projects: Map
             projectName = Array.from(cwdProjects)[0];
         }
 
-        // Grouper par projet
         if (!projects.has(projectName)) {
             projects.set(projectName, {
                 name: projectName,
@@ -325,7 +292,6 @@ async function processJsonlFile(fileHandle: any, filePath: string, projects: Map
         if (!project) return;
         project.messageCount += entries.length;
 
-        // Mettre à jour la dernière activité
         for (const entry of entries) {
             if (new Date(entry.timestamp || "") > new Date(project.lastActivity)) {
                 project.lastActivity = entry.timestamp || "";
@@ -337,7 +303,7 @@ async function processJsonlFile(fileHandle: any, filePath: string, projects: Map
 }
 
 /**
- * Load all usage data from directory (pour les autres composants)
+ * Load all usage data from directory
  */
 export async function loadAllUsageData(): Promise<UsageData[]> {
     try {

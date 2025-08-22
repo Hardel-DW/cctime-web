@@ -204,7 +204,7 @@ export const loadDashboardData = async (): Promise<DashboardData> => {
 
         return {
             conversations,
-            allEntries: [],
+            allEntries: filteredEntries,
             hourlyActivity,
             projectActivity,
             sessionDetails: [], // TODO: Implémenter si nécessaire
