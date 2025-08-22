@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/AppSidebar";
+import { BackgroundPattern } from "@/components/BackgroundPattern";
 import { Dashboard } from "@/components/Dashboard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { BackgroundPattern } from "@/components/BackgroundPattern";
 
 export const Route = createFileRoute("/")({
     component: IndexComponent

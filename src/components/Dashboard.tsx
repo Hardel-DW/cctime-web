@@ -1,5 +1,5 @@
-import { Bot, Copy, Check, Database, FolderOpen, TrendingUp, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { Bot, Check, Copy, Database, FolderOpen, TrendingUp, User } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,9 +45,9 @@ function WelcomeScreen() {
     const copyToClipboard = async (text: string, id: string) => {
         try {
             await navigator.clipboard.writeText(text);
-            setCopiedStates(prev => ({ ...prev, [id]: true }));
+            setCopiedStates((prev) => ({ ...prev, [id]: true }));
             setTimeout(() => {
-                setCopiedStates(prev => ({ ...prev, [id]: false }));
+                setCopiedStates((prev) => ({ ...prev, [id]: false }));
             }, 2000);
         } catch (err) {
             console.error("Failed to copy text: ", err);
@@ -60,14 +60,9 @@ function WelcomeScreen() {
             <Button
                 variant="ghost"
                 size="sm"
-                className={`h-6 w-6 p-0 transition-colors ${isCopied ? 'text-green-400 bg-green-500/10 hover:bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 dark:hover:bg-green-500/20' : ''} ${className}`}
-                onClick={() => copyToClipboard(text, id)}
-            >
-                {isCopied ? (
-                    <Check className="h-3 w-3 animate-in zoom-in-50 duration-200" />
-                ) : (
-                    <Copy className="h-3 w-3" />
-                )}
+                className={`h-6 w-6 p-0 transition-colors ${isCopied ? "text-green-400 bg-green-500/10 hover:bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 dark:hover:bg-green-500/20" : ""} ${className}`}
+                onClick={() => copyToClipboard(text, id)}>
+                {isCopied ? <Check className="h-3 w-3 animate-in zoom-in-50 duration-200" /> : <Copy className="h-3 w-3" />}
             </Button>
         );
     };
@@ -80,8 +75,7 @@ function WelcomeScreen() {
                 background="var(--card)"
                 borderRadius="0.75rem"
                 shimmerDuration="10s"
-                shimmerSize="2px"
-            >
+                shimmerSize="2px">
                 <div className="text-center space-y-12">
                     <div className="space-y-2">
                         <h1 className="text-4xl font-bold">Welcome</h1>

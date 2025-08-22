@@ -5,36 +5,193 @@ import { formatProjectName, getProjectNameFromPath } from "./project-utils";
 // Types basés sur la version CLI
 export const isoTimestampSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/, "Invalid ISO timestamp");
 
-export const usageDataSchema = z.object({
-    timestamp: isoTimestampSchema.optional(), // Allow missing timestamps
-    cwd: z.string().optional(),
-    message: z
+// Enhanced schema for todo items in toolUseResult
+const todoItemSchema = z.looseObject({
+    id: z.string().optional(),
+    content: z.string().optional(),
+    status: z.enum(["pending", "in_progress", "completed"]).optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional()
+}); // Allow additional properties
+
+// Enhanced schema for file operations in toolUseResult
+const fileOperationSchema = z.looseObject({
+    filePath: z.string().optional(),
+    content: z.string().optional(),
+    numLines: z.number().optional(),
+    startLine: z.number().optional(),
+    totalLines: z.number().optional(),
+    operation: z.string().optional(),
+    lineCount: z.number().optional(),
+    bytesRead: z.number().optional(),
+    encoding: z.string().optional()
+});
+
+// Enhanced schema for message content (supports different content types)
+const messageContentSchema = z.looseObject({
+    type: z.enum(["text", "tool_use", "tool_result", "image"]).optional(),
+    text: z.string().optional(),
+
+    // Tool use content
+    tool_use_id: z.string().optional(),
+    id: z.string().optional(),
+    name: z.string().optional(),
+    input: z.record(z.string(), z.any()).optional(),
+
+    // Tool result content
+    output: z.any().optional(),
+    content: z.union([z.string(), z.array(z.any())]).optional(),
+    is_error: z.boolean().optional(),
+    error: z.string().optional(),
+
+    // Image content
+    source: z
         .object({
-            content: z
-                .array(
-                    z.object({
-                        type: z.string().optional(),
-                        text: z.string().optional()
-                    })
-                )
-                .optional(),
-            role: z.string().optional(),
-            usage: z
-                .object({
-                    input_tokens: z.number().optional(),
-                    output_tokens: z.number().optional(),
-                    cache_creation_input_tokens: z.number().optional(),
-                    cache_read_input_tokens: z.number().optional(),
-                    service_tier: z.string().optional()
-                })
-                .optional(),
-            model: z.string().optional()
+            type: z.string().optional(),
+            media_type: z.string().optional(),
+            data: z.string().optional()
         })
         .optional(),
-    costUSD: z.number().optional(),
+
+    // Additional metadata
+    cache_control: z
+        .object({
+            type: z.string().optional()
+        })
+        .optional()
+});
+
+// Enhanced schema for usage statistics
+const usageStatsSchema = z.looseObject({
+    input_tokens: z.number().optional(),
+    output_tokens: z.number().optional(),
+    cache_creation_input_tokens: z.number().optional(),
+    cache_read_input_tokens: z.number().optional(),
+    service_tier: z.string().optional(),
+    total_tokens: z.number().optional(),
+    prompt_tokens: z.number().optional(),
+    completion_tokens: z.number().optional(),
+    // Nouveaux champs de cache éphémère (Claude Code v1.0.73+)
+    cache_creation: z.looseObject({
+        ephemeral_5m_input_tokens: z.number().optional(),
+        ephemeral_1h_input_tokens: z.number().optional()
+    }).optional()
+});
+
+// Enhanced main message schema (follows Anthropic's message format)
+const messageSchema = z.looseObject({
+    id: z.string().optional(),
+    type: z.string().optional(),
+    role: z.enum(["user", "assistant", "system"]).optional(),
+    content: z
+        .union([
+            z.string(), // Simple text content
+            z.array(messageContentSchema) // Complex content with tool use
+        ])
+        .optional(),
+    model: z.string().optional(), // e.g., "claude-sonnet-4-20250514"
+    stop_reason: z.string().nullable().optional(),
+    stop_sequence: z.string().nullable().optional(),
+    usage: usageStatsSchema.optional(),
+    metadata: z.record(z.string(), z.any()).optional(),
+
+    // System prompt and parameters
+    system: z.string().optional(),
+    temperature: z.number().optional(),
+    max_tokens: z.number().optional(),
+
+    // Tool use specific
+    tool_calls: z.array(z.any()).optional(),
+    tool_use_id: z.string().optional(),
+
+    // Streaming and processing
+    stream: z.boolean().optional(),
+    partial: z.boolean().optional(),
+    finished: z.boolean().optional(),
+
+    // Timing and performance
+    created_at: z.string().optional(),
+    processing_time: z.number().optional()
+});
+
+// Enhanced toolUseResult schema
+const toolUseResultSchema = z.looseObject({
+    type: z.string().optional(),
+    oldTodos: z.array(todoItemSchema).optional(),
+    newTodos: z.array(todoItemSchema).optional(),
+    file: fileOperationSchema.optional(),
+    files: z.array(fileOperationSchema).optional(),
+    result: z.any().optional(),
+    error: z.string().optional(),
+    duration: z.number().optional(),
+    tool_name: z.string().optional(),
+    tool_input: z.record(z.string(), z.any()).optional(),
+    tool_output: z.any().optional(),
+    success: z.boolean().optional()
+});
+
+export const usageDataSchema = z.looseObject({
+    // Core fields from Claude Code JSONL structure
+    timestamp: isoTimestampSchema.optional(),
+    cwd: z.string().optional(),
     sessionId: z.string().optional(),
-    isApiErrorMessage: z.boolean().optional()
-}).transform(data => {
+    parentUuid: z.string().nullable().optional(),
+    uuid: z.string().optional(),
+    isSidechain: z.boolean().optional(),
+    userType: z.string().optional(), // "external" for regular users
+    version: z.string().optional(), // Claude Code version (e.g., "1.0.58")
+    type: z.string().optional(), // Message type: "user", "assistant", "tool_use", "summary", etc.
+
+    // Git and project context
+    gitBranch: z.string().optional(),
+    projectHash: z.string().optional(),
+    workspaceType: z.string().optional(),
+
+    // Message content (follows Anthropic's message format)
+    message: messageSchema.optional(),
+
+    // Tool usage and results
+    toolUseResult: toolUseResultSchema.optional(),
+    toolCalls: z.array(z.any()).optional(),
+
+    // Usage tracking and costs
+    costUSD: z.number().optional(),
+    tokenUsage: usageStatsSchema.optional(),
+    model: z.string().optional(), // e.g., "claude-sonnet-4-20250514"
+
+    // Error handling
+    isApiErrorMessage: z.boolean().optional(),
+    error: z.string().optional(),
+    errorCode: z.string().optional(),
+
+    // Session and conversation context
+    conversationId: z.string().optional(),
+    turnId: z.string().optional(),
+    messageIndex: z.number().optional(),
+    requestId: z.string().optional(),
+
+    // System and environment
+    platform: z.string().optional(),
+    userAgent: z.string().optional(),
+    environment: z.record(z.string(), z.any()).optional(),
+
+    // Additional metadata
+    metadata: z.record(z.string(), z.any()).optional(),
+    context: z.record(z.string(), z.any()).optional(),
+    source: z.string().optional(),
+    event: z.string().optional(),
+    data: z.any().optional(),
+
+    // Summary and analytics
+    summary: z.string().optional(),
+    duration: z.number().optional(),
+    completed: z.boolean().optional(),
+
+    // Resume and continuation
+    resumeState: z.record(z.string(), z.any()).optional(),
+    continuationData: z.any().optional()
+}) // Allow any additional properties not explicitly defined
+.transform((data) => {
     // Provide fallback timestamp if missing
     if (!data.timestamp) {
         data.timestamp = new Date().toISOString();
@@ -44,6 +201,12 @@ export const usageDataSchema = z.object({
 
 export type UsageData = z.infer<typeof usageDataSchema>;
 export type ISOTimestamp = z.infer<typeof isoTimestampSchema>;
+export type TodoItem = z.infer<typeof todoItemSchema>;
+export type FileOperation = z.infer<typeof fileOperationSchema>;
+export type MessageContent = z.infer<typeof messageContentSchema>;
+export type UsageStats = z.infer<typeof usageStatsSchema>;
+export type Message = z.infer<typeof messageSchema>;
+export type ToolUseResult = z.infer<typeof toolUseResultSchema>;
 
 export interface Project {
     name: string;

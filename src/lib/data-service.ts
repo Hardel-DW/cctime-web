@@ -7,7 +7,7 @@ import { type ISOTimestamp, loadAllUsageData, type UsageData } from "./web-data-
  * Filter entries that have a valid timestamp
  */
 function hasValidTimestamp(entry: UsageData): entry is UsageData & { timestamp: ISOTimestamp } {
-    return typeof entry.timestamp === 'string' && entry.timestamp.length > 0;
+    return typeof entry.timestamp === "string" && entry.timestamp.length > 0;
 }
 
 /**

@@ -64,12 +64,12 @@ export function TokenUsage() {
     const allEntries = data?.allEntries || [];
 
     // Debug: Check what data we're getting
-    console.log('=== TOKEN USAGE DEBUG ===');
-    console.log('Has directory handle:', hasDirectoryHandle);
-    console.log('Raw data object:', data);
-    console.log('Total entries:', allEntries.length);
-    console.log('Filter state:', { selectedProject, startDate, endDate });
-    
+    console.log("=== TOKEN USAGE DEBUG ===");
+    console.log("Has directory handle:", hasDirectoryHandle);
+    console.log("Raw data object:", data);
+    console.log("Total entries:", allEntries.length);
+    console.log("Filter state:", { selectedProject, startDate, endDate });
+
     // Filter entries with token usage data (including cache tokens)
     const tokenEntries = allEntries.filter((entry) => {
         const usage = entry.message?.usage;
@@ -83,8 +83,8 @@ export function TokenUsage() {
         );
     });
 
-    console.log('Token entries found:', tokenEntries.length);
-    console.log('Sample token entries:', tokenEntries.slice(0, 3));
+    console.log("Token entries found:", tokenEntries.length);
+    console.log("Sample token entries:", tokenEntries.slice(0, 3));
 
     // Calculate comprehensive statistics
     const stats = tokenEntries.reduce(
