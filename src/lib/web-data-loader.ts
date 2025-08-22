@@ -61,22 +61,19 @@ const usageStatsSchema = z.looseObject({
     total_tokens: z.number().optional(),
     prompt_tokens: z.number().optional(),
     completion_tokens: z.number().optional(),
-    cache_creation: z.looseObject({
-        ephemeral_5m_input_tokens: z.number().optional(),
-        ephemeral_1h_input_tokens: z.number().optional()
-    }).optional()
+    cache_creation: z
+        .looseObject({
+            ephemeral_5m_input_tokens: z.number().optional(),
+            ephemeral_1h_input_tokens: z.number().optional()
+        })
+        .optional()
 });
 
 const messageSchema = z.looseObject({
     id: z.string().optional(),
     type: z.string().optional(),
     role: z.enum(["user", "assistant", "system"]).optional(),
-    content: z
-        .union([
-            z.string(),
-            z.array(messageContentSchema)
-        ])
-        .optional(),
+    content: z.union([z.string(), z.array(messageContentSchema)]).optional(),
     model: z.string().optional(),
     stop_reason: z.string().nullable().optional(),
     stop_sequence: z.string().nullable().optional(),
@@ -113,56 +110,57 @@ const toolUseResultSchema = z.looseObject({
     success: z.boolean().optional()
 });
 
-export const usageDataSchema = z.looseObject({
-    timestamp: isoTimestampSchema.optional(),
-    cwd: z.string().optional(),
-    sessionId: z.string().optional(),
-    parentUuid: z.string().nullable().optional(),
-    uuid: z.string().optional(),
-    isSidechain: z.boolean().optional(),
-    userType: z.string().optional(),
-    version: z.string().optional(),
-    type: z.string().optional(),
+export const usageDataSchema = z
+    .looseObject({
+        timestamp: isoTimestampSchema.optional(),
+        cwd: z.string().optional(),
+        sessionId: z.string().optional(),
+        parentUuid: z.string().nullable().optional(),
+        uuid: z.string().optional(),
+        isSidechain: z.boolean().optional(),
+        userType: z.string().optional(),
+        version: z.string().optional(),
+        type: z.string().optional(),
 
-    gitBranch: z.string().optional(),
-    projectHash: z.string().optional(),
-    workspaceType: z.string().optional(),
+        gitBranch: z.string().optional(),
+        projectHash: z.string().optional(),
+        workspaceType: z.string().optional(),
 
-    message: messageSchema.optional(),
+        message: messageSchema.optional(),
 
-    toolUseResult: toolUseResultSchema.optional(),
-    toolCalls: z.array(z.any()).optional(),
+        toolUseResult: toolUseResultSchema.optional(),
+        toolCalls: z.array(z.any()).optional(),
 
-    costUSD: z.number().optional(),
-    tokenUsage: usageStatsSchema.optional(),
-    model: z.string().optional(),
+        costUSD: z.number().optional(),
+        tokenUsage: usageStatsSchema.optional(),
+        model: z.string().optional(),
 
-    isApiErrorMessage: z.boolean().optional(),
-    error: z.string().optional(),
-    errorCode: z.string().optional(),
+        isApiErrorMessage: z.boolean().optional(),
+        error: z.string().optional(),
+        errorCode: z.string().optional(),
 
-    conversationId: z.string().optional(),
-    turnId: z.string().optional(),
-    messageIndex: z.number().optional(),
-    requestId: z.string().optional(),
+        conversationId: z.string().optional(),
+        turnId: z.string().optional(),
+        messageIndex: z.number().optional(),
+        requestId: z.string().optional(),
 
-    platform: z.string().optional(),
-    userAgent: z.string().optional(),
-    environment: z.record(z.string(), z.any()).optional(),
+        platform: z.string().optional(),
+        userAgent: z.string().optional(),
+        environment: z.record(z.string(), z.any()).optional(),
 
-    metadata: z.record(z.string(), z.any()).optional(),
-    context: z.record(z.string(), z.any()).optional(),
-    source: z.string().optional(),
-    event: z.string().optional(),
-    data: z.any().optional(),
+        metadata: z.record(z.string(), z.any()).optional(),
+        context: z.record(z.string(), z.any()).optional(),
+        source: z.string().optional(),
+        event: z.string().optional(),
+        data: z.any().optional(),
 
-    summary: z.string().optional(),
-    duration: z.number().optional(),
-    completed: z.boolean().optional(),
+        summary: z.string().optional(),
+        duration: z.number().optional(),
+        completed: z.boolean().optional(),
 
-    resumeState: z.record(z.string(), z.any()).optional(),
-    continuationData: z.any().optional()
-})
+        resumeState: z.record(z.string(), z.any()).optional(),
+        continuationData: z.any().optional()
+    })
     .transform((data) => {
         if (!data.timestamp) {
             data.timestamp = new Date().toISOString();

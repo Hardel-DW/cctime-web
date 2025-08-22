@@ -1,22 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import { Coins, Cpu, DollarSign, MessageSquare, Zap } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { loadAllUsageData } from "@/lib/web-data-loader";
-import { formatProjectName } from "@/lib/project-utils";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
+import { formatProjectName } from "@/lib/project-utils";
 import { useFilterStore } from "@/lib/store";
+import { loadAllUsageData } from "@/lib/web-data-loader";
 import { FilterIndicator } from "./FilterIndicator";
 
 export function TokenUsage() {
     const { selectedProject, startDate, endDate } = useFilterStore();
     const hasDirectoryHandle = !!getCachedDirectoryHandle();
 
-    const { data: allEntries, isLoading, error } = useQuery({
+    const {
+        data: allEntries,
+        isLoading,
+        error
+    } = useQuery({
         queryKey: ["token-usage-data", selectedProject, startDate, endDate],
         queryFn: () => loadAllUsageData(),
         enabled: hasDirectoryHandle
@@ -137,34 +141,46 @@ export function TokenUsage() {
 
     // Calculate comprehensive statistics with enhanced cache handling
     const stats = tokenEntries.reduce(
-        (acc: {
-            totalInputTokens: number;
-            totalOutputTokens: number;
-            totalCost: number;
-            messageCount: number;
-            totalCacheCreation: number;
-            totalCacheRead: number;
-            totalEphemeral5m: number;
-            totalEphemeral1h: number;
-            modelUsage: Record<string, {
-                inputTokens: number;
-                outputTokens: number;
-                cost: number;
-                messages: number;
-            }>;
-            projectUsage: Record<string, {
-                inputTokens: number;
-                outputTokens: number;
-                cost: number;
-                messages: number;
-            }>;
-            dailyUsage: Record<string, {
-                inputTokens: number;
-                outputTokens: number;
-                cost: number;
-                messages: number;
-            }>;
-        }, entry) => {
+        (
+            acc: {
+                totalInputTokens: number;
+                totalOutputTokens: number;
+                totalCost: number;
+                messageCount: number;
+                totalCacheCreation: number;
+                totalCacheRead: number;
+                totalEphemeral5m: number;
+                totalEphemeral1h: number;
+                modelUsage: Record<
+                    string,
+                    {
+                        inputTokens: number;
+                        outputTokens: number;
+                        cost: number;
+                        messages: number;
+                    }
+                >;
+                projectUsage: Record<
+                    string,
+                    {
+                        inputTokens: number;
+                        outputTokens: number;
+                        cost: number;
+                        messages: number;
+                    }
+                >;
+                dailyUsage: Record<
+                    string,
+                    {
+                        inputTokens: number;
+                        outputTokens: number;
+                        cost: number;
+                        messages: number;
+                    }
+                >;
+            },
+            entry
+        ) => {
             const usage = entry.message?.usage;
             const baseInputTokens = usage?.input_tokens || 0;
             const cacheCreationTokens = usage?.cache_creation_input_tokens || 0;
@@ -245,24 +261,33 @@ export function TokenUsage() {
             totalCacheRead: 0,
             totalEphemeral5m: 0,
             totalEphemeral1h: 0,
-            modelUsage: {} as Record<string, {
-                inputTokens: number;
-                outputTokens: number;
-                cost: number;
-                messages: number;
-            }>,
-            projectUsage: {} as Record<string, {
-                inputTokens: number;
-                outputTokens: number;
-                cost: number;
-                messages: number;
-            }>,
-            dailyUsage: {} as Record<string, {
-                inputTokens: number;
-                outputTokens: number;
-                cost: number;
-                messages: number;
-            }>
+            modelUsage: {} as Record<
+                string,
+                {
+                    inputTokens: number;
+                    outputTokens: number;
+                    cost: number;
+                    messages: number;
+                }
+            >,
+            projectUsage: {} as Record<
+                string,
+                {
+                    inputTokens: number;
+                    outputTokens: number;
+                    cost: number;
+                    messages: number;
+                }
+            >,
+            dailyUsage: {} as Record<
+                string,
+                {
+                    inputTokens: number;
+                    outputTokens: number;
+                    cost: number;
+                    messages: number;
+                }
+            >
         }
     );
 
@@ -311,14 +336,14 @@ export function TokenUsage() {
         { name: "Output Tokens", value: stats.totalOutputTokens, fill: "var(--chart-2)" },
         { name: "Cache Creation", value: stats.totalCacheCreation, fill: "var(--chart-3)" },
         { name: "Cache Read", value: stats.totalCacheRead, fill: "var(--chart-4)" }
-    ].filter(item => item.value > 0);
+    ].filter((item) => item.value > 0);
 
     const cacheEfficiencyData = [
         { name: "Cache Creation", value: stats.totalCacheCreation, fill: "var(--chart-1)" },
         { name: "Cache Read", value: stats.totalCacheRead, fill: "var(--chart-2)" },
         { name: "Ephemeral 5m", value: stats.totalEphemeral5m, fill: "var(--chart-3)" },
         { name: "Ephemeral 1h", value: stats.totalEphemeral1h, fill: "var(--chart-4)" }
-    ].filter(item => item.value > 0);
+    ].filter((item) => item.value > 0);
 
     return (
         <div className="space-y-6">
@@ -380,12 +405,9 @@ export function TokenUsage() {
                         <div className="text-2xl font-bold">
                             {stats.totalCacheRead > 0
                                 ? `${((stats.totalCacheRead / (stats.totalCacheCreation + stats.totalCacheRead)) * 100).toFixed(0)}%`
-                                : "0%"
-                            }
+                                : "0%"}
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                            {stats.totalCacheRead.toLocaleString()} reads
-                        </p>
+                        <p className="text-xs text-muted-foreground">{stats.totalCacheRead.toLocaleString()} reads</p>
                     </CardContent>
                 </Card>
 
@@ -403,11 +425,21 @@ export function TokenUsage() {
 
             <Tabs defaultValue="overview" className="space-y-4">
                 <TabsList className="rounded-xl bg-zinc-800">
-                    <TabsTrigger value="overview" className="rounded-lg">Overview</TabsTrigger>
-                    <TabsTrigger value="cache" className="rounded-lg">Cache</TabsTrigger>
-                    <TabsTrigger value="models" className="rounded-lg">By Models</TabsTrigger>
-                    <TabsTrigger value="projects" className="rounded-lg">By Projects</TabsTrigger>
-                    <TabsTrigger value="timeline" className="rounded-lg">Timeline</TabsTrigger>
+                    <TabsTrigger value="overview" className="rounded-lg">
+                        Overview
+                    </TabsTrigger>
+                    <TabsTrigger value="cache" className="rounded-lg">
+                        Cache
+                    </TabsTrigger>
+                    <TabsTrigger value="models" className="rounded-lg">
+                        By Models
+                    </TabsTrigger>
+                    <TabsTrigger value="projects" className="rounded-lg">
+                        By Projects
+                    </TabsTrigger>
+                    <TabsTrigger value="timeline" className="rounded-lg">
+                        Timeline
+                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
@@ -421,17 +453,21 @@ export function TokenUsage() {
                                 <ChartContainer config={{}} className="h-[300px] w-full">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
-                                            <Pie 
-                                                data={pieData} 
-                                                cx="50%" 
-                                                cy="50%" 
-                                                innerRadius={50} 
-                                                outerRadius={100} 
-                                                paddingAngle={3} 
-                                                dataKey="value"
-                                            >
+                                            <Pie
+                                                data={pieData}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={50}
+                                                outerRadius={100}
+                                                paddingAngle={3}
+                                                dataKey="value">
                                                 {pieData.map((entry) => (
-                                                    <Cell key={entry.name} fill={entry.fill} stroke="hsl(var(--background))" strokeWidth={2} />
+                                                    <Cell
+                                                        key={entry.name}
+                                                        fill={entry.fill}
+                                                        stroke="hsl(var(--background))"
+                                                        strokeWidth={2}
+                                                    />
                                                 ))}
                                             </Pie>
                                             <ChartTooltip
@@ -441,7 +477,9 @@ export function TokenUsage() {
                                                         return (
                                                             <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
                                                                 <p className="font-semibold text-foreground">{data.name}</p>
-                                                                <p className="text-sm text-muted-foreground">Tokens: {data.value.toLocaleString()}</p>
+                                                                <p className="text-sm text-muted-foreground">
+                                                                    Tokens: {data.value.toLocaleString()}
+                                                                </p>
                                                             </div>
                                                         );
                                                     }
@@ -480,21 +518,21 @@ export function TokenUsage() {
                                         <CartesianGrid strokeDasharray="3 3" stroke="var(--muted-foreground)" opacity={0.3} />
                                         <XAxis
                                             dataKey="date"
-                                            tick={{ fontSize: 12, fill: 'var(--foreground)' }}
+                                            tick={{ fontSize: 12, fill: "var(--foreground)" }}
                                             tickFormatter={(date) =>
                                                 new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
                                             }
                                         />
-                                        <YAxis tick={{ fontSize: 12, fill: 'var(--foreground)' }} />
+                                        <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} />
                                         <Tooltip
                                             labelFormatter={(date) => new Date(date).toLocaleDateString()}
                                             formatter={(value: number) => [value.toLocaleString(), "Tokens"]}
                                             contentStyle={{
-                                                backgroundColor: 'var(--popover)',
-                                                border: '1px solid var(--border)',
-                                                borderRadius: '6px',
-                                                color: 'var(--popover-foreground)',
-                                                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                                backgroundColor: "var(--popover)",
+                                                border: "1px solid var(--border)",
+                                                borderRadius: "6px",
+                                                color: "var(--popover-foreground)",
+                                                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
                                             }}
                                         />
                                         <Line
@@ -523,17 +561,21 @@ export function TokenUsage() {
                                 <ChartContainer config={{}} className="h-[300px] w-full">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
-                                            <Pie 
-                                                data={cacheEfficiencyData} 
-                                                cx="50%" 
-                                                cy="50%" 
-                                                innerRadius={50} 
-                                                outerRadius={100} 
-                                                paddingAngle={3} 
-                                                dataKey="value"
-                                            >
+                                            <Pie
+                                                data={cacheEfficiencyData}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={50}
+                                                outerRadius={100}
+                                                paddingAngle={3}
+                                                dataKey="value">
                                                 {cacheEfficiencyData.map((entry) => (
-                                                    <Cell key={entry.name} fill={entry.fill} stroke="hsl(var(--background))" strokeWidth={2} />
+                                                    <Cell
+                                                        key={entry.name}
+                                                        fill={entry.fill}
+                                                        stroke="hsl(var(--background))"
+                                                        strokeWidth={2}
+                                                    />
                                                 ))}
                                             </Pie>
                                             <ChartTooltip
@@ -543,7 +585,9 @@ export function TokenUsage() {
                                                         return (
                                                             <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
                                                                 <p className="font-semibold text-foreground">{data.name}</p>
-                                                                <p className="text-sm text-muted-foreground">Tokens: {data.value.toLocaleString()}</p>
+                                                                <p className="text-sm text-muted-foreground">
+                                                                    Tokens: {data.value.toLocaleString()}
+                                                                </p>
                                                             </div>
                                                         );
                                                     }
@@ -563,7 +607,16 @@ export function TokenUsage() {
                                             </div>
                                             <div className="flex gap-4 text-muted-foreground">
                                                 <span>{item.value.toLocaleString()}</span>
-                                                <span>({cacheEfficiencyData.reduce((acc, cur) => acc + cur.value, 0) > 0 ? Math.round((item.value / cacheEfficiencyData.reduce((acc, cur) => acc + cur.value, 0)) * 100) : 0}%)</span>
+                                                <span>
+                                                    (
+                                                    {cacheEfficiencyData.reduce((acc, cur) => acc + cur.value, 0) > 0
+                                                        ? Math.round(
+                                                              (item.value / cacheEfficiencyData.reduce((acc, cur) => acc + cur.value, 0)) *
+                                                                  100
+                                                          )
+                                                        : 0}
+                                                    %)
+                                                </span>
                                             </div>
                                         </div>
                                     ))}
@@ -599,14 +652,15 @@ export function TokenUsage() {
                                         <p className="text-xs text-muted-foreground">medium-term cache</p>
                                     </div>
                                 </div>
-                                {(stats.totalCacheCreation + stats.totalCacheRead) > 0 && (
+                                {stats.totalCacheCreation + stats.totalCacheRead > 0 && (
                                     <div className="pt-4 border-t">
                                         <p className="text-sm font-medium">Cache Hit Rate</p>
                                         <p className="text-2xl font-bold">
                                             {((stats.totalCacheRead / (stats.totalCacheCreation + stats.totalCacheRead)) * 100).toFixed(1)}%
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            {stats.totalCacheRead.toLocaleString()} reads / {(stats.totalCacheCreation + stats.totalCacheRead).toLocaleString()} total
+                                            {stats.totalCacheRead.toLocaleString()} reads /{" "}
+                                            {(stats.totalCacheCreation + stats.totalCacheRead).toLocaleString()} total
                                         </p>
                                     </div>
                                 )}
@@ -708,12 +762,12 @@ export function TokenUsage() {
                                     <CartesianGrid strokeDasharray="3 3" stroke="var(--muted-foreground)" opacity={0.3} />
                                     <XAxis
                                         dataKey="date"
-                                        tick={{ fontSize: 12, fill: 'var(--foreground)' }}
+                                        tick={{ fontSize: 12, fill: "var(--foreground)" }}
                                         tickFormatter={(date) =>
                                             new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
                                         }
                                     />
-                                    <YAxis tick={{ fontSize: 12, fill: 'var(--foreground)' }} />
+                                    <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} />
                                     <Tooltip
                                         labelFormatter={(date) => new Date(date).toLocaleDateString()}
                                         formatter={(value: number, name: string) => [
@@ -721,11 +775,11 @@ export function TokenUsage() {
                                             name === "inputTokens" ? "Input Tokens" : "Output Tokens"
                                         ]}
                                         contentStyle={{
-                                            backgroundColor: 'var(--popover)',
-                                            border: '1px solid var(--border)',
-                                            borderRadius: '6px',
-                                            color: 'var(--popover-foreground)',
-                                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                            backgroundColor: "var(--popover)",
+                                            border: "1px solid var(--border)",
+                                            borderRadius: "6px",
+                                            color: "var(--popover-foreground)",
+                                            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
                                         }}
                                     />
                                     <Bar
