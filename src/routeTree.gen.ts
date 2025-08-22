@@ -9,8 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TokenUsageRouteImport } from './routes/token-usage'
+import { Route as DailyActivityRouteImport } from './routes/daily-activity'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TokenUsageRoute = TokenUsageRouteImport.update({
+  id: '/token-usage',
+  path: '/token-usage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DailyActivityRoute = DailyActivityRouteImport.update({
+  id: '/daily-activity',
+  path: '/daily-activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +31,50 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/daily-activity': typeof DailyActivityRoute
+  '/token-usage': typeof TokenUsageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/daily-activity': typeof DailyActivityRoute
+  '/token-usage': typeof TokenUsageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/daily-activity': typeof DailyActivityRoute
+  '/token-usage': typeof TokenUsageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/daily-activity' | '/token-usage'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/daily-activity' | '/token-usage'
+  id: '__root__' | '/' | '/daily-activity' | '/token-usage'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DailyActivityRoute: typeof DailyActivityRoute
+  TokenUsageRoute: typeof TokenUsageRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/token-usage': {
+      id: '/token-usage'
+      path: '/token-usage'
+      fullPath: '/token-usage'
+      preLoaderRoute: typeof TokenUsageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daily-activity': {
+      id: '/daily-activity'
+      path: '/daily-activity'
+      fullPath: '/daily-activity'
+      preLoaderRoute: typeof DailyActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DailyActivityRoute: DailyActivityRoute,
+  TokenUsageRoute: TokenUsageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

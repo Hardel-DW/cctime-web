@@ -15,7 +15,6 @@ export function SiteHeader() {
                 <div className="flex items-center gap-2">
                     <FilterBar />
                 </div>
-
             </div>
         </header>
     );

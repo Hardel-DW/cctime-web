@@ -44,8 +44,8 @@ export function ConversationTable({ data }: ConversationTableProps) {
                         </CardTitle>
                         <CardDescription>Latest conversation activity and session details</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm">
-                        View All
+                    <Button variant="outline" size="sm" asChild>
+                        <a href="/daily-activity">View All</a>
                     </Button>
                 </div>
             </CardHeader>

@@ -6,7 +6,7 @@ import { formatProjectName, getProjectNameFromPath } from "./project-utils";
 export const isoTimestampSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/, "Invalid ISO timestamp");
 
 export const usageDataSchema = z.object({
-    timestamp: isoTimestampSchema,
+    timestamp: isoTimestampSchema.optional(), // Allow missing timestamps
     cwd: z.string().optional(),
     message: z
         .object({
@@ -22,7 +22,10 @@ export const usageDataSchema = z.object({
             usage: z
                 .object({
                     input_tokens: z.number().optional(),
-                    output_tokens: z.number().optional()
+                    output_tokens: z.number().optional(),
+                    cache_creation_input_tokens: z.number().optional(),
+                    cache_read_input_tokens: z.number().optional(),
+                    service_tier: z.string().optional()
                 })
                 .optional(),
             model: z.string().optional()
@@ -31,6 +34,12 @@ export const usageDataSchema = z.object({
     costUSD: z.number().optional(),
     sessionId: z.string().optional(),
     isApiErrorMessage: z.boolean().optional()
+}).transform(data => {
+    // Provide fallback timestamp if missing
+    if (!data.timestamp) {
+        data.timestamp = new Date().toISOString();
+    }
+    return data;
 });
 
 export type UsageData = z.infer<typeof usageDataSchema>;

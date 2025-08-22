@@ -20,17 +20,16 @@ const data = {
         {
             title: "Dashboard",
             url: "/",
-            icon: BarChart3,
-            isActive: true
+            icon: BarChart3
         },
         {
             title: "Daily Activity",
-            url: "#",
+            url: "/daily-activity",
             icon: Calendar
         },
         {
             title: "Token Usage",
-            url: "#",
+            url: "/token-usage",
             icon: Coins
         },
         {
@@ -82,8 +81,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 href="https://github.com/claude-code/cctime"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2"
-                            >
+                                className="flex items-center gap-2">
                                 <Github className="size-4" />
                                 <span>GitHub</span>
                             </a>

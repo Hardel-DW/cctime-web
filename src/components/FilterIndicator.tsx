@@ -18,9 +18,18 @@ export function FilterIndicator() {
 
             {selectedProject && <Badge variant="secondary">Project: {selectedProject}</Badge>}
 
-            {startDate && <Badge variant="secondary">From: {new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(startDate))}</Badge>}
+            {startDate && (
+                <Badge variant="secondary">
+                    From:{" "}
+                    {new Intl.DateTimeFormat("fr-FR", { year: "numeric", month: "short", day: "numeric" }).format(new Date(startDate))}
+                </Badge>
+            )}
 
-            {endDate && <Badge variant="secondary">To: {new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(endDate))}</Badge>}
+            {endDate && (
+                <Badge variant="secondary">
+                    To: {new Intl.DateTimeFormat("fr-FR", { year: "numeric", month: "short", day: "numeric" }).format(new Date(endDate))}
+                </Badge>
+            )}
         </div>
     );
 }

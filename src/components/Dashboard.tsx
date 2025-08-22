@@ -1,8 +1,9 @@
+import { Bot, Copy, Check, Database, FolderOpen, TrendingUp, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { Bot, Copy, Database, FolderOpen, TrendingUp, User } from "lucide-react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { loadDashboardData } from "@/lib/data-service";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
@@ -14,53 +15,87 @@ import { ProjectChart } from "./charts/ProjectChart";
 import { FilterIndicator } from "./FilterIndicator";
 import { DirectorySelector } from "./SettingsPopover";
 import { StatsCards } from "./StatsCards";
-import React from "react";
+import { ShimmerBorder } from "./ui/ShimmerBorder";
 
 function WelcomeScreen() {
     const [customUsername, setCustomUsername] = React.useState(() => {
-        if (typeof window === 'undefined') return '';
-        return localStorage.getItem('claude-username') || '';
+        if (typeof window === "undefined") return "";
+        return localStorage.getItem("claude-username") || "";
     });
+    const [copiedStates, setCopiedStates] = React.useState<{ [key: string]: boolean }>({});
 
     const username = React.useMemo(() => {
         if (customUsername.trim()) return customUsername.trim();
 
         const platform = navigator.platform.toLowerCase();
-        if (platform.includes('win')) {
-            return 'Username';
+        if (platform.includes("win")) {
+            return "Username";
         } else {
-            return 'username';
+            return "username";
         }
     }, [customUsername]);
 
     const handleUsernameChange = (value: string) => {
         setCustomUsername(value);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('claude-username', value);
+        if (typeof window !== "undefined") {
+            localStorage.setItem("claude-username", value);
         }
     };
 
-    const copyToClipboard = async (text: string) => {
+    const copyToClipboard = async (text: string, id: string) => {
         try {
             await navigator.clipboard.writeText(text);
+            setCopiedStates(prev => ({ ...prev, [id]: true }));
+            setTimeout(() => {
+                setCopiedStates(prev => ({ ...prev, [id]: false }));
+            }, 2000);
         } catch (err) {
-            console.error('Failed to copy text: ', err);
+            console.error("Failed to copy text: ", err);
         }
     };
+
+    const CopyButton = ({ text, id, className = "" }: { text: string; id: string; className?: string }) => {
+        const isCopied = copiedStates[id];
+        return (
+            <Button
+                variant="ghost"
+                size="sm"
+                className={`h-6 w-6 p-0 transition-colors ${isCopied ? 'text-green-400 bg-green-500/10 hover:bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 dark:hover:bg-green-500/20' : ''} ${className}`}
+                onClick={() => copyToClipboard(text, id)}
+            >
+                {isCopied ? (
+                    <Check className="h-3 w-3 animate-in zoom-in-50 duration-200" />
+                ) : (
+                    <Copy className="h-3 w-3" />
+                )}
+            </Button>
+        );
+    };
+
     return (
         <div className="flex flex-1 items-center justify-center p-6">
-            <Card className="w-full max-w-2xl">
-                <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                        <Bot className="h-10 w-10 text-primary" />
+            <ShimmerBorder
+                className="w-full max-w-2xl p-6 border-zinc-900 border-2"
+                shimmerColor="rgba(255, 255, 255, 0.25)"
+                background="var(--card)"
+                borderRadius="0.75rem"
+                shimmerDuration="10s"
+                shimmerSize="2px"
+            >
+                <div className="text-center space-y-6">
+                    <div className="space-y-4">
+                        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+                            <Bot className="h-10 w-10 text-primary" />
+                        </div>
+                        <div className="space-y-2">
+                            <h1 className="text-3xl font-bold">Welcome to CCTime</h1>
+                            <p className="text-lg text-muted-foreground">Claude Code Conversation Analytics</p>
+                        </div>
                     </div>
-                    <CardTitle className="text-3xl">Welcome to CCTime</CardTitle>
-                    <CardDescription className="text-lg">Claude Code Conversation Analytics</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="text-center text-muted-foreground">
+
+                    <div className="text-muted-foreground space-y-4">
                         <p>To get started, please select your Claude data directory.</p>
-                        <div className="text-sm mt-3 space-y-2 text-left">
+                        <div className="text-sm space-y-2 text-left">
                             <div className="flex items-center justify-between gap-4">
                                 <p className="font-medium">Examples of Claude data paths:</p>
                                 <div className="flex items-center gap-2">
@@ -77,59 +112,38 @@ function WelcomeScreen() {
                                 <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
                                     <Badge variant="outline">Windows</Badge>
                                     <code className="text-sm font-mono flex-1">C:\Users\{username}\.claude</code>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-6 w-6 p-0"
-                                        onClick={() => copyToClipboard(`C:\\Users\\${username}\\.claude`)}
-                                    >
-                                        <Copy className="h-3 w-3" />
-                                    </Button>
+                                    <CopyButton text={`C:\\Users\\${username}\\.claude`} id="windows" />
                                 </div>
                                 <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
                                     <Badge variant="outline">macOS</Badge>
                                     <code className="text-sm font-mono flex-1">/Users/{username}/.claude</code>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-6 w-6 p-0"
-                                        onClick={() => copyToClipboard(`/Users/${username}/.claude`)}
-                                    >
-                                        <Copy className="h-3 w-3" />
-                                    </Button>
+                                    <CopyButton text={`/Users/${username}/.claude`} id="macos" />
                                 </div>
                                 <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
                                     <Badge variant="outline">Linux</Badge>
                                     <code className="text-sm font-mono flex-1">/home/{username.toLowerCase()}/.claude</code>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-6 w-6 p-0"
-                                        onClick={() => copyToClipboard(`/home/${username.toLowerCase()}/.claude`)}
-                                    >
-                                        <Copy className="h-3 w-3" />
-                                    </Button>
+                                    <CopyButton text={`/home/${username.toLowerCase()}/.claude`} id="linux" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-3">
-                        <Card className="text-center p-4">
+                        <div className="text-center p-4 rounded-lg bg-card/50 border">
                             <Database className="h-8 w-8 mx-auto mb-2 text-blue-600" />
                             <h3 className="font-semibold">Track Conversations</h3>
                             <p className="text-sm text-muted-foreground">Daily activity and session analytics</p>
-                        </Card>
-                        <Card className="text-center p-4">
+                        </div>
+                        <div className="text-center p-4 rounded-lg bg-card/50 border">
                             <TrendingUp className="h-8 w-8 mx-auto mb-2 text-green-600" />
                             <h3 className="font-semibold">Usage Insights</h3>
                             <p className="text-sm text-muted-foreground">Understand your coding patterns</p>
-                        </Card>
-                        <Card className="text-center p-4">
+                        </div>
+                        <div className="text-center p-4 rounded-lg bg-card/50 border">
                             <FolderOpen className="h-8 w-8 mx-auto mb-2 text-purple-600" />
                             <h3 className="font-semibold">Project Analysis</h3>
                             <p className="text-sm text-muted-foreground">Per-project activity breakdown</p>
-                        </Card>
+                        </div>
                     </div>
 
                     <div className="flex justify-center">
@@ -139,8 +153,8 @@ function WelcomeScreen() {
                     <div className="text-center text-xs text-muted-foreground">
                         <p>Requires Chrome, Edge, or another browser with File System Access API support</p>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </ShimmerBorder>
         </div>
     );
 }

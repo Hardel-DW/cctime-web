@@ -1,15 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Dashboard } from "@/components/Dashboard";
 import { SiteHeader } from "@/components/SiteHeader";
+import { TokenUsage } from "@/components/TokenUsage";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { BackgroundPattern } from "@/components/BackgroundPattern";
 
-export const Route = createFileRoute("/")({
-    component: IndexComponent
+export const Route = createFileRoute("/token-usage")({
+    component: TokenUsageComponent
 });
 
-export function IndexComponent() {
+export function TokenUsageComponent() {
     return (
         <SidebarProvider
             style={
@@ -20,12 +19,11 @@ export function IndexComponent() {
             }>
             <AppSidebar />
             <SidebarInset className="p-2 bg-sidebar">
-                <div className="flex flex-1 flex-col bg-background rounded-xl overflow-hidden relative">
-                    <BackgroundPattern />
+                <div className="flex flex-1 flex-col bg-background rounded-xl overflow-hidden">
                     <SiteHeader />
-                    <div className="flex flex-1 flex-col p-6 relative z-10">
+                    <div className="flex flex-1 flex-col p-6">
                         <div className="@container/main flex flex-1 flex-col">
-                            <Dashboard />
+                            <TokenUsage />
                         </div>
                     </div>
                 </div>
