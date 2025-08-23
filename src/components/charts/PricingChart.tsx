@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ResponsiveContainer, Line, LineChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface ModelPricingData {
@@ -16,7 +15,6 @@ interface ModelPricingData {
     cacheWriteMultiplier: number;
     cacheReadMultiplier: number;
     contextWindow: string;
-    tokensPerSecond: string;
     special?: string;
 }
 
@@ -24,38 +22,15 @@ interface PricingChartProps {
     data: ModelPricingData[];
 }
 
-interface PriceFilter {
-    id: string;
-    label: string;
-    color: string;
-    getValue: (model: ModelPricingData) => number;
-    enabled: boolean;
-}
-
 export function PricingChart({ data }: PricingChartProps) {
     const [selectedPriceTypes, setSelectedPriceTypes] = useState<string[]>(['input', 'output']);
 
     const togglePriceType = (priceType: string) => {
-        setSelectedPriceTypes(prev => 
+        setSelectedPriceTypes(prev =>
             prev.includes(priceType)
                 ? prev.filter(type => type !== priceType)
                 : [...prev, priceType]
         );
-    };
-
-    // Color scheme for different models
-    const getModelColor = (modelName: string) => {
-        const colors = {
-            "Claude Opus 4.1": "#8b5cf6",
-            "Claude Sonnet 4": "#3b82f6", 
-            "Claude Sonnet 4 (1M Context)": "#06b6d4",
-            "Claude 3.5 Sonnet": "#10b981",
-            "Claude 3.5 Haiku": "#84cc16",
-            "Claude 3 Opus": "#f59e0b",
-            "Claude 3 Sonnet": "#ef4444",
-            "Claude 3 Haiku": "#f97316"
-        };
-        return colors[modelName as keyof typeof colors] || "#6b7280";
     };
 
     // Price type definitions
@@ -75,10 +50,9 @@ export function PricingChart({ data }: PricingChartProps) {
             fullModelName: model.name,
             tier: model.tier,
             version: model.version,
-            contextWindow: model.contextWindow,
-            tokensPerSecond: model.tokensPerSecond
+            contextWindow: model.contextWindow
         };
-        
+
         priceTypes.forEach(priceType => {
             dataPoint[priceType.id] = priceType.getValue(model);
         });
@@ -87,7 +61,7 @@ export function PricingChart({ data }: PricingChartProps) {
     });
 
     const maxPrice = Math.max(
-        ...chartData.flatMap(item => 
+        ...chartData.flatMap(item =>
             priceTypes.map(priceType => item[priceType.id])
         )
     );
@@ -121,7 +95,7 @@ export function PricingChart({ data }: PricingChartProps) {
                                     checked={selectedPriceTypes.includes(priceType.id)}
                                     onCheckedChange={() => togglePriceType(priceType.id)}
                                 />
-                                <label 
+                                <label
                                     htmlFor={priceType.id}
                                     className="text-sm font-medium leading-none cursor-pointer"
                                 >
@@ -139,12 +113,12 @@ export function PricingChart({ data }: PricingChartProps) {
                 <div className="h-[500px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={chartData} margin={{ left: 60, right: 60, top: 20, bottom: 80 }}>
-                            <CartesianGrid 
-                                strokeDasharray="3 3" 
-                                stroke="var(--border)" 
+                            <CartesianGrid
+                                strokeDasharray="3 3"
+                                stroke="var(--border)"
                                 opacity={0.4}
                             />
-                            <XAxis 
+                            <XAxis
                                 dataKey="modelName"
                                 tick={{ fontSize: 10, fill: "var(--foreground)" }}
                                 tickLine={{ stroke: "var(--border)" }}
@@ -154,7 +128,7 @@ export function PricingChart({ data }: PricingChartProps) {
                                 height={80}
                                 interval={0}
                             />
-                            <YAxis 
+                            <YAxis
                                 tick={{ fontSize: 11, fill: "var(--foreground)" }}
                                 tickLine={{ stroke: "var(--border)" }}
                                 axisLine={{ stroke: "var(--border)" }}
@@ -162,14 +136,14 @@ export function PricingChart({ data }: PricingChartProps) {
                                 tickFormatter={(value) => `$${value}`}
                                 label={{ value: 'Price ($/MTok)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: 'var(--foreground)' } }}
                             />
-                            <Tooltip 
+                            <Tooltip
                                 contentStyle={{
                                     backgroundColor: 'var(--background)',
                                     border: '1px solid var(--border)',
                                     borderRadius: '8px',
                                     color: 'var(--foreground)'
                                 }}
-                                content={({ active, payload, label }) => {
+                                content={({ active, payload }) => {
                                     if (active && payload && payload.length > 0) {
                                         const data = payload[0].payload;
                                         return (
@@ -178,7 +152,6 @@ export function PricingChart({ data }: PricingChartProps) {
                                                 <p className="text-sm text-muted-foreground">Version: {data.version}</p>
                                                 <p className="text-sm text-muted-foreground">Tier: {data.tier}</p>
                                                 <p className="text-sm text-muted-foreground">Context: {data.contextWindow}</p>
-                                                <p className="text-sm text-muted-foreground">Speed: {data.tokensPerSecond} tok/s</p>
                                                 <div className="mt-2 space-y-1">
                                                     {payload.map((entry, index) => (
                                                         <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -208,8 +181,8 @@ export function PricingChart({ data }: PricingChartProps) {
                                     />
                                 );
                             })}
-                            <Legend 
-                                verticalAlign="bottom" 
+                            <Legend
+                                verticalAlign="bottom"
                                 height={36}
                                 iconType="line"
                                 wrapperStyle={{ paddingTop: '20px', color: 'var(--foreground)' }}

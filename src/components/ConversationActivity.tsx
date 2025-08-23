@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { loadDashboardData } from "@/lib/data-service";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { useFilterStore } from "@/lib/store";
 import type { DailyConversation } from "@/lib/types";
+import { DataStateWrapper } from "./DataStateWrapper";
 import { FilterIndicator } from "./FilterIndicator";
 
 export function ConversationActivity() {
@@ -41,50 +41,6 @@ export function ConversationActivity() {
         if (messages > 500) return <Badge variant="default">Medium</Badge>;
         return <Badge variant="secondary">Low</Badge>;
     };
-
-    if (!hasDirectoryHandle) {
-        return (
-            <div className="flex flex-1 items-center justify-center p-6">
-                <Card className="w-full max-w-md text-center">
-                    <CardContent className="pt-6">
-                        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                        <h3 className="text-lg font-semibold mb-2">No Directory Selected</h3>
-                        <p className="text-muted-foreground">Please select your Claude data directory to view conversation activity.</p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <div className="flex flex-1 items-center justify-center p-6">
-                <Card className="w-full max-w-md text-center">
-                    <CardContent className="pt-6">
-                        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Loading conversation activity...</p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex flex-1 items-center justify-center p-6">
-                <Card className="w-full max-w-md text-center">
-                    <CardContent className="pt-6">
-                        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-red-500" />
-                        <h3 className="text-lg font-semibold mb-2">Error Loading Data</h3>
-                        <p className="text-muted-foreground mb-4">Failed to load conversation activity data.</p>
-                        <Button variant="outline" onClick={() => window.location.reload()}>
-                            Try Again
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
 
     // Use ALL daily conversations data (not limited to 10)
     const conversationData = data?.conversations || [];
@@ -142,7 +98,14 @@ export function ConversationActivity() {
     };
 
     return (
-        <div className="space-y-6">
+        <DataStateWrapper
+            isLoading={isLoading}
+            error={error}
+            loadingMessage="Loading conversation activity..."
+            noDirectoryIcon={<MessageSquare className="h-12 w-12" />}
+            noDirectoryMessage="Please select your Claude data directory to view conversation activity."
+        >
+            <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold">Daily Activity</h1>
@@ -228,6 +191,7 @@ export function ConversationActivity() {
                     )}
                 </CardContent>
             </Card>
-        </div>
+            </div>
+        </DataStateWrapper>
     );
 }

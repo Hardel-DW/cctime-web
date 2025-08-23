@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Bot, Calendar, Check, Clock, Copy, MessageSquare, User } from "lucide-react";
 import React from "react";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { loadDashboardData } from "@/lib/data-service";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { useFilterStore } from "@/lib/store";
+import { DataStateWrapper } from "./DataStateWrapper";
 
 interface MessageData {
     timestamp: string;
@@ -31,7 +33,7 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
     const router = useRouter();
     const { dataRefreshKey } = useFilterStore();
     const hasDirectoryHandle = getCachedDirectoryHandle() !== null;
-    const [copiedStates, setCopiedStates] = React.useState<{ [key: string]: boolean }>({});
+    const { copyToClipboard, isCopied } = useCopyToClipboard();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["session-details", sessionId, dataRefreshKey],
@@ -111,68 +113,6 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
         };
     }, [data, sessionId]);
 
-    const copyToClipboard = async (text: string, id: string) => {
-        try {
-            await navigator.clipboard.writeText(text);
-            setCopiedStates((prev) => ({ ...prev, [id]: true }));
-            setTimeout(() => {
-                setCopiedStates((prev) => ({ ...prev, [id]: false }));
-            }, 2000);
-        } catch (err) {
-            console.error("Failed to copy text: ", err);
-        }
-    };
-
-    if (!hasDirectoryHandle) {
-        return (
-            <div className="flex flex-1 items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                    <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <h2 className="text-xl font-semibold mb-2">No Directory Selected</h2>
-                    <p>Please select your Claude data directory to view session details.</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="sm" onClick={() => router.history.back()}>
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back
-                    </Button>
-                    <div className="h-8 w-48 bg-muted rounded animate-pulse"></div>
-                </div>
-
-                <Card className="animate-pulse">
-                    <CardHeader>
-                        <div className="h-6 w-1/3 bg-muted rounded"></div>
-                        <div className="h-4 w-1/2 bg-muted rounded"></div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {Array.from({ length: 3 }).map((_, i) => (
-                                <div key={`loading-skeleton-${i.toString()}`} className="h-24 bg-muted rounded"></div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex flex-1 items-center justify-center">
-                <div className="text-center text-red-600">
-                    <h2 className="text-2xl font-bold mb-2">Error loading session</h2>
-                    <p>{error instanceof Error ? error.message : "Unknown error"}</p>
-                </div>
-            </div>
-        );
-    }
 
     if (!sessionData) {
         return (
@@ -199,7 +139,14 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
         sessionData.duration < 60 ? `${sessionData.duration}m` : `${Math.floor(sessionData.duration / 60)}h ${sessionData.duration % 60}m`;
 
     return (
-        <div className="space-y-6">
+        <DataStateWrapper
+            isLoading={isLoading}
+            error={error}
+            loadingMessage="Loading session details..."
+            noDirectoryIcon={<Bot className="h-12 w-12" />}
+            noDirectoryMessage="Please select your Claude data directory to view session details."
+        >
+            <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="sm" onClick={() => router.history.back()}>
@@ -269,10 +216,9 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
                         <div key={`${message.timestamp}-${index}`} className="space-y-3">
                             <div className={`flex gap-3 ${message.role === "assistant" ? "justify-start" : "justify-end"}`}>
                                 <div className={`max-w-3xl space-y-2 ${message.role === "assistant" ? "order-2" : ""}`}>
-                                    <div className="flex items-center gap-2">
+                                    <div className={`flex items-center gap-2 ${message.role === "user" ? "justify-end" : ""}`}>
                                         {message.role === "assistant" ? (
                                             <div className="flex items-center gap-2">
-                                                <Bot className="h-4 w-4" />
                                                 <span className="text-sm font-semibold">Claude</span>
                                                 {message.model && (
                                                     <Badge variant="outline" className="text-xs">
@@ -282,7 +228,6 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
                                             </div>
                                         ) : (
                                             <div className="flex items-center gap-2">
-                                                <User className="h-4 w-4" />
                                                 <span className="text-sm font-semibold">You</span>
                                             </div>
                                         )}
@@ -302,7 +247,7 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
                                                     size="sm"
                                                     className="h-6 w-6 p-0 flex-shrink-0"
                                                     onClick={() => copyToClipboard(message.content, `message-${index}`)}>
-                                                    {copiedStates[`message-${index}`] ? (
+                                                    {isCopied(`message-${index}`) ? (
                                                         <Check className="h-3 w-3 text-green-500" />
                                                     ) : (
                                                         <Copy className="h-3 w-3" />
@@ -330,13 +275,13 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
                                 </div>
 
                                 {message.role === "assistant" && (
-                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 order-1">
+                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 order-1 self-start mt-1">
                                         <Bot className="h-4 w-4" />
                                     </div>
                                 )}
 
                                 {message.role === "user" && (
-                                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 self-start mt-1">
                                         <User className="h-4 w-4" />
                                     </div>
                                 )}
@@ -347,6 +292,7 @@ export function SessionDetails({ sessionId }: SessionDetailsProps) {
                     ))}
                 </CardContent>
             </Card>
-        </div>
+            </div>
+        </DataStateWrapper>
     );
 }

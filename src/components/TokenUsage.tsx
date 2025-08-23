@@ -10,6 +10,7 @@ import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { formatProjectName } from "@/lib/project-utils";
 import { useFilterStore } from "@/lib/store";
 import { loadAllUsageData } from "@/lib/web-data-loader";
+import { DataStateWrapper } from "./DataStateWrapper";
 import { FilterIndicator } from "./FilterIndicator";
 
 export function TokenUsage() {
@@ -25,47 +26,6 @@ export function TokenUsage() {
         queryFn: () => loadAllUsageData(),
         enabled: hasDirectoryHandle
     });
-
-    if (!hasDirectoryHandle) {
-        return (
-            <div className="flex flex-1 items-center justify-center p-6">
-                <Card className="w-full max-w-md text-center">
-                    <CardContent className="pt-6">
-                        <Coins className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                        <h3 className="text-lg font-semibold mb-2">No Directory Selected</h3>
-                        <p className="text-muted-foreground">Please select your Claude data directory to view token usage.</p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <div className="flex flex-1 items-center justify-center p-6">
-                <Card className="w-full max-w-md text-center">
-                    <CardContent className="pt-6">
-                        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Loading token usage data...</p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex flex-1 items-center justify-center p-6">
-                <Card className="w-full max-w-md text-center">
-                    <CardContent className="pt-6">
-                        <Coins className="h-12 w-12 mx-auto mb-4 text-red-500" />
-                        <h3 className="text-lg font-semibold mb-2">Error Loading Data</h3>
-                        <p className="text-muted-foreground mb-4">Failed to load token usage data.</p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
 
     // Apply filters
     const filteredEntries = (allEntries || []).filter((entry) => {
@@ -354,7 +314,14 @@ export function TokenUsage() {
     ].filter((item) => item.value > 0);
 
     return (
-        <div className="space-y-6">
+        <DataStateWrapper
+            isLoading={isLoading}
+            error={error}
+            loadingMessage="Loading token usage data..."
+            noDirectoryIcon={<Coins className="h-12 w-12" />}
+            noDirectoryMessage="Please select your Claude data directory to view token usage analytics."
+        >
+            <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold">Token Usage</h1>
@@ -810,6 +777,7 @@ export function TokenUsage() {
                     </Card>
                 </TabsContent>
             </Tabs>
-        </div>
+            </div>
+        </DataStateWrapper>
     );
 }

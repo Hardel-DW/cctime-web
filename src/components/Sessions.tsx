@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { loadDashboardData } from "@/lib/data-service";
 import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { useFilterStore } from "@/lib/store";
+import { DataStateWrapper } from "./DataStateWrapper";
 import { FilterIndicator } from "./FilterIndicator";
 
 interface SessionData {
@@ -118,57 +119,14 @@ export function Sessions() {
         });
     };
 
-    if (!hasDirectoryHandle) {
-        return (
-            <div className="flex flex-1 items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                    <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <h2 className="text-xl font-semibold mb-2">No Directory Selected</h2>
-                    <p>Please select your Claude data directory to view sessions.</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <div className="space-y-6">
-                <div className="space-y-3">
-                    <h1 className="text-3xl font-bold tracking-tight">Sessions</h1>
-                    <p className="text-muted-foreground">Loading your session data...</p>
-                </div>
-
-                <div className="space-y-4">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                        <Card key={`session-skeleton-${i.toString()}`} className="animate-pulse">
-                            <CardHeader>
-                                <div className="h-6 bg-muted rounded w-1/4"></div>
-                                <div className="h-4 bg-muted rounded w-1/3"></div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-3">
-                                    {Array.from({ length: 2 }).map((_, j) => (
-                                        <div key={`session-card-skeleton-${j.toString()}`} className="h-16 bg-muted rounded"></div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex flex-1 items-center justify-center">
-                <div className="text-center text-red-600">
-                    <h2 className="text-2xl font-bold mb-2">Error loading sessions</h2>
-                    <p>{error instanceof Error ? error.message : "Unknown error"}</p>
-                </div>
-            </div>
-        );
-    }
+    return (
+        <DataStateWrapper
+            isLoading={isLoading}
+            error={error}
+            loadingMessage="Loading your session data..."
+            noDirectoryIcon={<Bot className="h-12 w-12" />}
+            noDirectoryMessage="Please select your Claude data directory to view sessions."
+        >
 
     return (
         <div className="space-y-6">
@@ -300,5 +258,6 @@ export function Sessions() {
                 </div>
             )}
         </div>
+        </DataStateWrapper>
     );
 }
