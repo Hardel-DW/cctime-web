@@ -89,12 +89,6 @@ export function TokenUsage() {
         return true;
     });
 
-    console.log("=== TOKEN USAGE DEBUG ===");
-    console.log("Has directory handle:", hasDirectoryHandle);
-    console.log("Raw entries:", allEntries?.length);
-    console.log("Filtered entries:", filteredEntries.length);
-    console.log("Filter state:", { selectedProject, startDate, endDate });
-
     // Filter entries with token usage data (including cache tokens)
     const tokenEntries = filteredEntries.filter((entry) => {
         const usage = entry.message?.usage;
@@ -108,18 +102,23 @@ export function TokenUsage() {
         );
     });
 
-    console.log("Token entries found:", tokenEntries.length);
-    console.log("Sample token entries:", tokenEntries.slice(0, 3));
-
-    // Calculate estimated cost if not provided
-    const calculateEstimatedCost = (model: string, inputTokens: number, outputTokens: number): number => {
-        // Approximate pricing for Claude models (per 1M tokens)
+    // Calculate estimated cost if not provided - Updated 2025 pricing
+    const calculateEstimatedCost = (
+        model: string,
+        baseInputTokens: number,
+        outputTokens: number,
+        cacheCreationTokens: number,
+        cacheReadTokens: number
+    ): number => {
+        // Updated 2025 pricing for Claude models (per 1M tokens)
         const pricing: Record<string, { input: number; output: number }> = {
-            "claude-sonnet-4": { input: 15, output: 75 },
+            "claude-sonnet-4": { input: 3, output: 15 },
+            "claude-opus-4": { input: 15, output: 75 },
             "claude-3-5-sonnet": { input: 3, output: 15 },
             "claude-3-opus": { input: 15, output: 75 },
             "claude-3-sonnet": { input: 3, output: 15 },
-            "claude-3-haiku": { input: 0.25, output: 1.25 }
+            "claude-3-haiku": { input: 0.25, output: 1.25 },
+            "claude-3-5-haiku": { input: 0.8, output: 4 }
         };
 
         // Find matching model pricing
@@ -136,7 +135,13 @@ export function TokenUsage() {
             modelPricing = pricing["claude-3-5-sonnet"];
         }
 
-        return (inputTokens * modelPricing.input + outputTokens * modelPricing.output) / 1000000;
+        // Calculate cost with proper cache pricing
+        const baseInputCost = (baseInputTokens * modelPricing.input) / 1000000;
+        const outputCost = (outputTokens * modelPricing.output) / 1000000;
+        const cacheWriteCost = (cacheCreationTokens * modelPricing.input * 1.25) / 1000000; // 25% premium
+        const cacheReadCost = (cacheReadTokens * modelPricing.input * 0.1) / 1000000; // 90% discount
+
+        return baseInputCost + outputCost + cacheWriteCost + cacheReadCost;
     };
 
     // Calculate comprehensive statistics with enhanced cache handling
@@ -190,10 +195,13 @@ export function TokenUsage() {
             const ephemeral5mTokens = usage?.cache_creation?.ephemeral_5m_input_tokens || 0;
             const ephemeral1hTokens = usage?.cache_creation?.ephemeral_1h_input_tokens || 0;
 
-            const inputTokens = baseInputTokens + cacheCreationTokens + cacheReadTokens;
             const outputTokens = usage?.output_tokens || 0;
             const model = entry.message?.model || "unknown";
-            const cost = entry.costUSD || calculateEstimatedCost(model, inputTokens, outputTokens);
+            const cost =
+                entry.costUSD || calculateEstimatedCost(model, baseInputTokens, outputTokens, cacheCreationTokens, cacheReadTokens);
+
+            // For display purposes, keep total input tokens for compatibility
+            const inputTokens = baseInputTokens + cacheCreationTokens + cacheReadTokens;
 
             acc.totalInputTokens += inputTokens;
             acc.totalOutputTokens += outputTokens;
@@ -380,7 +388,7 @@ export function TokenUsage() {
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">${stats.totalCost.toFixed(4)}</div>
+                        <div className="text-2xl font-bold">${stats.totalCost.toFixed(2)}</div>
                         <p className="text-xs text-muted-foreground">${avgCostPerMessage.toFixed(6)}/msg</p>
                     </CardContent>
                 </Card>
@@ -465,7 +473,7 @@ export function TokenUsage() {
                                                     <Cell
                                                         key={entry.name}
                                                         fill={entry.fill}
-                                                        stroke="hsl(var(--background))"
+                                                        stroke="var(--background)"
                                                         strokeWidth={2}
                                                     />
                                                 ))}
@@ -573,7 +581,7 @@ export function TokenUsage() {
                                                     <Cell
                                                         key={entry.name}
                                                         fill={entry.fill}
-                                                        stroke="hsl(var(--background))"
+                                                        stroke="var(--background)"
                                                         strokeWidth={2}
                                                     />
                                                 ))}

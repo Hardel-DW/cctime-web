@@ -66,18 +66,18 @@ export function DailyChart({ data }: DailyChartProps) {
                             </defs>
                             <XAxis
                                 dataKey="date"
-                                tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                                tick={{ fontSize: 12, fill: "var(--foreground)" }}
                                 tickLine={false}
                                 axisLine={false}
                             />
-                            <YAxis tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }} tickLine={false} axisLine={false} />
+                            <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
                             <ChartTooltip
                                 content={<ChartTooltipContent />}
                                 contentStyle={{
-                                    backgroundColor: "hsl(var(--background))",
-                                    border: "1px solid hsl(var(--border))",
+                                    backgroundColor: "var(--background)",
+                                    border: "1px solid var(--border)",
                                     borderRadius: "var(--radius)",
-                                    color: "hsl(var(--foreground))"
+                                    color: "var(--foreground)"
                                 }}
                             />
                             <Area

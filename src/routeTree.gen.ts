@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TokenUsageRouteImport } from './routes/token-usage'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as SessionDetailsRouteImport } from './routes/session-details'
+import { Route as PricesRouteImport } from './routes/prices'
 import { Route as DailyActivityRouteImport } from './routes/daily-activity'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -30,6 +31,11 @@ const SessionDetailsRoute = SessionDetailsRouteImport.update({
   path: '/session-details',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricesRoute = PricesRouteImport.update({
+  id: '/prices',
+  path: '/prices',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DailyActivityRoute = DailyActivityRouteImport.update({
   id: '/daily-activity',
   path: '/daily-activity',
@@ -44,6 +50,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily-activity': typeof DailyActivityRoute
+  '/prices': typeof PricesRoute
   '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
   '/token-usage': typeof TokenUsageRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily-activity': typeof DailyActivityRoute
+  '/prices': typeof PricesRoute
   '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
   '/token-usage': typeof TokenUsageRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daily-activity': typeof DailyActivityRoute
+  '/prices': typeof PricesRoute
   '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
   '/token-usage': typeof TokenUsageRoute
@@ -68,6 +77,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/daily-activity'
+    | '/prices'
     | '/session-details'
     | '/sessions'
     | '/token-usage'
@@ -75,6 +85,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/daily-activity'
+    | '/prices'
     | '/session-details'
     | '/sessions'
     | '/token-usage'
@@ -82,6 +93,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/daily-activity'
+    | '/prices'
     | '/session-details'
     | '/sessions'
     | '/token-usage'
@@ -90,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyActivityRoute: typeof DailyActivityRoute
+  PricesRoute: typeof PricesRoute
   SessionDetailsRoute: typeof SessionDetailsRoute
   SessionsRoute: typeof SessionsRoute
   TokenUsageRoute: typeof TokenUsageRoute
@@ -118,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SessionDetailsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prices': {
+      id: '/prices'
+      path: '/prices'
+      fullPath: '/prices'
+      preLoaderRoute: typeof PricesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/daily-activity': {
       id: '/daily-activity'
       path: '/daily-activity'
@@ -138,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyActivityRoute: DailyActivityRoute,
+  PricesRoute: PricesRoute,
   SessionDetailsRoute: SessionDetailsRoute,
   SessionsRoute: SessionsRoute,
   TokenUsageRoute: TokenUsageRoute,

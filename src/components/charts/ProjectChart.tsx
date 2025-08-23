@@ -54,7 +54,7 @@ export function ProjectChart({ data }: ProjectChartProps) {
                         <PieChart>
                             <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={100} paddingAngle={3} dataKey="value">
                                 {chartData.map((entry) => (
-                                    <Cell key={entry.name} fill={entry.color} stroke="hsl(var(--background))" strokeWidth={2} />
+                                    <Cell key={entry.name} fill={entry.color} stroke="var(--background)" strokeWidth={2} />
                                 ))}
                             </Pie>
                             <ChartTooltip

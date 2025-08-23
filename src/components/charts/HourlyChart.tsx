@@ -53,20 +53,20 @@ export function HourlyChart({ data }: HourlyChartProps) {
                         <BarChart data={chartData}>
                             <XAxis
                                 dataKey="hour"
-                                tick={{ fontSize: 11, fill: "hsl(var(--foreground))" }}
+                                tick={{ fontSize: 11, fill: "var(--foreground)" }}
                                 tickLine={false}
                                 axisLine={false}
                                 interval={1}
                             />
-                            <YAxis tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }} tickLine={false} axisLine={false} />
+                            <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
                             <ChartTooltip
                                 content={<ChartTooltipContent />}
                                 labelFormatter={(label) => `Time: ${label}`}
                                 contentStyle={{
-                                    backgroundColor: "hsl(var(--background))",
-                                    border: "1px solid hsl(var(--border))",
+                                    backgroundColor: "var(--background)",
+                                    border: "1px solid var(--border)",
                                     borderRadius: "var(--radius)",
-                                    color: "hsl(var(--foreground))"
+                                    color: "var(--foreground)"
                                 }}
                             />
                             <Bar

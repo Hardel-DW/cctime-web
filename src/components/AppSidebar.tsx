@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Calendar, Coins, FolderOpen, Github, Timer, TrendingUp } from "lucide-react";
+import { BarChart3, Calendar, Coins, DollarSign, FolderOpen, Github, Timer, TrendingUp } from "lucide-react";
 import type * as React from "react";
 
 import { NavMain } from "@/components/NavMain";
@@ -41,6 +41,11 @@ const data = {
             title: "Sessions",
             url: "/sessions",
             icon: Timer
+        },
+        {
+            title: "Prices",
+            url: "/prices",
+            icon: DollarSign
         },
         {
             title: "Analytics",
