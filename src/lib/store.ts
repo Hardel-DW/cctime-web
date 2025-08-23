@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Project } from "./web-data-loader";
+import type { Project } from "./models/ClaudeDataManager";
 
 export interface FilterState {
     // Filtres
@@ -15,7 +15,10 @@ export interface FilterState {
 
     // Settings
     claudePath: string | null;
+    directoryHandle: any;
     setClaudePath: (path: string | null) => void;
+    setDirectoryHandle: (handle: any) => void;
+    clearDirectoryHandle: () => void;
 
     // Data refresh
     dataRefreshKey: number;
@@ -33,6 +36,7 @@ export const useFilterStore = create<FilterState>((set, get) => ({
     startDate: null,
     endDate: null,
     claudePath: null,
+    directoryHandle: null,
     dataRefreshKey: 0,
     projects: [],
     isLoadingProjects: false,
@@ -50,19 +54,31 @@ export const useFilterStore = create<FilterState>((set, get) => ({
 
     // Settings
     setClaudePath: (path) => set({ claudePath: path, dataRefreshKey: Date.now(), projects: [] }),
+    setDirectoryHandle: (handle) => set({ 
+        directoryHandle: handle, 
+        claudePath: handle?.name || "Directory selected",
+        dataRefreshKey: Date.now(), 
+        projects: [] 
+    }),
+    clearDirectoryHandle: () => set({ 
+        directoryHandle: null, 
+        claudePath: null, 
+        dataRefreshKey: Date.now(), 
+        projects: [] 
+    }),
 
     // Data refresh
     refreshData: () => set((state) => ({ dataRefreshKey: state.dataRefreshKey + 1 })),
 
     // Projects
     loadProjects: async () => {
-        const { projects, isLoadingProjects } = get();
-        if (projects.length > 0 || isLoadingProjects) return;
+        const { projects, isLoadingProjects, directoryHandle } = get();
+        if (projects.length > 0 || isLoadingProjects || !directoryHandle) return;
 
         set({ isLoadingProjects: true });
         try {
-            const { loadProjectsFromDirectory } = await import("./web-data-loader");
-            const projectsData = await loadProjectsFromDirectory();
+            const { ClaudeDataManager } = await import("./models/ClaudeDataManager");
+            const projectsData = await ClaudeDataManager.loadProjectsFromDirectory(directoryHandle);
             set({ projects: projectsData, isLoadingProjects: false });
         } catch (error) {
             console.error("Failed to load projects:", error);

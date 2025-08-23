@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { getCachedDirectoryHandle } from "@/lib/directory-storage";
+import { useFilterStore } from "@/lib/store";
 
 interface DataStateWrapperProps {
     isLoading: boolean;
@@ -19,9 +19,9 @@ export function DataStateWrapper({
     noDirectoryMessage,
     children
 }: DataStateWrapperProps) {
-    const hasDirectoryHandle = getCachedDirectoryHandle() !== null;
+    const { directoryHandle } = useFilterStore();
 
-    if (!hasDirectoryHandle) {
+    if (!directoryHandle !== null) {
         return (
             <div className="flex flex-1 items-center justify-center p-6">
                 <Card className="w-full max-w-md text-center">

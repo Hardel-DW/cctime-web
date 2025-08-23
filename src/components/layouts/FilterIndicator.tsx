@@ -5,8 +5,7 @@ import { useFilterStore } from "@/lib/store";
 
 export function FilterIndicator() {
     const { selectedProject, startDate, endDate } = useFilterStore();
-    const hasFilters = selectedProject || startDate || endDate;
-    if (!hasFilters) return null;
+    if (!(selectedProject || startDate || endDate)) return null;
 
     return (
         <div className="flex flex-wrap items-center gap-2 text-sm">

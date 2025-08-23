@@ -5,11 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import type { HourlyActivity } from "@/lib/types";
 
-interface HourlyChartProps {
-    data: HourlyActivity[];
-}
-
-export function HourlyChart({ data }: HourlyChartProps) {
+export function HourlyChart({ data }: { data: HourlyActivity[] }) {
     const chartData = data.map((hour) => ({
         hour: `${hour.hour.toString().padStart(2, "0")}:00`,
         messages: hour.messageCount,

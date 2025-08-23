@@ -1,11 +1,16 @@
-export interface DailyConversation {
-    date: string;
-    firstMessage: Date;
-    lastMessage: Date;
-    conversationTime: string;
-    messages: number;
-    sessions: number;
-    sessionIds: string[];
+// ===== CORE DATA TYPES =====
+// These are the fundamental data structures from the JSONL files
+
+export interface UsageStats {
+    input_tokens?: number;
+    output_tokens?: number;
+    cache_creation_input_tokens?: number;
+    cache_read_input_tokens?: number;
+    service_tier?: string;
+    cache_creation?: {
+        ephemeral_5m_input_tokens?: number;
+        ephemeral_1h_input_tokens?: number;
+    };
 }
 
 export interface UsageData {
@@ -17,18 +22,25 @@ export interface UsageData {
             text?: string;
         }>;
         role?: string;
-        usage?: {
-            input_tokens?: number;
-            output_tokens?: number;
-            cache_creation_input_tokens?: number;
-            cache_read_input_tokens?: number;
-            service_tier?: string;
-        };
+        usage?: UsageStats;
         model?: string;
     };
     costUSD?: number;
     sessionId?: string;
     isApiErrorMessage?: boolean;
+}
+
+// ===== LEGACY DASHBOARD TYPES =====
+// These are for the existing dashboard components that haven't been migrated yet
+
+export interface DailyConversation {
+    date: string;
+    firstMessage: Date;
+    lastMessage: Date;
+    conversationTime: string;
+    messages: number;
+    sessions: number;
+    sessionIds: string[];
 }
 
 export interface HourlyActivity {
@@ -60,7 +72,7 @@ export interface UserToUserGap {
 
 export interface DashboardData {
     conversations: DailyConversation[];
-    allEntries: import("./web-data-loader").UsageData[];
+    allEntries: UsageData[];
     hourlyActivity: HourlyActivity[];
     projectActivity: ProjectActivity[];
     sessionDetails: SessionDetail[];

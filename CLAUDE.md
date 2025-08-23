@@ -1,27 +1,72 @@
-Bien sûr, voici le tableau récupéré de l'image :
+Structure du projets :
 
-| Date       | Models     | Input      | Output        | Cache Create   | Cache Read      | Total Tokens    | Cost (USD)  |
-| :--------- | :--------- | :--------- | :------------ | :------------- | :-------------- | :-------------- | :---------- |
-| 2025-07-14 | - sonnet-4 | 39         | 258           | 18,357         | 113,133         | 131,787         | $0.11       |
-| 2025-07-23 | - sonnet-4 | 394        | 17,647        | 947,980        | 10,412,751      | 11,378,692      | $6.94       |
-| 2025-07-24 | - sonnet-4 | 8,922      | 75,410        | 886,388        | 15,153,409      | 16,124,129      | $9.03       |
-| 2025-07-25 | - sonnet-4 | 279        | 31,314        | 696,558        | 9,009,409       | 9,737,560       | $5.79       |
-| 2025-07-26 | - sonnet-4 | 1,610      | 77,982        | 1,751,031      | 34,297,313      | 36,127,936      | $18.03      |
-| 2025-07-27 | - sonnet-4 | 806        | 39,409        | 479,501        | 12,750,629      | 13,270,345      | $6.22       |
-| 2025-07-28 | - sonnet-4 | 2,046      | 26,173        | 679,087        | 10,069,870      | 10,777,176      | $5.97       |
-| 2025-07-30 | - sonnet-4 | 3,383      | 73,728        | 1,025,601      | 28,270,509      | 29,373,221      | $13.44      |
-| 2025-07-31 | - sonnet-4 | 5,869      | 166,915       | 2,301,368      | 54,635,331      | 57,109,483      | $27.54      |
-| 2025-08-01 | - sonnet-4 | 2,440      | 88,196        | 1,418,074      | 31,973,108      | 33,481,818      | $16.24      |
-| 2025-08-02 | - sonnet-4 | 317        | 29,707        | 889,965        | 8,339,199       | 9,259,188       | $6.29       |
-| 2025-08-03 | - sonnet-4 | 532        | 37,221        | 647,966        | 16,957,071      | 17,642,790      | $8.08       |
-| 2025-08-04 | - sonnet-4 | 347        | 15,064        | 502,958        | 5,289,410       | 5,807,779       | $3.70       |
-| 2025-08-05 | - sonnet-4 | 6,804      | 135,178       | 2,220,458      | 78,812,369      | 81,174,809      | $34.02      |
-| 2025-08-06 | - sonnet-4 | 882        | 61,587        | 814,139        | 28,902,772      | 29,779,380      | $12.65      |
-| 2025-08-07 | - sonnet-4 | 450        | 25,054        | 960,162        | 14,973,860      | 15,959,526      | $8.47       |
-| 2025-08-08 | - sonnet-4 | 3,670      | 60,748        | 862,744        | 14,045,524      | 14,972,686      | $8.37       |
-| 2025-08-09 | - sonnet-4 | 8,371      | 43,854        | 750,626        | 28,305,666      | 29,108,517      | $11.99      |
-| 2025-08-10 | - sonnet-4 | 5,613      | 95,206        | 1,098,798      | 57,205,293      | 58,396,902      | $22.70      |
-| 2025-08-11 | - sonnet-4 | 3,473      | 163,804       | 2,711,633      | 50,587,106      | 53,465,376      | $27.80      |
-| 2025-08-12 | - sonnet-4 | 699        | 22,984        | 963,412        | 13,353,878      | 14,340,973      | $7.97       |
-| 2025-08-22 | - sonnet-4 | 963        | 70,615        | 1,235,634      | 29,432,415      | 30,739,627      | $14.53      |
-| **Total**  |            | **57,909** | **1,357,300** | **23,854,352** | **552,890,100** | **578,159,700** | **$275.85** |
+- public/ -> contient les fichiers statiques (images)
+- src/ -> contient le code source
+
+Structure des sources :
+
+- assets/ -> contient les fichiers statiques (images)
+- components/ -> contient les composants
+- hooks/ -> contient les hooks reacts
+- lib/ -> contient les fichiers utilitaires et qui manipules les données
+- routes/ -> contient les routes de l'application en Tanstack Router
+
+- main.tsx -> point d'entrée de l'application avec Root et App
+- App.tsx -> Contient l'initialisation de Tanstack Router et de la Query Client
+- global.css -> contient les styles globaux de l'application. Utilise Tailwind
+  CSS 4
+- routeTree.gen.ts -> Fichier auto-généré par Tanstack Router contenant les
+  routes de l'application
+- vite-env.d.ts -> contient les types de l'application
+
+Structures du dossier components :
+
+- charts/ -> Contient un dossier par routes. Contient les composants de recharts
+  qui sont utilisés dans l'application a chaque fois qu'ont veut afficher un
+  graphique ou créera un component, la logique TS spécifique seras présent dans
+  le composant.
+- ui/ -> Contient les composants primitives de shadcn/ui et certains composants
+  personnalisés. (Que des primitives)
+
+Structures du dossier libs :
+
+- data/ -> Contient des JSON notament Sidebar, les prix des modéles Claude des
+  données statiques.
+- models/ -> Contient l'orientés objets qui manipulents les données JSONL de
+  claude.
+- types/ -> Contient les types de l'application.
+- store.ts -> Contient les données primitives trouver dans claude.
+- utils.ts -> Contient notament cn.
+
+Processus :
+
+- Ont récupére les données du dossier que l'utilisateur a sélectionné dans le
+  store comme primitives sans faire de modification dessus ou trés peu.
+- Ont utilise la logique orientés objets pour manipuler les données.
+- Ont créer une routes avec le dossiers routes de Tanstack Router.
+- Ont créer un composant pour chaque route. (Ces composants ne doivent contenir
+  strictement que des hooks ou des composants pas de logique TS)
+- Pour chaque graphique, ont créer un composant dans le dossier charts/ et on
+  utilise recharts pour afficher le graphique. Ce fichier auras des logiques TS
+  spécifique.
+
+Régles :
+
+- Pas de redondance de code.
+- Chaque methodes dans les classes doivent être pensés pour être réutilisable.
+- Les methodes doivent faire moins de 10 lignes de code et doivent faire un truc
+  et correctement.
+- Ont évites les finalités dans les classes. Ont préféres mettre la logique
+  dédiés dans les composants de charts.
+- Ont évite de faire des codes surperflux.
+- Ont évite le statique dans les classes exepters pour les design patterns.
+- Pas de support de Legacy ou de Deprecated.
+- Une logique simple.
+
+Ont veut déplacer la logique liés a chaque charts dans sont component chart a
+lui. Et pas mettre dans le composant mére.
+
+Ont veut que les composants de chaque routes ConversationActivity Dashboard
+SessionDetails Prices Sessions TokenUsage soit a terme fusionnés dans le
+component du dossier routes, mais pour cela il faut qu'il y est que des
+composant et des hooks. Pas de logique TS.

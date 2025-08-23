@@ -6,12 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import type { DailyConversation } from "@/lib/types";
 
-interface DailyChartProps {
-    data: DailyConversation[];
-}
-
-export function DailyChart({ data }: DailyChartProps) {
-    // Prepare data for chart (reverse to show chronological order)
+export function DailyChart({ data }: { data: DailyConversation[] }) {
     const chartData = data
         .slice()
         .reverse()

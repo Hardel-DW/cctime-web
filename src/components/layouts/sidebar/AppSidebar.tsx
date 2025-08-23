@@ -1,34 +1,9 @@
-import { BarChart3, Calendar, Coins, DollarSign, FolderOpen, Github, Timer, TrendingUp } from "lucide-react";
+import { Github, Timer } from "lucide-react";
 import type React from "react";
-
-import { NavMain } from "@/components/NavMain";
-import { SettingsPopover } from "@/components/SettingsPopover";
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem
-} from "@/components/ui/sidebar";
+import { NavMain } from "@/components/layouts/sidebar/NavMain";
+import { SettingsPopover } from "@/components/layouts/sidebar/SettingsPopover";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { navigationItems } from "@/lib/data/navigation";
-
-const iconMap = {
-    BarChart3: BarChart3,
-    Calendar: Calendar,
-    Coins: Coins,
-    FolderOpen: FolderOpen,
-    Timer: Timer,
-    DollarSign: DollarSign,
-    TrendingUp: TrendingUp,
-};
-
-const navMainData = navigationItems.map(item => ({
-    title: item.title,
-    url: item.url,
-    icon: iconMap[item.iconName as keyof typeof iconMap]
-}));
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
@@ -51,7 +26,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={navMainData} />
+                <NavMain items={navigationItems} />
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>

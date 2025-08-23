@@ -1,17 +1,12 @@
 import { useRouter, useRouterState } from "@tanstack/react-router";
-import type { LucideIcon } from "lucide-react";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-
-type NavItem = {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-};
+import type { NavItem } from "@/lib/data/navigation";
 
 export function NavMain({ items }: { items: NavItem[] }) {
     const router = useRouter();
     const routerState = useRouterState();
     const currentPath = routerState.location.pathname;
+
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Analytics</SidebarGroupLabel>

@@ -3,13 +3,10 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import { formatDuration } from "@/lib/utils/formatters";
 import type { ProjectActivity } from "@/lib/types";
 
-interface ProjectChartProps {
-    data: ProjectActivity[];
-}
-
-export function ProjectChart({ data }: ProjectChartProps) {
+export function ProjectChart({ data }: { data: ProjectActivity[] }) {
     const colors = [
         "#3b82f6", // blue
         "#10b981", // emerald
@@ -32,11 +29,6 @@ export function ProjectChart({ data }: ProjectChartProps) {
     }));
 
     const totalTime = data.reduce((sum, p) => sum + p.conversationTime, 0);
-    const formatTime = (minutes: number) => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours}h ${mins}m`;
-    };
 
     return (
         <Card>
@@ -64,7 +56,7 @@ export function ProjectChart({ data }: ProjectChartProps) {
                                         return (
                                             <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
                                                 <p className="font-semibold text-foreground">{data.name}</p>
-                                                <p className="text-sm text-muted-foreground">Time: {formatTime(data.value)}</p>
+                                                <p className="text-sm text-muted-foreground">Time: {formatDuration(data.value)}</p>
                                                 <p className="text-sm text-muted-foreground">Messages: {data.messages.toLocaleString()}</p>
                                                 <p className="text-sm text-muted-foreground">Sessions: {data.sessions}</p>
                                             </div>
@@ -85,7 +77,7 @@ export function ProjectChart({ data }: ProjectChartProps) {
                                 <span className="font-medium">{project.name}</span>
                             </div>
                             <div className="flex gap-4 text-muted-foreground">
-                                <span>{formatTime(project.value)}</span>
+                                <span>{formatDuration(project.value)}</span>
                                 <span>({Math.round((project.value / totalTime) * 100)}%)</span>
                             </div>
                         </div>
@@ -94,7 +86,7 @@ export function ProjectChart({ data }: ProjectChartProps) {
 
                 <div className="mt-4 pt-4 border-t text-center">
                     <div className="text-sm text-muted-foreground">Total Time</div>
-                    <div className="text-2xl font-bold">{formatTime(totalTime)}</div>
+                    <div className="text-2xl font-bold">{formatDuration(totalTime)}</div>
                 </div>
             </CardContent>
         </Card>

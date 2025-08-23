@@ -1,4 +1,4 @@
-import { FilterBar } from "@/components/FilterBar";
+import { FilterBar } from "@/components/layouts/FilterBar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 

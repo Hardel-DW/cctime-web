@@ -1,43 +1,46 @@
+import { BarChart3, Calendar, Coins, DollarSign, FolderOpen, Timer, TrendingUp } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
 export interface NavItem {
     title: string;
     url: string;
-    iconName: string;
+    icon: LucideIcon;
 }
 
 export const navigationItems: NavItem[] = [
     {
         title: "Dashboard",
         url: "/",
-        iconName: "BarChart3"
+        icon: BarChart3
     },
     {
         title: "Daily",
         url: "/daily",
-        iconName: "Calendar"
+        icon: Calendar
     },
     {
         title: "Token",
         url: "/token",
-        iconName: "Coins"
+        icon: Coins
     },
     {
         title: "Projects",
         url: "#",
-        iconName: "FolderOpen"
+        icon: FolderOpen
     },
     {
         title: "Sessions",
         url: "/sessions",
-        iconName: "Timer"
+        icon: Timer
     },
     {
         title: "Prices",
         url: "/prices",
-        iconName: "DollarSign"
+        icon: DollarSign
     },
     {
         title: "Analytics",
         url: "#",
-        iconName: "TrendingUp"
+        icon: TrendingUp
     }
 ];

@@ -1,14 +1,10 @@
-import type React from "react";
-import { AppSidebar } from "@/components/AppSidebar";
-import { BackgroundPattern } from "@/components/BackgroundPattern";
-import { SiteHeader } from "@/components/SiteHeader";
+import type { PropsWithChildren } from "react";
+import { AppSidebar } from "@/components/layouts/sidebar/AppSidebar";
+import { BackgroundPattern } from "@/components/layouts/BackgroundPattern";
+import { SiteHeader } from "@/components/layouts/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-interface PageLayoutProps {
-    children: React.ReactNode;
-}
-
-export function PageLayout({ children }: PageLayoutProps) {
+export function PageLayout({ children }: PropsWithChildren) {
     return (
         <SidebarProvider>
             <AppSidebar />
