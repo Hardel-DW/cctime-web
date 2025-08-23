@@ -12,7 +12,7 @@ import { FilterIndicator } from "@/components/layouts/FilterIndicator";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatDate, formatTime } from "@/lib/utils/formatters";
+import { formatDate, formatTime } from "@/lib/utils";
 import { IntensityBadge } from "@/components/ui/intensity-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,9 +31,14 @@ export function IndexComponent() {
         enabled: hasDirectoryHandle // Only run query if directory is selected
     });
 
+    if (!hasDirectoryHandle) return (
+        <PageLayout>
+            <WelcomeScreen />
+        </PageLayout>
+    );
+
     return (
         <PageLayout>
-            {!hasDirectoryHandle && <WelcomeScreen />}
             <DataStateWrapper
                 isLoading={isLoading}
                 error={error}

@@ -1,4 +1,4 @@
-import { Github, Timer } from "lucide-react";
+import { Github } from "lucide-react";
 import type React from "react";
 import { NavMain } from "@/components/layouts/sidebar/NavMain";
 import { SettingsPopover } from "@/components/layouts/sidebar/SettingsPopover";
@@ -14,12 +14,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <SidebarMenuButton
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                                <Timer className="size-4" />
+                            <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+                                <img src="/logo.svg" alt="Claude Time" className="size-8" />
                             </div>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-semibold">CCTime</span>
-                                <span className="truncate text-xs">Claude Code Analytics</span>
+                                <span className="truncate font-semibold text-base">Claude Time</span>
                             </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

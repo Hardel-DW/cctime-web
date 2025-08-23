@@ -1,5 +1,5 @@
 import type { SessionDetailsData, MessageData } from "@/lib/types/session";
-import { formatDuration } from "@/lib/utils/formatters";
+import { formatDuration } from "@/lib/utils";
 
 export class SessionDetailsManager {
     private allEntries: any[];

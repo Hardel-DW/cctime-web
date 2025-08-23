@@ -1,5 +1,5 @@
 import type { DailyConversation } from "@/lib/types";
-import { parseDurationToMinutes, formatDuration } from "@/lib/utils/formatters";
+import { parseDurationToMinutes, formatDuration } from "@/lib/utils";
 
 export interface ConversationTotals {
     totalMessages: number;

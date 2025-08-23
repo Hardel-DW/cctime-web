@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, Coins, DollarSign, FolderOpen, Timer, TrendingUp } from "lucide-react";
+import { BarChart3, Calendar, Coins, DollarSign, Timer } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface NavItem {
@@ -24,11 +24,6 @@ export const navigationItems: NavItem[] = [
         icon: Coins
     },
     {
-        title: "Projects",
-        url: "#",
-        icon: FolderOpen
-    },
-    {
         title: "Sessions",
         url: "/sessions",
         icon: Timer
@@ -37,10 +32,5 @@ export const navigationItems: NavItem[] = [
         title: "Prices",
         url: "/prices",
         icon: DollarSign
-    },
-    {
-        title: "Analytics",
-        url: "#",
-        icon: TrendingUp
     }
 ];

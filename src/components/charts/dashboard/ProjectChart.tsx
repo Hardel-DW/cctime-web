@@ -3,7 +3,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import { formatDuration } from "@/lib/utils/formatters";
+import { formatDuration } from "@/lib/utils";
 import type { ProjectActivity } from "@/lib/types";
 
 export function ProjectChart({ data }: { data: ProjectActivity[] }) {

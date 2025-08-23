@@ -5,7 +5,7 @@ import { useFilterStore } from "@/lib/store";
 import { DataService } from "@/lib/models/DataService";
 import { ConversationAnalytics } from "@/lib/models/analytics/ConversationAnalytics";
 import { DailyConversation } from "@/lib/types";
-import { formatDate, formatTime } from "@/lib/utils/formatters";
+import { formatDate, formatTime } from "@/lib/utils";
 import { IntensityBadge } from "@/components/ui/intensity-badge";
 import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
 import { FilterIndicator } from "@/components/layouts/FilterIndicator";

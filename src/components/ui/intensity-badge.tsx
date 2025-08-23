@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { getIntensityLevel } from "@/lib/utils/formatters";
+import { getIntensityLevel } from "@/lib/utils";
 
 interface IntensityBadgeProps {
     messages: number;
