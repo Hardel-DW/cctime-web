@@ -22,10 +22,8 @@ export function FilterBar() {
         isLoadingProjects,
         loadProjects
     } = useFilterStore();
-
     const [startDateOpen, setStartDateOpen] = React.useState(false);
     const [endDateOpen, setEndDateOpen] = React.useState(false);
-
     const hasActiveFilters = selectedProject || startDate || endDate;
 
     return (

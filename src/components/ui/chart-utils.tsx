@@ -1,6 +1,6 @@
-import * as RechartsPrimitive from "recharts";
+import { Tooltip, Legend } from "recharts";
 
-const ChartTooltip = RechartsPrimitive.Tooltip;
-const ChartLegend = RechartsPrimitive.Legend;
+const ChartTooltip = Tooltip;
+const ChartLegend = Legend;
 
 export { ChartTooltip, ChartLegend };

@@ -1,19 +1,14 @@
-"use client";
-
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
-
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
-export function NavMain({
-    items
-}: {
-    items: {
-        title: string;
-        url: string;
-        icon?: LucideIcon;
-    }[];
-}) {
+type NavItem = {
+    title: string;
+    url: string;
+    icon?: LucideIcon;
+};
+
+export function NavMain({ items }: { items: NavItem[] }) {
     const router = useRouter();
     const routerState = useRouterState();
     const currentPath = routerState.location.pathname;
@@ -26,11 +21,7 @@ export function NavMain({
                         <SidebarMenuButton
                             tooltip={item.title}
                             isActive={currentPath === item.url}
-                            onClick={() => {
-                                if (item.url !== "#") {
-                                    router.navigate({ to: item.url });
-                                }
-                            }}
+                            onClick={item.url !== "#" ? () => router.navigate({ to: item.url }) : undefined}
                             className={item.url === "#" ? "cursor-not-allowed opacity-50" : "cursor-pointer"}>
                             {item.icon && <item.icon />}
                             <span>{item.title}</span>

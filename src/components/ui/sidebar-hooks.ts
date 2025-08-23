@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext, useContext } from "react";
 
 type SidebarContext = {
     state: "open" | "closed";
@@ -10,10 +10,10 @@ type SidebarContext = {
     toggleSidebar: () => void;
 };
 
-const SidebarContext = React.createContext<SidebarContext | null>(null);
+const SidebarContext = createContext<SidebarContext | null>(null);
 
 export function useSidebar() {
-    const context = React.useContext(SidebarContext);
+    const context = useContext(SidebarContext);
     if (!context) {
         throw new Error("useSidebar must be used within a SidebarProvider.");
     }

@@ -1,5 +1,5 @@
 import { Clock, Cpu, Info, Layers, TrendingDown, TrendingUp, Zap } from "lucide-react";
-import { PricingChart } from "@/components/charts/PricingChart";
+import { PricingChart } from "@/components/charts/prices/PricingChart";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

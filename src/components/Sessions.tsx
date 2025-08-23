@@ -114,7 +114,7 @@ export function Sessions() {
     const handleSessionClick = (sessionId: string) => {
         // Navigate to session details
         router.navigate({
-            to: "/session-details",
+            to: "/messages",
             search: { sessionId }
         });
     };

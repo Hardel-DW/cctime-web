@@ -39,6 +39,8 @@
 }
 
 @theme inline {
+  --sidebar-width: calc(var(--spacing) * 72);
+  --header-height: calc(var(--spacing) * 12);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

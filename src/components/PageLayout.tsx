@@ -10,13 +10,7 @@ interface PageLayoutProps {
 
 export function PageLayout({ children }: PageLayoutProps) {
     return (
-        <SidebarProvider
-            style={
-                {
-                    "--sidebar-width": "calc(var(--spacing) * 72)",
-                    "--header-height": "calc(var(--spacing) * 12)"
-                } as React.CSSProperties
-            }>
+        <SidebarProvider>
             <AppSidebar />
             <SidebarInset className="p-2 bg-sidebar">
                 <div className="flex flex-1 flex-col bg-background rounded-xl overflow-hidden relative">

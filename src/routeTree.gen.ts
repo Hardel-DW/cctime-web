@@ -9,16 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TokenUsageRouteImport } from './routes/token-usage'
+import { Route as TokenRouteImport } from './routes/token'
 import { Route as SessionsRouteImport } from './routes/sessions'
-import { Route as SessionDetailsRouteImport } from './routes/session-details'
 import { Route as PricesRouteImport } from './routes/prices'
-import { Route as DailyActivityRouteImport } from './routes/daily-activity'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as DailyRouteImport } from './routes/daily'
 import { Route as IndexRouteImport } from './routes/index'
 
-const TokenUsageRoute = TokenUsageRouteImport.update({
-  id: '/token-usage',
-  path: '/token-usage',
+const TokenRoute = TokenRouteImport.update({
+  id: '/token',
+  path: '/token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SessionsRoute = SessionsRouteImport.update({
@@ -26,19 +26,19 @@ const SessionsRoute = SessionsRouteImport.update({
   path: '/sessions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SessionDetailsRoute = SessionDetailsRouteImport.update({
-  id: '/session-details',
-  path: '/session-details',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PricesRoute = PricesRouteImport.update({
   id: '/prices',
   path: '/prices',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DailyActivityRoute = DailyActivityRouteImport.update({
-  id: '/daily-activity',
-  path: '/daily-activity',
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DailyRoute = DailyRouteImport.update({
+  id: '/daily',
+  path: '/daily',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,72 +49,60 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/daily-activity': typeof DailyActivityRoute
+  '/daily': typeof DailyRoute
+  '/messages': typeof MessagesRoute
   '/prices': typeof PricesRoute
-  '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
-  '/token-usage': typeof TokenUsageRoute
+  '/token': typeof TokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/daily-activity': typeof DailyActivityRoute
+  '/daily': typeof DailyRoute
+  '/messages': typeof MessagesRoute
   '/prices': typeof PricesRoute
-  '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
-  '/token-usage': typeof TokenUsageRoute
+  '/token': typeof TokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/daily-activity': typeof DailyActivityRoute
+  '/daily': typeof DailyRoute
+  '/messages': typeof MessagesRoute
   '/prices': typeof PricesRoute
-  '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
-  '/token-usage': typeof TokenUsageRoute
+  '/token': typeof TokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/daily-activity'
-    | '/prices'
-    | '/session-details'
-    | '/sessions'
-    | '/token-usage'
+  fullPaths: '/' | '/daily' | '/messages' | '/prices' | '/sessions' | '/token'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/daily-activity'
-    | '/prices'
-    | '/session-details'
-    | '/sessions'
-    | '/token-usage'
+  to: '/' | '/daily' | '/messages' | '/prices' | '/sessions' | '/token'
   id:
     | '__root__'
     | '/'
-    | '/daily-activity'
+    | '/daily'
+    | '/messages'
     | '/prices'
-    | '/session-details'
     | '/sessions'
-    | '/token-usage'
+    | '/token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DailyActivityRoute: typeof DailyActivityRoute
+  DailyRoute: typeof DailyRoute
+  MessagesRoute: typeof MessagesRoute
   PricesRoute: typeof PricesRoute
-  SessionDetailsRoute: typeof SessionDetailsRoute
   SessionsRoute: typeof SessionsRoute
-  TokenUsageRoute: typeof TokenUsageRoute
+  TokenRoute: typeof TokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/token-usage': {
-      id: '/token-usage'
-      path: '/token-usage'
-      fullPath: '/token-usage'
-      preLoaderRoute: typeof TokenUsageRouteImport
+    '/token': {
+      id: '/token'
+      path: '/token'
+      fullPath: '/token'
+      preLoaderRoute: typeof TokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sessions': {
@@ -124,13 +112,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SessionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/session-details': {
-      id: '/session-details'
-      path: '/session-details'
-      fullPath: '/session-details'
-      preLoaderRoute: typeof SessionDetailsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/prices': {
       id: '/prices'
       path: '/prices'
@@ -138,11 +119,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/daily-activity': {
-      id: '/daily-activity'
-      path: '/daily-activity'
-      fullPath: '/daily-activity'
-      preLoaderRoute: typeof DailyActivityRouteImport
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daily': {
+      id: '/daily'
+      path: '/daily'
+      fullPath: '/daily'
+      preLoaderRoute: typeof DailyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,11 +145,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DailyActivityRoute: DailyActivityRoute,
+  DailyRoute: DailyRoute,
+  MessagesRoute: MessagesRoute,
   PricesRoute: PricesRoute,
-  SessionDetailsRoute: SessionDetailsRoute,
   SessionsRoute: SessionsRoute,
-  TokenUsageRoute: TokenUsageRoute,
+  TokenRoute: TokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

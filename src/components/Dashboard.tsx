@@ -5,9 +5,9 @@ import { getCachedDirectoryHandle } from "@/lib/directory-storage";
 import { useFilterStore } from "@/lib/store";
 import { ConversationTable } from "./ConversationTable";
 import { DataStateWrapper } from "./DataStateWrapper";
-import { DailyChart } from "./charts/DailyChart";
-import { HourlyChart } from "./charts/HourlyChart";
-import { ProjectChart } from "./charts/ProjectChart";
+import { DailyChart } from "./charts/dashboard/DailyChart";
+import { HourlyChart } from "./charts/dashboard/HourlyChart";
+import { ProjectChart } from "./charts/dashboard/ProjectChart";
 import { FilterIndicator } from "./FilterIndicator";
 import { StatsCards } from "./StatsCards";
 import { WelcomeScreen } from "./WelcomeScreen";
@@ -16,7 +16,6 @@ import { WelcomeScreen } from "./WelcomeScreen";
 export function Dashboard() {
     const { dataRefreshKey, selectedProject, startDate, endDate } = useFilterStore();
     const hasDirectoryHandle = getCachedDirectoryHandle() !== null;
-
     const { data, isLoading, error } = useQuery({
         queryKey: ["dashboard-data", dataRefreshKey, selectedProject, startDate, endDate],
         queryFn: loadDashboardData,

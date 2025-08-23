@@ -1,7 +1,5 @@
-"use client";
-
 import { BarChart3, Calendar, Coins, DollarSign, FolderOpen, Github, Timer, TrendingUp } from "lucide-react";
-import type * as React from "react";
+import type React from "react";
 
 import { NavMain } from "@/components/NavMain";
 import { SettingsPopover } from "@/components/SettingsPopover";
@@ -23,13 +21,13 @@ const data = {
             icon: BarChart3
         },
         {
-            title: "Daily Activity",
-            url: "/daily-activity",
+            title: "Daily",
+            url: "/daily",
             icon: Calendar
         },
         {
-            title: "Token Usage",
-            url: "/token-usage",
+            title: "Token",
+            url: "/token",
             icon: Coins
         },
         {

@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ConversationActivity } from "@/components/ConversationActivity";
 import { PageLayout } from "@/components/PageLayout";
 
-export const Route = createFileRoute("/daily-activity")({
-    component: DailyActivityComponent
+export const Route = createFileRoute("/daily")({
+    component: DailyComponent
 });
 
-export function DailyActivityComponent() {
+export function DailyComponent() {
     return (
         <PageLayout>
             <ConversationActivity />

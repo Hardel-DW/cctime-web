@@ -2,14 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageLayout } from "@/components/PageLayout";
 import { SessionDetails } from "@/components/SessionDetails";
 
-export const Route = createFileRoute("/session-details")({
-    component: SessionDetailsComponent,
+export const Route = createFileRoute("/messages")({
+    component: MessagesComponent,
     validateSearch: (search: Record<string, unknown>) => ({
         sessionId: (search.sessionId as string) || ""
     })
 });
 
-export function SessionDetailsComponent() {
+export function MessagesComponent() {
     const { sessionId } = Route.useSearch();
 
     return (
