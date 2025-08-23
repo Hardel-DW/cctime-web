@@ -1,4 +1,4 @@
-import path from "node:path";
+import { fileURLToPath, URL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
@@ -16,9 +16,9 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, "./src"),
-            "@lib/*": path.resolve(__dirname, "./src/lib/*"),
-            "@routes/*": path.resolve(__dirname, "./src/routes/*")
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
+            "@lib/*": fileURLToPath(new URL("./src/lib/*", import.meta.url)),
+            "@routes/*": fileURLToPath(new URL("./src/routes/*", import.meta.url))
         }
     }
 });
