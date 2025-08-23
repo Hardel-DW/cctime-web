@@ -1,147 +1,15 @@
-import { Clock, Cpu, Info, Layers, TrendingDown, TrendingUp, Zap } from "lucide-react";
+import React from "react";
+import { Clock, Info, Layers, TrendingDown, TrendingUp } from "lucide-react";
 import { PricingChart } from "@/components/charts/prices/PricingChart";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { claudeModels } from "@/lib/data/claude-models";
+import { specialFeatures } from "@/lib/data/special-features";
 
 export function Prices() {
-    // Updated 2025 Claude API Pricing
-    const models = [
-        {
-            name: "Claude Opus 4.1",
-            version: "4.1",
-            tier: "Premium",
-            description: "World-class performance for the most demanding tasks",
-            inputPrice: 15,
-            outputPrice: 75,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude 4 Opus",
-            version: "4.0",
-            tier: "Premium",
-            description: "Advanced reasoning and analysis for complex tasks",
-            inputPrice: 15,
-            outputPrice: 75,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude Sonnet 4",
-            version: "4.0",
-            tier: "Balanced",
-            description: "Excellent balance of performance and speed",
-            inputPrice: 3,
-            outputPrice: 15,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude Sonnet 4 (1M Context)",
-            version: "4.0-1M",
-            tier: "Premium Long Context",
-            description: "Extended context for processing large documents",
-            inputPrice: 6,
-            outputPrice: 22.5,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "1M",
-            special: "Premium pricing applies to ALL tokens when >200K input tokens"
-        },
-        {
-            name: "Claude Sonnet 3.7",
-            version: "3.7",
-            tier: "Balanced",
-            description: "Enhanced Sonnet with improved capabilities",
-            inputPrice: 3,
-            outputPrice: 15,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude 3.5 Sonnet",
-            version: "3.5",
-            tier: "Balanced",
-            description: "Strong performance with efficient processing",
-            inputPrice: 3,
-            outputPrice: 15,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude 3.5 Haiku",
-            version: "3.5",
-            tier: "Fast",
-            description: "Ultra-fast responses for high-volume tasks",
-            inputPrice: 0.8,
-            outputPrice: 4,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude 3 Opus",
-            version: "3.0",
-            tier: "Premium",
-            description: "Legacy premium model with strong performance",
-            inputPrice: 15,
-            outputPrice: 75,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude 3 Sonnet",
-            version: "3.0",
-            tier: "Balanced",
-            description: "Legacy balanced model",
-            inputPrice: 3,
-            outputPrice: 15,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        },
-        {
-            name: "Claude 3 Haiku",
-            version: "3.0",
-            tier: "Fast",
-            description: "Legacy fast model",
-            inputPrice: 0.25,
-            outputPrice: 1.25,
-            cacheWriteMultiplier: 1.25,
-            cacheReadMultiplier: 0.1,
-            contextWindow: "200K"
-        }
-    ];
-
-    const specialFeatures = [
-        {
-            name: "Web Search",
-            price: "$10 per 1,000 searches",
-            description: "Real-time web search capability",
-            icon: <Zap className="h-5 w-5" />
-        },
-        {
-            name: "Code Execution",
-            price: "$0.05 per session-hour",
-            description: "Sandboxed code execution environment",
-            icon: <Cpu className="h-5 w-5" />
-        },
-        {
-            name: "Batch API Discount",
-            price: "50% off input & output",
-            description: "Asynchronous processing discount",
-            icon: <TrendingDown className="h-5 w-5" />
-        }
-    ];
 
     return (
         <div className="space-y-6">
@@ -193,7 +61,7 @@ export function Prices() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {models.map((model) => (
+                                    {claudeModels.map((model) => (
                                         <TableRow key={model.name}>
                                             <TableCell className="font-medium">
                                                 <div>
@@ -236,7 +104,7 @@ export function Prices() {
                         </CardContent>
                     </Card>
 
-                    <PricingChart data={models} />
+                    <PricingChart data={claudeModels} />
                 </TabsContent>
 
                 <TabsContent value="features" className="space-y-6">
@@ -254,7 +122,7 @@ export function Prices() {
                             <Card key={feature.name}>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
-                                        {feature.icon}
+                                        {feature.iconName && React.createElement(feature.iconName, { className: "h-5 w-5" })}
                                         {feature.name}
                                     </CardTitle>
                                     <CardDescription>{feature.description}</CardDescription>

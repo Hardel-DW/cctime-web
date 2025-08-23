@@ -12,46 +12,23 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
+import { navigationItems } from "@/lib/data/navigation";
 
-const data = {
-    navMain: [
-        {
-            title: "Dashboard",
-            url: "/",
-            icon: BarChart3
-        },
-        {
-            title: "Daily",
-            url: "/daily",
-            icon: Calendar
-        },
-        {
-            title: "Token",
-            url: "/token",
-            icon: Coins
-        },
-        {
-            title: "Projects",
-            url: "#",
-            icon: FolderOpen
-        },
-        {
-            title: "Sessions",
-            url: "/sessions",
-            icon: Timer
-        },
-        {
-            title: "Prices",
-            url: "/prices",
-            icon: DollarSign
-        },
-        {
-            title: "Analytics",
-            url: "#",
-            icon: TrendingUp
-        }
-    ]
+const iconMap = {
+    BarChart3: BarChart3,
+    Calendar: Calendar,
+    Coins: Coins,
+    FolderOpen: FolderOpen,
+    Timer: Timer,
+    DollarSign: DollarSign,
+    TrendingUp: TrendingUp,
 };
+
+const navMainData = navigationItems.map(item => ({
+    title: item.title,
+    url: item.url,
+    icon: iconMap[item.iconName as keyof typeof iconMap]
+}));
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
@@ -74,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
+                <NavMain items={navMainData} />
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
