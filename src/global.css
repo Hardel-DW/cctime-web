@@ -137,3 +137,9 @@
 .recharts-bar-rectangle:hover {
   filter: brightness(1.1) !important;
 }
+
+.hidden-height {
+  @media (height < 800px) {
+    display: none;
+  }
+}

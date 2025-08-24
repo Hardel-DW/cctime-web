@@ -57,7 +57,7 @@ export function WelcomeScreen() {
                         </div>
                     </div>
 
-                    <div className="hidden lg:grid gap-4 lg:grid-cols-3">
+                    <div className="hidden hidden-height lg:grid gap-4 lg:grid-cols-3">
                         <div className="text-center p-4 rounded-lg bg-card/50 border">
                             <Database className="h-8 w-8 mx-auto mb-2" />
                             <h3 className="font-semibold">Track Conversations</h3>
