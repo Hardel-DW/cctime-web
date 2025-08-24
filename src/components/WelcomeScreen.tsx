@@ -1,11 +1,10 @@
 import { Database, FolderOpen, TrendingUp, User } from "lucide-react";
-import { useLocalStorage } from "@/hooks/use-local-storage";
+import { DirectorySelector } from "@/components/layouts/sidebar/DirectorySelector";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { DirectorySelector } from "@/components/layouts/sidebar/DirectorySelector";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { CopyButton } from "./ui/copy-button";
 import { ShimmerBorder } from "./ui/ShimmerBorder";
-
 
 export function WelcomeScreen() {
     const [customUsername, setCustomUsername] = useLocalStorage("claude-username", "");

@@ -1,6 +1,6 @@
 import React from "react";
-import { ResponsiveContainer, Tooltip } from "recharts";
 import type { LegendProps } from "recharts";
+import { ResponsiveContainer, type Tooltip } from "recharts";
 
 import { cn } from "@/lib/utils";
 

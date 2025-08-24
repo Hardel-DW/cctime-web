@@ -65,14 +65,14 @@ export class ClaudeEntry {
     // Basic filter primitives
     isInDateRange(start?: Date, end?: Date): boolean {
         if (!start && !end) return true;
-        
+
         const entryDate = this.formatDate();
         const startStr = start?.toISOString().split("T")[0];
         const endStr = end?.toISOString().split("T")[0];
-        
+
         if (startStr && entryDate < startStr) return false;
         if (endStr && entryDate > endStr) return false;
-        
+
         return true;
     }
 
@@ -112,17 +112,21 @@ export class ClaudeEntry {
             // If decoding fails, use raw name
         }
 
+        // Always extract the last meaningful part of any path
         if (decoded.includes("/") || decoded.includes("\\")) {
             const parts = decoded.split(/[/\\]/);
-            const lastPart = parts.filter((p) => p.length > 0).pop() || "Unknown Project";
-            decoded = lastPart;
+            const filteredParts = parts.filter((p) => p.length > 0);
+            decoded = filteredParts[filteredParts.length - 1] || "Unknown Project";
         }
 
-        return decoded
-            .replace(/[-_]/g, " ")
-            .replace(/\s+/g, " ")
-            .trim()
-            .replace(/\b\w/g, (l) => l.toUpperCase()) || "Unknown Project";
+        // Clean up the name
+        return (
+            decoded
+                .replace(/[-_]/g, " ")
+                .replace(/\s+/g, " ")
+                .trim()
+                .replace(/\b\w/g, (l) => l.toUpperCase()) || "Unknown Project"
+        );
     }
 
     static getProjectNameFromPath(filePath: string): string {
@@ -132,12 +136,12 @@ export class ClaudeEntry {
         const projectsIndex = pathParts.findIndex((part) => part === "projects");
         if (projectsIndex !== -1 && projectsIndex + 1 < pathParts.length) {
             const rawProjectName = pathParts[projectsIndex + 1];
-            return this.formatProjectName(rawProjectName);
+            return ClaudeEntry.formatProjectName(rawProjectName);
         }
 
         const parentDir = pathParts[pathParts.length - 2];
         if (parentDir && parentDir !== "projects") {
-            return this.formatProjectName(parentDir);
+            return ClaudeEntry.formatProjectName(parentDir);
         }
 
         return "Unknown Project";
@@ -149,10 +153,10 @@ export class ClaudeEntry {
     }
 
     static filterValid(entries: ClaudeEntry[]): ClaudeEntry[] {
-        return entries.filter(entry => entry.isValid);
+        return entries.filter((entry) => entry.isValid);
     }
 
     static filterWithUsage(entries: ClaudeEntry[]): ClaudeEntry[] {
-        return entries.filter(entry => entry.hasUsage);
+        return entries.filter((entry) => entry.hasUsage);
     }
 }

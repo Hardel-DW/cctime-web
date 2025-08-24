@@ -1,4 +1,4 @@
-import type { SessionDetailsData, MessageData } from "@/lib/types/session";
+import type { MessageData, SessionDetailsData } from "@/lib/types/session";
 import { formatDuration } from "@/lib/utils";
 
 export class SessionDetailsManager {
@@ -28,10 +28,7 @@ export class SessionDetailsManager {
         const projectName = project ? project.split(/[/\\]/).pop() || "Unknown Project" : "Unknown Project";
 
         // Get unique models
-        const models = [...new Set(sessionEntries
-            .map((entry) => entry.message?.model || "unknown")
-            .filter(Boolean)
-        )];
+        const models = [...new Set(sessionEntries.map((entry) => entry.message?.model || "unknown").filter(Boolean))];
 
         // Calculate token totals
         const totalTokens = sessionEntries.reduce(
@@ -52,12 +49,14 @@ export class SessionDetailsManager {
             timestamp: entry.timestamp || "",
             role: entry.message?.role === "user" ? "user" : "assistant",
             content: this.extractMessageContent(entry.message),
-            tokens: entry.usage ? {
-                input: entry.usage.input_tokens,
-                output: entry.usage.output_tokens,
-                cache_creation: entry.usage.cache_creation_input_tokens,
-                cache_read: entry.usage.cache_read_input_tokens
-            } : undefined,
+            tokens: entry.usage
+                ? {
+                      input: entry.usage.input_tokens,
+                      output: entry.usage.output_tokens,
+                      cache_creation: entry.usage.cache_creation_input_tokens,
+                      cache_read: entry.usage.cache_read_input_tokens
+                  }
+                : undefined,
             model: entry.message?.model
         }));
 

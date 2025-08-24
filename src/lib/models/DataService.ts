@@ -1,5 +1,5 @@
-import { ClaudeDataManager } from "./ClaudeDataManager";
 import type { DailyConversation } from "@/lib/types";
+import { ClaudeDataManager } from "./ClaudeDataManager";
 
 export class DataService {
     private directoryHandle: any;
@@ -15,7 +15,7 @@ export class DataService {
 
         const rawData = await ClaudeDataManager.loadAllUsageData(this.directoryHandle);
         let dataManager = ClaudeDataManager.fromRawData(rawData);
-        
+
         // Apply filters
         if (selectedProject) {
             dataManager = dataManager.filterByProject(selectedProject);
@@ -25,31 +25,31 @@ export class DataService {
             const end = endDate ? new Date(endDate) : undefined;
             dataManager = dataManager.filterByDateRange(start, end);
         }
-        
+
         return this.transformToLegacyFormat(dataManager);
     }
 
     private transformToLegacyFormat(dataManager: ClaudeDataManager) {
         const sessions = dataManager.getAllSessions();
         const conversations: DailyConversation[] = [];
-        
+
         // Group sessions by date
         const dailyMap = new Map<string, typeof sessions>();
-        sessions.forEach(session => {
-            const date = session.startTime.toISOString().split('T')[0];
+        sessions.forEach((session) => {
+            const date = session.startTime.toISOString().split("T")[0];
             if (!dailyMap.has(date)) {
                 dailyMap.set(date, []);
             }
-            dailyMap.get(date)!.push(session);
+            dailyMap.get(date)?.push(session);
         });
 
         // Create daily conversations
         for (const [date, daySessions] of dailyMap) {
             if (daySessions.length === 0) continue;
-            
-            const allEntries = daySessions.flatMap(s => s.getEntries());
+
+            const allEntries = daySessions.flatMap((s) => s.getEntries());
             allEntries.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-            
+
             const totalTime = daySessions.reduce((sum, session) => {
                 const timeStr = session.getDurationString();
                 const match = timeStr.match(/(?:(\d+)h)?\s*(?:(\d+)m)?/);
@@ -57,7 +57,7 @@ export class DataService {
                 const minutes = parseInt(match?.[2] || "0", 10);
                 return sum + hours * 60 + minutes;
             }, 0);
-            
+
             const formatTime = (totalMinutes: number): string => {
                 if (totalMinutes < 60) return `${totalMinutes}m`;
                 const hours = Math.floor(totalMinutes / 60);
@@ -72,7 +72,7 @@ export class DataService {
                 conversationTime: formatTime(totalTime),
                 messages: allEntries.length,
                 sessions: daySessions.length,
-                sessionIds: daySessions.map(s => s.sessionId).filter(Boolean)
+                sessionIds: daySessions.map((s) => s.sessionId).filter(Boolean)
             });
         }
 
@@ -80,13 +80,13 @@ export class DataService {
 
         return {
             conversations,
-            allEntries: dataManager.getAllEntries().map(e => e.rawEntry),
+            allEntries: dataManager.getAllEntries().map((e) => e.rawEntry),
             hourlyActivity: Array.from({ length: 24 }, (_, hour) => ({
                 hour,
                 messageCount: dataManager.getEntriesByHour(hour).length,
                 totalTime: Math.floor(dataManager.getEntriesByHour(hour).length / 10)
             })),
-            projectActivity: dataManager.getAllProjects().map(project => ({
+            projectActivity: dataManager.getAllProjects().map((project) => ({
                 projectName: project.name,
                 messageCount: project.messageCount,
                 conversationTime: Math.floor(project.messageCount / 10),
@@ -113,7 +113,7 @@ export class DataService {
         }, 0);
 
         if (totalMinutes < 60) return `${totalMinutes}m`;
-        
+
         const hours = Math.floor(totalMinutes / 60);
         const mins = totalMinutes % 60;
         return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;

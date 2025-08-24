@@ -1,16 +1,10 @@
-import { Root, Image, Fallback } from "@radix-ui/react-avatar";
+import { Fallback, Image, Root } from "@radix-ui/react-avatar";
 import type React from "react";
 
 import { cn } from "@/lib/utils";
 
 function Avatar({ className, ...props }: React.ComponentProps<typeof Root>) {
-    return (
-        <Root
-            data-slot="avatar"
-            className={cn("relative flex size-8 shrink-0 overflow-hidden rounded-full", className)}
-            {...props}
-        />
-    );
+    return <Root data-slot="avatar" className={cn("relative flex size-8 shrink-0 overflow-hidden rounded-full", className)} {...props} />;
 }
 
 function AvatarImage({ className, ...props }: React.ComponentProps<typeof Image>) {

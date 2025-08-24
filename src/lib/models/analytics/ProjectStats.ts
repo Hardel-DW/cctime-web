@@ -56,12 +56,12 @@ export class ProjectData {
     }
 
     get models(): string[] {
-        const uniqueModels = new Set(this.entries.map(entry => entry.model));
+        const uniqueModels = new Set(this.entries.map((entry) => entry.model));
         return Array.from(uniqueModels);
     }
 
     get activeDays(): number {
-        const uniqueDays = new Set(this.entries.map(entry => entry.formatDate()));
+        const uniqueDays = new Set(this.entries.map((entry) => entry.formatDate()));
         return uniqueDays.size;
     }
 
@@ -89,7 +89,7 @@ export class ProjectData {
 
     // Basic filter primitives
     hasModel(modelName: string): boolean {
-        return this.entries.some(entry => entry.hasModel(modelName));
+        return this.entries.some((entry) => entry.hasModel(modelName));
     }
 
     isInDateRange(start?: Date, end?: Date): boolean {
@@ -105,15 +105,15 @@ export class ProjectData {
     }
 
     getEntriesByDateRange(start: Date, end: Date): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.isInDateRange(start, end));
+        return this.entries.filter((entry) => entry.isInDateRange(start, end));
     }
 
     getEntriesByModel(modelName: string): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.hasModel(modelName));
+        return this.entries.filter((entry) => entry.hasModel(modelName));
     }
 
     getEntriesByHour(hour: number): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.getHour() === hour);
+        return this.entries.filter((entry) => entry.getHour() === hour);
     }
 
     getSessions(): SessionInfo[] {

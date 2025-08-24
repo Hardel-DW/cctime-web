@@ -1,6 +1,7 @@
-import { Root, Item } from "@radix-ui/react-toggle-group";
+import { Item, Root } from "@radix-ui/react-toggle-group";
 import type { VariantProps } from "class-variance-authority";
-import React, { createContext, useContext } from "react";
+import type React from "react";
+import { createContext, useContext } from "react";
 import { toggleVariants } from "@/components/ui/toggle-variants";
 import { cn } from "@/lib/utils";
 

@@ -9,8 +9,10 @@ export const buttonVariants = cva(
                 destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
                 outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
                 secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-                ghost: "hover:bg-accent hover:text-accent-foreground",
-                link: "text-primary underline-offset-4 hover:underline"
+                ghost: "hover:bg-accent border-2 border-zinc-900 rounded-md hover:text-accent-foreground",
+                link: "text-primary underline-offset-4 hover:underline",
+                "white-shimmer":
+                    "animate-shimmer shadow-lg shadow-zinc-500/50 bg-[linear-gradient(110deg,#FFFEFC,45%,#d0d0d0,55%,#FFFEFC)] bg-[length:200%_100%] text-black font-medium border-t-2 border-l-2 border-zinc-500 hover:opacity-75 transition"
             },
             size: {
                 default: "h-10 px-4 py-2",

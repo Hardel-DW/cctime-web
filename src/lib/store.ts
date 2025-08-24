@@ -54,18 +54,20 @@ export const useFilterStore = create<FilterState>((set, get) => ({
 
     // Settings
     setClaudePath: (path) => set({ claudePath: path, dataRefreshKey: Date.now(), projects: [] }),
-    setDirectoryHandle: (handle) => set({ 
-        directoryHandle: handle, 
-        claudePath: handle?.name || "Directory selected",
-        dataRefreshKey: Date.now(), 
-        projects: [] 
-    }),
-    clearDirectoryHandle: () => set({ 
-        directoryHandle: null, 
-        claudePath: null, 
-        dataRefreshKey: Date.now(), 
-        projects: [] 
-    }),
+    setDirectoryHandle: (handle) =>
+        set({
+            directoryHandle: handle,
+            claudePath: handle?.name || "Directory selected",
+            dataRefreshKey: Date.now(),
+            projects: []
+        }),
+    clearDirectoryHandle: () =>
+        set({
+            directoryHandle: null,
+            claudePath: null,
+            dataRefreshKey: Date.now(),
+            projects: []
+        }),
 
     // Data refresh
     refreshData: () => set((state) => ({ dataRefreshKey: state.dataRefreshKey + 1 })),

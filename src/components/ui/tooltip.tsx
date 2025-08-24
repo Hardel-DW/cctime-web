@@ -1,4 +1,4 @@
-import { Provider, Root, Trigger, Content, Arrow, Portal } from "@radix-ui/react-tooltip";
+import { Arrow, Content, Portal, Provider, Root, Trigger } from "@radix-ui/react-tooltip";
 import type React from "react";
 
 import { cn } from "@/lib/utils";

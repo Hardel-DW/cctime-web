@@ -1,15 +1,15 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { PageLayout } from "@/components/layouts/PageLayout";
-import React from "react";
 import { Clock, Info, Layers, TrendingDown, TrendingUp } from "lucide-react";
+import React from "react";
 import { PricingChart } from "@/components/charts/prices/PricingChart";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { claudeModels } from "@/lib/data/models";
 import { specialFeatures } from "@/lib/data/features";
+import { claudeModels } from "@/lib/data/models";
 
 export const Route = createLazyFileRoute("/prices")({
     component: PricesComponent
@@ -73,7 +73,9 @@ export function PricesComponent() {
                                                     <div>
                                                         <div className="font-semibold">{model.name}</div>
                                                         <div className="text-xs text-muted-foreground">{model.description}</div>
-                                                        {model.special && <div className="text-xs text-orange-600 mt-1">{model.special}</div>}
+                                                        {model.special && (
+                                                            <div className="text-xs text-orange-600 mt-1">{model.special}</div>
+                                                        )}
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
@@ -97,8 +99,8 @@ export function PricesComponent() {
                                                             model.tier === "Premium" || model.tier === "Premium Long Context"
                                                                 ? "default"
                                                                 : model.tier === "Balanced"
-                                                                    ? "secondary"
-                                                                    : "outline"
+                                                                  ? "secondary"
+                                                                  : "outline"
                                                         }>
                                                         {model.tier}
                                                     </Badge>

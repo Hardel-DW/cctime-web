@@ -21,12 +21,9 @@ export class CacheStats {
     private entries: ClaudeEntry[];
 
     constructor(entries: ClaudeEntry[]) {
-        this.entries = entries.filter(entry => {
+        this.entries = entries.filter((entry) => {
             const usage = entry.rawEntry.message?.usage;
-            return usage && (
-                usage.cache_creation_input_tokens ||
-                usage.cache_read_input_tokens
-            );
+            return usage && (usage.cache_creation_input_tokens || usage.cache_read_input_tokens);
         });
     }
 
@@ -36,15 +33,15 @@ export class CacheStats {
                 const usage = entry.rawEntry.message?.usage || {};
                 const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
                 const cacheReadTokens = usage.cache_read_input_tokens || 0;
-                
+
                 const ephemeral5m = usage.cache_creation?.ephemeral_5m_input_tokens || 0;
                 const ephemeral1h = usage.cache_creation?.ephemeral_1h_input_tokens || 0;
-                
+
                 acc.totalCacheCreationTokens += cacheCreationTokens;
                 acc.totalCacheReadTokens += cacheReadTokens;
                 acc.totalEphemeral5mTokens += ephemeral5m;
                 acc.totalEphemeral1hTokens += ephemeral1h;
-                
+
                 return acc;
             },
             {
@@ -72,11 +69,11 @@ export class CacheStats {
     get cacheBreakdownData(): CacheUsageData[] {
         const stats = this.basicStats;
         const total = stats.totalCacheTokens;
-        
+
         if (total === 0) return [];
 
         const data: CacheUsageData[] = [];
-        
+
         if (stats.totalCacheCreationTokens > 0) {
             data.push({
                 name: "Cache Creation",
@@ -84,7 +81,7 @@ export class CacheStats {
                 percentage: (stats.totalCacheCreationTokens / total) * 100
             });
         }
-        
+
         if (stats.totalCacheReadTokens > 0) {
             data.push({
                 name: "Cache Read",
@@ -92,7 +89,7 @@ export class CacheStats {
                 percentage: (stats.totalCacheReadTokens / total) * 100
             });
         }
-        
+
         if (stats.totalEphemeral5mTokens > 0) {
             data.push({
                 name: "Ephemeral 5m",
@@ -100,7 +97,7 @@ export class CacheStats {
                 percentage: (stats.totalEphemeral5mTokens / total) * 100
             });
         }
-        
+
         if (stats.totalEphemeral1hTokens > 0) {
             data.push({
                 name: "Ephemeral 1h",
@@ -114,20 +111,22 @@ export class CacheStats {
 
     get dailyCacheUsage(): { date: string; cacheCreation: number; cacheRead: number }[] {
         const dailyMap = new Map<string, { cacheCreation: number; cacheRead: number }>();
-        
+
         for (const entry of this.entries) {
             const date = entry.formatDate();
             const usage = entry.rawEntry.message?.usage || {};
             const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
             const cacheReadTokens = usage.cache_read_input_tokens || 0;
-            
+
             if (!dailyMap.has(date)) {
                 dailyMap.set(date, { cacheCreation: 0, cacheRead: 0 });
             }
-            
-            const dayData = dailyMap.get(date)!;
-            dayData.cacheCreation += cacheCreationTokens;
-            dayData.cacheRead += cacheReadTokens;
+
+            const dayData = dailyMap.get(date);
+            if (dayData) {
+                dayData.cacheCreation += cacheCreationTokens;
+                dayData.cacheRead += cacheReadTokens;
+            }
         }
 
         return Array.from(dailyMap.entries())
@@ -141,12 +140,15 @@ export class CacheStats {
     }
 
     static fromRawEntries(rawEntries: any[]): CacheStats {
-        const entries = rawEntries.map(data => ({ 
-            rawEntry: data, 
-            project: data.cwd ? data.cwd.split('/').pop() || 'Unknown' : 'Unknown',
-            timestamp: new Date(data.timestamp),
-            formatDate: () => new Date(data.timestamp).toISOString().split('T')[0]
-        } as ClaudeEntry));
+        const entries = rawEntries.map(
+            (data) =>
+                ({
+                    rawEntry: data,
+                    project: data.cwd ? data.cwd.split("/").pop() || "Unknown" : "Unknown",
+                    timestamp: new Date(data.timestamp),
+                    formatDate: () => new Date(data.timestamp).toISOString().split("T")[0]
+                }) as ClaudeEntry
+        );
         return new CacheStats(entries);
     }
 }

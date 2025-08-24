@@ -1,18 +1,18 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
-import { useFilterStore } from "@/lib/store";
-import { DataService } from "@/lib/models/DataService";
-import { ConversationAnalytics } from "@/lib/models/analytics/ConversationAnalytics";
-import { DailyConversation } from "@/lib/types";
-import { formatDate, formatTime } from "@/lib/utils";
-import { IntensityBadge } from "@/components/ui/intensity-badge";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { MessageSquare } from "lucide-react";
 import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
 import { FilterIndicator } from "@/components/layouts/FilterIndicator";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { IntensityBadge } from "@/components/ui/intensity-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { MessageSquare } from "lucide-react";
+import { ConversationAnalytics } from "@/lib/models/analytics/ConversationAnalytics";
+import { DataService } from "@/lib/models/DataService";
+import { useFilterStore } from "@/lib/store";
+import type { DailyConversation } from "@/lib/types";
+import { formatDate, formatTime } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/daily")({
     component: DailyComponent
@@ -37,8 +37,7 @@ export function DailyComponent() {
                 error={error}
                 loadingMessage="Loading conversation activity..."
                 noDirectoryIcon={<MessageSquare className="h-12 w-12" />}
-                noDirectoryMessage="Please select your Claude data directory to view conversation activity."
-            >
+                noDirectoryMessage="Please select your Claude data directory to view conversation activity.">
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
@@ -84,15 +83,21 @@ export function DailyComponent() {
                                                 <TableCell>
                                                     <div className="flex gap-1 text-sm">
                                                         <span>{formatTime(conversation.firstMessage)}</span>
-                                                        <span className="text-muted-foreground">→ {formatTime(conversation.lastMessage)}</span>
+                                                        <span className="text-muted-foreground">
+                                                            → {formatTime(conversation.lastMessage)}
+                                                        </span>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="text-right font-mono">{conversation.messages.toLocaleString()}</TableCell>
+                                                <TableCell className="text-right font-mono">
+                                                    {conversation.messages.toLocaleString()}
+                                                </TableCell>
                                                 <TableCell className="text-right">
                                                     <Badge variant="outline">{conversation.sessions}</Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right font-medium">{conversation.conversationTime}</TableCell>
-                                                <TableCell className="text-right"><IntensityBadge messages={conversation.messages} /></TableCell>
+                                                <TableCell className="text-right">
+                                                    <IntensityBadge messages={conversation.messages} />
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

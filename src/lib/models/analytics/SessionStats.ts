@@ -1,5 +1,5 @@
-import type { ClaudeEntry } from "../core/ClaudeEntry";
 import type { DaySession } from "@/lib/types/session";
+import type { ClaudeEntry } from "../core/ClaudeEntry";
 
 export interface SessionStatsData {
     totalSessions: number;
@@ -30,26 +30,25 @@ export class SessionStats {
     private entries: ClaudeEntry[];
 
     constructor(entries: ClaudeEntry[]) {
-        this.entries = entries.filter(entry => entry.rawEntry.sessionId)
-            .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+        this.entries = entries.filter((entry) => entry.rawEntry.sessionId).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     }
 
     get basicStats(): SessionStatsData {
         const sessionMap = new Map<string, ClaudeEntry[]>();
-        
+
         for (const entry of this.entries) {
             const sessionId = entry.rawEntry.sessionId;
             if (!sessionId) continue;
-            
+
             if (!sessionMap.has(sessionId)) {
                 sessionMap.set(sessionId, []);
             }
-            sessionMap.get(sessionId)!.push(entry);
+            sessionMap.get(sessionId)?.push(entry);
         }
 
         const sessions = Array.from(sessionMap.values());
         const totalSessions = sessions.length;
-        
+
         const totalDuration = sessions.reduce((sum, sessionEntries) => {
             if (sessionEntries.length === 0) return sum;
             const start = sessionEntries[0].timestamp;
@@ -60,7 +59,7 @@ export class SessionStats {
         const averageSessionDuration = totalSessions > 0 ? totalDuration / totalSessions : 0;
         const averageMessagesPerSession = totalSessions > 0 ? this.entries.length / totalSessions : 0;
 
-        const uniqueDates = new Set(this.entries.map(entry => entry.formatDate()));
+        const uniqueDates = new Set(this.entries.map((entry) => entry.formatDate()));
         const activeDays = uniqueDates.size;
 
         const dailySessionData = this.getDailySessionData(sessions);
@@ -76,74 +75,80 @@ export class SessionStats {
 
     get allSessions(): SessionData[] {
         const sessionMap = new Map<string, ClaudeEntry[]>();
-        
+
         for (const entry of this.entries) {
             const sessionId = entry.rawEntry.sessionId;
             if (!sessionId) continue;
-            
+
             if (!sessionMap.has(sessionId)) {
                 sessionMap.set(sessionId, []);
             }
-            sessionMap.get(sessionId)!.push(entry);
+            sessionMap.get(sessionId)?.push(entry);
         }
 
-        return Array.from(sessionMap.entries()).map(([sessionId, entries]) => {
-            if (entries.length === 0) {
+        return Array.from(sessionMap.entries())
+            .map(([sessionId, entries]) => {
+                if (entries.length === 0) {
+                    return {
+                        sessionId,
+                        messageCount: 0,
+                        startTime: new Date(),
+                        endTime: new Date(),
+                        duration: 0,
+                        project: "Unknown",
+                        model: "unknown"
+                    };
+                }
+
+                const sortedEntries = entries.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+                const startTime = sortedEntries[0].timestamp;
+                const endTime = sortedEntries[sortedEntries.length - 1].timestamp;
+                const duration = endTime.getTime() - startTime.getTime();
+
                 return {
                     sessionId,
-                    messageCount: 0,
-                    startTime: new Date(),
-                    endTime: new Date(),
-                    duration: 0,
-                    project: 'Unknown',
-                    model: 'unknown'
+                    messageCount: entries.length,
+                    startTime,
+                    endTime,
+                    duration,
+                    project: entries[0].project || "Unknown",
+                    model: entries[0].rawEntry.message?.model || "unknown"
                 };
-            }
-
-            const sortedEntries = entries.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-            const startTime = sortedEntries[0].timestamp;
-            const endTime = sortedEntries[sortedEntries.length - 1].timestamp;
-            const duration = endTime.getTime() - startTime.getTime();
-
-            return {
-                sessionId,
-                messageCount: entries.length,
-                startTime,
-                endTime,
-                duration,
-                project: entries[0].project || 'Unknown',
-                model: entries[0].rawEntry.message?.model || 'unknown'
-            };
-        }).sort((a, b) => b.startTime.getTime() - a.startTime.getTime());
+            })
+            .sort((a, b) => b.startTime.getTime() - a.startTime.getTime());
     }
 
     private getDailySessionData(sessions: ClaudeEntry[][]): DailySessionData[] {
-        const dailyMap = new Map<string, { sessions: ClaudeEntry[][], messages: number }>();
+        const dailyMap = new Map<string, { sessions: ClaudeEntry[][]; messages: number }>();
 
         for (const sessionEntries of sessions) {
             if (sessionEntries.length === 0) continue;
-            
+
             const date = sessionEntries[0].formatDate();
             if (!dailyMap.has(date)) {
                 dailyMap.set(date, { sessions: [], messages: 0 });
             }
-            
-            const dayData = dailyMap.get(date)!;
-            dayData.sessions.push(sessionEntries);
-            dayData.messages += sessionEntries.length;
+
+            const dayData = dailyMap.get(date);
+            if (dayData) {
+                dayData.sessions.push(sessionEntries);
+                dayData.messages += sessionEntries.length;
+            }
         }
 
-        return Array.from(dailyMap.entries()).map(([date, data]) => ({
-            date,
-            sessionCount: data.sessions.length,
-            messageCount: data.messages,
-            duration: data.sessions.reduce((sum, sessionEntries) => {
-                if (sessionEntries.length === 0) return sum;
-                const start = sessionEntries[0].timestamp;
-                const end = sessionEntries[sessionEntries.length - 1].timestamp;
-                return sum + (end.getTime() - start.getTime());
-            }, 0)
-        })).sort((a, b) => b.date.localeCompare(a.date));
+        return Array.from(dailyMap.entries())
+            .map(([date, data]) => ({
+                date,
+                sessionCount: data.sessions.length,
+                messageCount: data.messages,
+                duration: data.sessions.reduce((sum, sessionEntries) => {
+                    if (sessionEntries.length === 0) return sum;
+                    const start = sessionEntries[0].timestamp;
+                    const end = sessionEntries[sessionEntries.length - 1].timestamp;
+                    return sum + (end.getTime() - start.getTime());
+                }, 0)
+            }))
+            .sort((a, b) => b.date.localeCompare(a.date));
     }
 
     get daySessions(): DaySession[] {
@@ -218,12 +223,15 @@ export class SessionStats {
     }
 
     static fromRawEntries(rawEntries: any[]): SessionStats {
-        const entries = rawEntries.map(data => ({ 
-            rawEntry: data, 
-            project: data.cwd ? data.cwd.split('/').pop() || 'Unknown' : 'Unknown',
-            timestamp: new Date(data.timestamp),
-            formatDate: () => new Date(data.timestamp).toISOString().split('T')[0]
-        } as ClaudeEntry));
+        const entries = rawEntries.map(
+            (data) =>
+                ({
+                    rawEntry: data,
+                    project: data.cwd ? data.cwd.split("/").pop() || "Unknown" : "Unknown",
+                    timestamp: new Date(data.timestamp),
+                    formatDate: () => new Date(data.timestamp).toISOString().split("T")[0]
+                }) as ClaudeEntry
+        );
         return new SessionStats(entries);
     }
 }

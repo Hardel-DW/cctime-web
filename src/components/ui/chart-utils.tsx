@@ -1,4 +1,4 @@
-import { Tooltip, Legend } from "recharts";
+import { Legend, Tooltip } from "recharts";
 
 const ChartTooltip = Tooltip;
 const ChartLegend = Legend;

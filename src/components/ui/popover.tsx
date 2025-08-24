@@ -1,4 +1,4 @@
-import { Root, Trigger, Content, Portal, Anchor } from "@radix-ui/react-popover";
+import { Anchor, Content, Portal, Root, Trigger } from "@radix-ui/react-popover";
 import type React from "react";
 import { cn } from "@/lib/utils";
 

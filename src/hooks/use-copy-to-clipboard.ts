@@ -15,9 +15,12 @@ export function useCopyToClipboard() {
         }
     }, []);
 
-    const isCopied = React.useCallback((id: string) => {
-        return copiedStates[id] || false;
-    }, [copiedStates]);
+    const isCopied = React.useCallback(
+        (id: string) => {
+            return copiedStates[id] || false;
+        },
+        [copiedStates]
+    );
 
     return {
         copyToClipboard,

@@ -1,4 +1,4 @@
-import { Root, Indicator } from "@radix-ui/react-checkbox";
+import { Indicator, Root } from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import type React from "react";
 
@@ -13,9 +13,7 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof Root>) {
                 className
             )}
             {...props}>
-            <Indicator
-                data-slot="checkbox-indicator"
-                className="flex items-center justify-center text-current transition-none">
+            <Indicator data-slot="checkbox-indicator" className="flex items-center justify-center text-current transition-none">
                 <CheckIcon className="size-3.5" />
             </Indicator>
         </Root>

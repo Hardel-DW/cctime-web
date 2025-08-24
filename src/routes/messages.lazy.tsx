@@ -1,17 +1,16 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Bot, Calendar, Check, Clock, Copy, MessageSquare, User } from "lucide-react";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useFilterStore } from "@/lib/store";
-import { DataService } from "@/lib/models/DataService";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { SessionDetailsManager } from "@/lib/models/analytics/SessionDetailsManager";
-import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
-import { PageLayout } from "@/components/layouts/PageLayout";
+import { DataService } from "@/lib/models/DataService";
+import { useFilterStore } from "@/lib/store";
 
 export const Route = createLazyFileRoute("/messages")({
     component: SessionDetailsComponent
@@ -31,7 +30,6 @@ export function SessionDetailsComponent() {
     });
 
     const sessionData = data?.allEntries ? new SessionDetailsManager(data.allEntries).getSessionDetails(sessionId) : null;
-
 
     if (!sessionData) {
         return (
@@ -61,8 +59,7 @@ export function SessionDetailsComponent() {
                 error={error}
                 loadingMessage="Loading session details..."
                 noDirectoryIcon={<Bot className="h-12 w-12" />}
-                noDirectoryMessage="Please select your Claude data directory to view session details."
-            >
+                noDirectoryMessage="Please select your Claude data directory to view session details.">
                 <div className="space-y-6">
                     {/* Header */}
                     <div className="flex items-center gap-4">
@@ -108,9 +105,7 @@ export function SessionDetailsComponent() {
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-sm text-muted-foreground">Total Tokens</p>
-                                    <span className="font-semibold">
-                                        {sessionData.totalTokens.total.toLocaleString()}
-                                    </span>
+                                    <span className="font-semibold">{sessionData.totalTokens.total.toLocaleString()}</span>
                                 </div>
                             </div>
 
@@ -172,21 +167,24 @@ export function SessionDetailsComponent() {
                                                         </Button>
                                                     </div>
 
-                                                    {message.tokens && ((message.tokens.input ?? 0) > 0 || (message.tokens.output ?? 0) > 0) && (
-                                                        <div className="mt-3 pt-3 border-t border-border/50">
-                                                            <div className="flex gap-4 text-xs text-muted-foreground">
-                                                                {(message.tokens.input ?? 0) > 0 && (
-                                                                    <span>Input: {(message.tokens.input ?? 0).toLocaleString()}</span>
-                                                                )}
-                                                                {(message.tokens.output ?? 0) > 0 && (
-                                                                    <span>Output: {(message.tokens.output ?? 0).toLocaleString()}</span>
-                                                                )}
-                                                                {(message.tokens.cache_read ?? 0) > 0 && (
-                                                                    <span>Cache: {(message.tokens.cache_read ?? 0).toLocaleString()}</span>
-                                                                )}
+                                                    {message.tokens &&
+                                                        ((message.tokens.input ?? 0) > 0 || (message.tokens.output ?? 0) > 0) && (
+                                                            <div className="mt-3 pt-3 border-t border-border/50">
+                                                                <div className="flex gap-4 text-xs text-muted-foreground">
+                                                                    {(message.tokens.input ?? 0) > 0 && (
+                                                                        <span>Input: {(message.tokens.input ?? 0).toLocaleString()}</span>
+                                                                    )}
+                                                                    {(message.tokens.output ?? 0) > 0 && (
+                                                                        <span>Output: {(message.tokens.output ?? 0).toLocaleString()}</span>
+                                                                    )}
+                                                                    {(message.tokens.cache_read ?? 0) > 0 && (
+                                                                        <span>
+                                                                            Cache: {(message.tokens.cache_read ?? 0).toLocaleString()}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )}
+                                                        )}
                                                 </CardContent>
                                             </Card>
                                         </div>

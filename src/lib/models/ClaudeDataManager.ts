@@ -1,8 +1,8 @@
 import type { UsageData } from "@/lib/types";
+import { ModelData } from "./analytics/ModelStats";
+import { ProjectData } from "./analytics/ProjectStats";
 import { ClaudeEntry } from "./core/ClaudeEntry";
 import { SessionInfo } from "./core/SessionInfo";
-import { ProjectData } from "./analytics/ProjectStats";
-import { ModelData } from "./analytics/ModelStats";
 
 export interface Project {
     name: string;
@@ -15,8 +15,9 @@ export class ClaudeDataManager {
     private entries: ClaudeEntry[];
 
     constructor(rawData: UsageData[]) {
-        this.entries = rawData.map(data => ClaudeEntry.fromRawData(data))
-            .filter(entry => entry.isValid)
+        this.entries = rawData
+            .map((data) => ClaudeEntry.fromRawData(data))
+            .filter((entry) => entry.isValid)
             .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     }
 
@@ -45,17 +46,17 @@ export class ClaudeDataManager {
     }
 
     get uniqueProjects(): string[] {
-        const projects = new Set(this.entries.map(entry => entry.project));
+        const projects = new Set(this.entries.map((entry) => entry.project));
         return Array.from(projects);
     }
 
     get uniqueModels(): string[] {
-        const models = new Set(this.entries.map(entry => entry.model));
+        const models = new Set(this.entries.map((entry) => entry.model));
         return Array.from(models);
     }
 
     get uniqueSessions(): string[] {
-        const sessions = new Set(this.entries.map(entry => entry.sessionId));
+        const sessions = new Set(this.entries.map((entry) => entry.sessionId));
         return Array.from(sessions);
     }
 
@@ -78,23 +79,23 @@ export class ClaudeDataManager {
     }
 
     getEntriesByProject(projectName: string): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.belongsToProject(projectName));
+        return this.entries.filter((entry) => entry.belongsToProject(projectName));
     }
 
     getEntriesByModel(modelName: string): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.hasModel(modelName));
+        return this.entries.filter((entry) => entry.hasModel(modelName));
     }
 
     getEntriesBySession(sessionId: string): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.belongsToSession(sessionId));
+        return this.entries.filter((entry) => entry.belongsToSession(sessionId));
     }
 
     getEntriesByDateRange(start?: Date, end?: Date): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.isInDateRange(start, end));
+        return this.entries.filter((entry) => entry.isInDateRange(start, end));
     }
 
     getEntriesByHour(hour: number): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.getHour() === hour);
+        return this.entries.filter((entry) => entry.getHour() === hour);
     }
 
     // Aggregation methods (primitives)
@@ -110,13 +111,13 @@ export class ClaudeDataManager {
 
     getAllProjects(): ProjectData[] {
         const projectMap = new Map<string, ClaudeEntry[]>();
-        
+
         for (const entry of this.entries) {
             const project = entry.project;
             if (!projectMap.has(project)) {
                 projectMap.set(project, []);
             }
-            projectMap.get(project)!.push(entry);
+            projectMap.get(project)?.push(entry);
         }
 
         return ProjectData.createMultiple(projectMap);
@@ -129,13 +130,13 @@ export class ClaudeDataManager {
 
     getAllModels(): ModelData[] {
         const modelMap = new Map<string, ClaudeEntry[]>();
-        
+
         for (const entry of this.entries) {
             const model = entry.model;
             if (!modelMap.has(model)) {
                 modelMap.set(model, []);
             }
-            modelMap.get(model)!.push(entry);
+            modelMap.get(model)?.push(entry);
         }
 
         return ModelData.createMultiple(modelMap);
@@ -149,31 +150,34 @@ export class ClaudeDataManager {
     // Filter operations (primitives)
     filterByProject(projectName: string): ClaudeDataManager {
         const filteredEntries = this.getEntriesByProject(projectName);
-        const rawData = filteredEntries.map(entry => entry.rawEntry);
+        const rawData = filteredEntries.map((entry) => entry.rawEntry);
         return new ClaudeDataManager(rawData);
     }
 
     filterByModel(modelName: string): ClaudeDataManager {
         const filteredEntries = this.getEntriesByModel(modelName);
-        const rawData = filteredEntries.map(entry => entry.rawEntry);
+        const rawData = filteredEntries.map((entry) => entry.rawEntry);
         return new ClaudeDataManager(rawData);
     }
 
     filterBySession(sessionId: string): ClaudeDataManager {
         const filteredEntries = this.getEntriesBySession(sessionId);
-        const rawData = filteredEntries.map(entry => entry.rawEntry);
+        const rawData = filteredEntries.map((entry) => entry.rawEntry);
         return new ClaudeDataManager(rawData);
     }
 
     filterByDateRange(start?: Date, end?: Date): ClaudeDataManager {
         const filteredEntries = this.getEntriesByDateRange(start, end);
-        const rawData = filteredEntries.map(entry => entry.rawEntry);
+        const rawData = filteredEntries.map((entry) => entry.rawEntry);
         return new ClaudeDataManager(rawData);
     }
 
     // Static data loading methods (primitives)
     static parseJsonlContent(content: string): UsageData[] {
-        const lines = content.trim().split("\n").filter(line => line.trim());
+        const lines = content
+            .trim()
+            .split("\n")
+            .filter((line) => line.trim());
         const entries: UsageData[] = [];
 
         for (const line of lines) {
@@ -194,7 +198,8 @@ export class ClaudeDataManager {
         }
 
         const projects = new Map<string, Project>();
-        await this.processDirectory(directoryHandle, "", projects);
+        await ClaudeDataManager.processDirectory(directoryHandle, "", projects);
+
         return Array.from(projects.values()).sort((a, b) => b.messageCount - a.messageCount);
     }
 
@@ -204,25 +209,19 @@ export class ClaudeDataManager {
         }
 
         const allEntries: UsageData[] = [];
-        await this.collectAllEntries(directoryHandle, "", allEntries);
-        return allEntries.sort((a, b) => 
-            new Date(a.timestamp || "").getTime() - new Date(b.timestamp || "").getTime()
-        );
+        await ClaudeDataManager.collectAllEntries(directoryHandle, "", allEntries);
+        return allEntries.sort((a, b) => new Date(a.timestamp || "").getTime() - new Date(b.timestamp || "").getTime());
     }
 
-    private static async processDirectory(
-        directoryHandle: any, 
-        currentPath: string, 
-        projects: Map<string, Project>
-    ): Promise<void> {
+    private static async processDirectory(directoryHandle: any, currentPath: string, projects: Map<string, Project>): Promise<void> {
         try {
             for await (const [name, handle] of directoryHandle.entries()) {
                 const fullPath = currentPath ? `${currentPath}/${name}` : name;
 
                 if (handle.kind === "file" && name.endsWith(".jsonl")) {
-                    await this.processJsonlFile(handle, fullPath, projects);
+                    await ClaudeDataManager.processJsonlFile(handle, fullPath, projects);
                 } else if (handle.kind === "directory") {
-                    await this.processDirectory(handle, fullPath, projects);
+                    await ClaudeDataManager.processDirectory(handle, fullPath, projects);
                 }
             }
         } catch (error) {
@@ -230,29 +229,32 @@ export class ClaudeDataManager {
         }
     }
 
-    private static async processJsonlFile(
-        fileHandle: any, 
-        filePath: string, 
-        projects: Map<string, Project>
-    ): Promise<void> {
+    private static async processJsonlFile(fileHandle: any, filePath: string, projects: Map<string, Project>): Promise<void> {
         try {
             const file = await fileHandle.getFile();
             const content = await file.text();
-            const entries = this.parseJsonlContent(content);
+            const entries = ClaudeDataManager.parseJsonlContent(content);
 
             if (entries.length === 0) return;
 
-            let projectName = ClaudeEntry.getProjectNameFromPath(filePath);
+            // Use the same logic as TokenStats: always use formatProjectName on CWD
+            const rawCwdPaths = entries.map((entry) => entry.cwd).filter(Boolean);
 
-            const cwdProjects = new Set(
-                entries
-                    .map(entry => entry.cwd)
-                    .filter(Boolean)
-                    .map(cwd => ClaudeEntry.formatProjectName(cwd || "Unknown"))
-            );
-
-            if (cwdProjects.size === 1) {
-                projectName = Array.from(cwdProjects)[0];
+            let projectName: string;
+            if (rawCwdPaths.length > 0) {
+                // Use the first CWD path and format it properly (same as TokenStats)
+                projectName = ClaudeEntry.formatProjectName(rawCwdPaths[0] || "");
+            } else {
+                // Fallback: try to extract project from file path but format it properly
+                const pathSegments = filePath.split("/");
+                const projectFolder = pathSegments[1]; // e.g., "C--Users-Hardel-Desktop-repository-twitchplay"
+                if (projectFolder) {
+                    // Convert encoded path back to normal path then format
+                    const decodedPath = projectFolder.replace(/-/g, "/");
+                    projectName = ClaudeEntry.formatProjectName(decodedPath);
+                } else {
+                    projectName = "Unknown Project";
+                }
             }
 
             if (!projects.has(projectName)) {
@@ -278,11 +280,7 @@ export class ClaudeDataManager {
         }
     }
 
-    private static async collectAllEntries(
-        directoryHandle: any, 
-        currentPath: string, 
-        allEntries: UsageData[]
-    ): Promise<void> {
+    private static async collectAllEntries(directoryHandle: any, currentPath: string, allEntries: UsageData[]): Promise<void> {
         try {
             for await (const [name, handle] of directoryHandle.entries()) {
                 const fullPath = currentPath ? `${currentPath}/${name}` : name;
@@ -290,10 +288,10 @@ export class ClaudeDataManager {
                 if (handle.kind === "file" && name.endsWith(".jsonl")) {
                     const file = await handle.getFile();
                     const content = await file.text();
-                    const entries = this.parseJsonlContent(content);
+                    const entries = ClaudeDataManager.parseJsonlContent(content);
                     allEntries.push(...entries);
                 } else if (handle.kind === "directory") {
-                    await this.collectAllEntries(handle, fullPath, allEntries);
+                    await ClaudeDataManager.collectAllEntries(handle, fullPath, allEntries);
                 }
             }
         } catch (error) {

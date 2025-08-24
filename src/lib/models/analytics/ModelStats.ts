@@ -80,12 +80,12 @@ export class ModelData {
     }
 
     get activeDays(): number {
-        const uniqueDays = new Set(this.entries.map(entry => entry.formatDate()));
+        const uniqueDays = new Set(this.entries.map((entry) => entry.formatDate()));
         return uniqueDays.size;
     }
 
     get projects(): string[] {
-        const uniqueProjects = new Set(this.entries.map(entry => entry.project));
+        const uniqueProjects = new Set(this.entries.map((entry) => entry.project));
         return Array.from(uniqueProjects);
     }
 
@@ -117,7 +117,7 @@ export class ModelData {
 
     // Basic filter primitives
     hasProject(projectName: string): boolean {
-        return this.entries.some(entry => entry.belongsToProject(projectName));
+        return this.entries.some((entry) => entry.belongsToProject(projectName));
     }
 
     isInDateRange(start?: Date, end?: Date): boolean {
@@ -133,15 +133,15 @@ export class ModelData {
     }
 
     getEntriesByProject(projectName: string): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.belongsToProject(projectName));
+        return this.entries.filter((entry) => entry.belongsToProject(projectName));
     }
 
     getEntriesByDateRange(start: Date, end: Date): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.isInDateRange(start, end));
+        return this.entries.filter((entry) => entry.isInDateRange(start, end));
     }
 
     getEntriesByHour(hour: number): ClaudeEntry[] {
-        return this.entries.filter(entry => entry.getHour() === hour);
+        return this.entries.filter((entry) => entry.getHour() === hour);
     }
 
     // Static factory methods (primitives)

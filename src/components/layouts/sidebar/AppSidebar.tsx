@@ -1,8 +1,17 @@
-import { Github } from "lucide-react";
+import { Github, Heart } from "lucide-react";
 import type React from "react";
 import { NavMain } from "@/components/layouts/sidebar/NavMain";
 import { SettingsPopover } from "@/components/layouts/sidebar/SettingsPopover";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem
+} from "@/components/ui/sidebar";
 import { navigationItems } from "@/lib/data/navigation";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -30,9 +39,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
+                        <Button asChild variant="ghost" className="w-full justify-start p-2">
+                            <a href="https://www.buymeacoffee.com/hardel">
+                                <Heart className="size-4 animate-pulse" />
+                                <span className="font-medium">Donation</span>
+                            </a>
+                        </Button>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <a
-                                href="https://github.com/claude-code/cctime"
+                                href="https://github.com/Hardel-DW/cctime-web"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2">

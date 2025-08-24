@@ -1,6 +1,6 @@
 import { BarChart3, Eye } from "lucide-react";
 import { useState } from "react";
-import { ResponsiveContainer, Line, LineChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,23 +23,19 @@ interface PricingChartProps {
 }
 
 export function PricingChart({ data }: PricingChartProps) {
-    const [selectedPriceTypes, setSelectedPriceTypes] = useState<string[]>(['input', 'output']);
+    const [selectedPriceTypes, setSelectedPriceTypes] = useState<string[]>(["input", "output"]);
 
     const togglePriceType = (priceType: string) => {
-        setSelectedPriceTypes(prev =>
-            prev.includes(priceType)
-                ? prev.filter(type => type !== priceType)
-                : [...prev, priceType]
-        );
+        setSelectedPriceTypes((prev) => (prev.includes(priceType) ? prev.filter((type) => type !== priceType) : [...prev, priceType]));
     };
 
     // Price type definitions
     const priceTypes = [
-        { id: 'input', label: 'Input Price', getValue: (model: ModelPricingData) => model.inputPrice },
-        { id: 'output', label: 'Output Price', getValue: (model: ModelPricingData) => model.outputPrice },
-        { id: 'cacheWrite5m', label: 'Cache Write 5m', getValue: (model: ModelPricingData) => model.inputPrice * 1.25 },
-        { id: 'cacheWrite1h', label: 'Cache Write 1h', getValue: (model: ModelPricingData) => model.inputPrice * 2 },
-        { id: 'cacheRead', label: 'Cache Read', getValue: (model: ModelPricingData) => model.inputPrice * model.cacheReadMultiplier }
+        { id: "input", label: "Input Price", getValue: (model: ModelPricingData) => model.inputPrice },
+        { id: "output", label: "Output Price", getValue: (model: ModelPricingData) => model.outputPrice },
+        { id: "cacheWrite5m", label: "Cache Write 5m", getValue: (model: ModelPricingData) => model.inputPrice * 1.25 },
+        { id: "cacheWrite1h", label: "Cache Write 1h", getValue: (model: ModelPricingData) => model.inputPrice * 2 },
+        { id: "cacheRead", label: "Cache Read", getValue: (model: ModelPricingData) => model.inputPrice * model.cacheReadMultiplier }
     ];
 
     // Prepare chart data - each model with all price types
@@ -53,18 +49,14 @@ export function PricingChart({ data }: PricingChartProps) {
             contextWindow: model.contextWindow
         };
 
-        priceTypes.forEach(priceType => {
+        priceTypes.forEach((priceType) => {
             dataPoint[priceType.id] = priceType.getValue(model);
         });
 
         return dataPoint;
     });
 
-    const maxPrice = Math.max(
-        ...chartData.flatMap(item =>
-            priceTypes.map(priceType => item[priceType.id])
-        )
-    );
+    const maxPrice = Math.max(...chartData.flatMap((item) => priceTypes.map((priceType) => item[priceType.id])));
 
     return (
         <Card>
@@ -95,10 +87,7 @@ export function PricingChart({ data }: PricingChartProps) {
                                     checked={selectedPriceTypes.includes(priceType.id)}
                                     onCheckedChange={() => togglePriceType(priceType.id)}
                                 />
-                                <label
-                                    htmlFor={priceType.id}
-                                    className="text-sm font-medium leading-none cursor-pointer"
-                                >
+                                <label htmlFor={priceType.id} className="text-sm font-medium leading-none cursor-pointer">
                                     {priceType.label}
                                 </label>
                             </div>
@@ -113,11 +102,7 @@ export function PricingChart({ data }: PricingChartProps) {
                 <div className="h-[500px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={chartData} margin={{ left: 60, right: 60, top: 20, bottom: 80 }}>
-                            <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="var(--border)"
-                                opacity={0.4}
-                            />
+                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} />
                             <XAxis
                                 dataKey="modelName"
                                 tick={{ fontSize: 10, fill: "var(--foreground)" }}
@@ -134,14 +119,19 @@ export function PricingChart({ data }: PricingChartProps) {
                                 axisLine={{ stroke: "var(--border)" }}
                                 domain={[0, Math.ceil(maxPrice * 1.1)]}
                                 tickFormatter={(value) => `$${value}`}
-                                label={{ value: 'Price ($/MTok)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: 'var(--foreground)' } }}
+                                label={{
+                                    value: "Price ($/MTok)",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                    style: { textAnchor: "middle", fill: "var(--foreground)" }
+                                }}
                             />
                             <Tooltip
                                 contentStyle={{
-                                    backgroundColor: 'var(--background)',
-                                    border: '1px solid var(--border)',
-                                    borderRadius: '8px',
-                                    color: 'var(--foreground)'
+                                    backgroundColor: "var(--background)",
+                                    border: "1px solid var(--border)",
+                                    borderRadius: "8px",
+                                    color: "var(--foreground)"
                                 }}
                                 content={({ active, payload }) => {
                                     if (active && payload && payload.length > 0) {
@@ -153,9 +143,9 @@ export function PricingChart({ data }: PricingChartProps) {
                                                 <p className="text-sm text-muted-foreground">Tier: {data.tier}</p>
                                                 <p className="text-sm text-muted-foreground">Context: {data.contextWindow}</p>
                                                 <div className="mt-2 space-y-1">
-                                                    {payload.map((entry, index) => (
-                                                        <p key={index} className="text-sm" style={{ color: entry.color }}>
-                                                            {priceTypes.find(pt => pt.id === entry.dataKey)?.label}: ${entry.value}/MTok
+                                                    {payload.map((entry) => (
+                                                        <p key={entry.dataKey} className="text-sm" style={{ color: entry.color }}>
+                                                            {priceTypes.find((pt) => pt.id === entry.dataKey)?.label}: ${entry.value}/MTok
                                                         </p>
                                                     ))}
                                                 </div>
@@ -166,8 +156,8 @@ export function PricingChart({ data }: PricingChartProps) {
                                 }}
                             />
                             {selectedPriceTypes.map((priceTypeId, index) => {
-                                const priceType = priceTypes.find(pt => pt.id === priceTypeId);
-                                const colors = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)'];
+                                const priceType = priceTypes.find((pt) => pt.id === priceTypeId);
+                                const colors = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
                                 return (
                                     <Line
                                         key={priceTypeId}
@@ -185,7 +175,7 @@ export function PricingChart({ data }: PricingChartProps) {
                                 verticalAlign="bottom"
                                 height={36}
                                 iconType="line"
-                                wrapperStyle={{ paddingTop: '20px', color: 'var(--foreground)' }}
+                                wrapperStyle={{ paddingTop: "20px", color: "var(--foreground)" }}
                             />
                         </LineChart>
                     </ResponsiveContainer>
@@ -195,13 +185,15 @@ export function PricingChart({ data }: PricingChartProps) {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t">
                     <div className="text-center">
                         <div className="text-lg font-semibold">
-                            ${Math.min(...data.map(m => m.inputPrice)).toFixed(2)} - ${Math.max(...data.map(m => m.inputPrice)).toFixed(2)}
+                            ${Math.min(...data.map((m) => m.inputPrice)).toFixed(2)} - $
+                            {Math.max(...data.map((m) => m.inputPrice)).toFixed(2)}
                         </div>
                         <div className="text-xs text-muted-foreground">Input price range ($/MTok)</div>
                     </div>
                     <div className="text-center">
                         <div className="text-lg font-semibold">
-                            ${Math.min(...data.map(m => m.outputPrice)).toFixed(2)} - ${Math.max(...data.map(m => m.outputPrice)).toFixed(2)}
+                            ${Math.min(...data.map((m) => m.outputPrice)).toFixed(2)} - $
+                            {Math.max(...data.map((m) => m.outputPrice)).toFixed(2)}
                         </div>
                         <div className="text-xs text-muted-foreground">Output price range ($/MTok)</div>
                     </div>
@@ -212,9 +204,7 @@ export function PricingChart({ data }: PricingChartProps) {
                         <div className="text-xs text-muted-foreground">Price types shown</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-lg font-semibold">
-                            {new Set(data.map(m => m.tier)).size}
-                        </div>
+                        <div className="text-lg font-semibold">{new Set(data.map((m) => m.tier)).size}</div>
                         <div className="text-xs text-muted-foreground">Different tiers</div>
                     </div>
                 </div>

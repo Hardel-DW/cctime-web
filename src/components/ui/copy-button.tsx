@@ -1,6 +1,6 @@
 import { Check, Copy } from "lucide-react";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Button } from "@/components/ui/button";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
 
 interface CopyButtonProps {
@@ -19,15 +19,12 @@ export function CopyButton({ text, id, className = "" }: CopyButtonProps) {
             size="sm"
             className={cn(
                 "h-6 w-6 p-0 transition-colors",
-                isTextCopied && "text-green-400 bg-green-500/10 hover:bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 dark:hover:bg-green-500/20",
+                isTextCopied &&
+                    "text-green-400 bg-green-500/10 hover:bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 dark:hover:bg-green-500/20",
                 className
             )}
             onClick={() => copyToClipboard(text, id)}>
-            {isTextCopied ? (
-                <Check className="h-3 w-3 animate-in zoom-in-50 duration-200" />
-            ) : (
-                <Copy className="h-3 w-3" />
-            )}
+            {isTextCopied ? <Check className="h-3 w-3 animate-in zoom-in-50 duration-200" /> : <Copy className="h-3 w-3" />}
         </Button>
     );
 }

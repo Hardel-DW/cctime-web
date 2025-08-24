@@ -1,4 +1,20 @@
-import { Root, Portal, Trigger, Content, Group, Item, CheckboxItem, RadioGroup, RadioItem, Label, Separator, Sub, SubTrigger, SubContent, ItemIndicator } from "@radix-ui/react-dropdown-menu";
+import {
+    CheckboxItem,
+    Content,
+    Group,
+    Item,
+    ItemIndicator,
+    Label,
+    Portal,
+    RadioGroup,
+    RadioItem,
+    Root,
+    Separator,
+    Sub,
+    SubContent,
+    SubTrigger,
+    Trigger
+} from "@radix-ui/react-dropdown-menu";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import type React from "react";
 
@@ -59,12 +75,7 @@ function DropdownMenuItem({
     );
 }
 
-function DropdownMenuCheckboxItem({
-    className,
-    children,
-    checked,
-    ...props
-}: React.ComponentProps<typeof CheckboxItem>) {
+function DropdownMenuCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof CheckboxItem>) {
     return (
         <CheckboxItem
             data-slot="dropdown-menu-checkbox-item"
@@ -125,13 +136,7 @@ function DropdownMenuLabel({
 }
 
 function DropdownMenuSeparator({ className, ...props }: React.ComponentProps<typeof Separator>) {
-    return (
-        <Separator
-            data-slot="dropdown-menu-separator"
-            className={cn("bg-border -mx-1 my-1 h-px", className)}
-            {...props}
-        />
-    );
+    return <Separator data-slot="dropdown-menu-separator" className={cn("bg-border -mx-1 my-1 h-px", className)} {...props} />;
 }
 
 function DropdownMenuShortcut({ className, ...props }: React.ComponentProps<"span">) {

@@ -39,14 +39,15 @@ export class TokenStats {
     private entries: ClaudeEntry[];
 
     constructor(entries: ClaudeEntry[]) {
-        this.entries = entries.filter(entry => {
+        this.entries = entries.filter((entry) => {
             const usage = entry.rawEntry.message?.usage;
-            return usage && (
-                usage.input_tokens ||
-                usage.output_tokens ||
-                usage.cache_creation_input_tokens ||
-                usage.cache_read_input_tokens ||
-                entry.rawEntry.costUSD
+            return (
+                usage &&
+                (usage.input_tokens ||
+                    usage.output_tokens ||
+                    usage.cache_creation_input_tokens ||
+                    usage.cache_read_input_tokens ||
+                    entry.rawEntry.costUSD)
             );
         });
     }
@@ -64,13 +65,15 @@ export class TokenStats {
                 acc.totalOutputTokens += outputTokens;
                 acc.totalCacheCreationTokens += cacheCreationTokens;
                 acc.totalCacheReadTokens += cacheReadTokens;
-                const cost = entry.rawEntry.costUSD || TokenInfo.calculateEstimatedCost(
-                    entry.rawEntry.message?.model || 'claude-3-5-sonnet-20241022',
-                    inputTokens,
-                    outputTokens,
-                    cacheCreationTokens,
-                    cacheReadTokens
-                );
+                const cost =
+                    entry.rawEntry.costUSD ||
+                    TokenInfo.calculateEstimatedCost(
+                        entry.rawEntry.message?.model || "claude-3-5-sonnet-20241022",
+                        inputTokens,
+                        outputTokens,
+                        cacheCreationTokens,
+                        cacheReadTokens
+                    );
                 acc.totalCost += cost;
 
                 return acc;
@@ -99,42 +102,47 @@ export class TokenStats {
     }
 
     get modelStats(): Record<string, ModelStatsData> {
-        return this.entries.reduce((acc, entry) => {
-            const model = entry.rawEntry.message?.model || 'unknown';
-            const usage = entry.rawEntry.message?.usage || {};
-            const inputTokens = usage.input_tokens || 0;
-            const outputTokens = usage.output_tokens || 0;
-            const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
-            const cacheReadTokens = usage.cache_read_input_tokens || 0;
-            const cost = entry.rawEntry.costUSD || TokenInfo.calculateEstimatedCost(
-                model || entry.rawEntry.message?.model || 'claude-3-5-sonnet-20241022',
-                inputTokens,
-                outputTokens,
-                cacheCreationTokens,
-                cacheReadTokens
-            );
+        return this.entries.reduce(
+            (acc, entry) => {
+                const model = entry.rawEntry.message?.model || "unknown";
+                const usage = entry.rawEntry.message?.usage || {};
+                const inputTokens = usage.input_tokens || 0;
+                const outputTokens = usage.output_tokens || 0;
+                const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
+                const cacheReadTokens = usage.cache_read_input_tokens || 0;
+                const cost =
+                    entry.rawEntry.costUSD ||
+                    TokenInfo.calculateEstimatedCost(
+                        model || entry.rawEntry.message?.model || "claude-3-5-sonnet-20241022",
+                        inputTokens,
+                        outputTokens,
+                        cacheCreationTokens,
+                        cacheReadTokens
+                    );
 
-            if (!acc[model]) {
-                acc[model] = {
-                    name: model,
-                    totalTokens: 0,
-                    inputTokens: 0,
-                    outputTokens: 0,
-                    cacheTokens: 0,
-                    cost: 0,
-                    messages: 0
-                };
-            }
+                if (!acc[model]) {
+                    acc[model] = {
+                        name: model,
+                        totalTokens: 0,
+                        inputTokens: 0,
+                        outputTokens: 0,
+                        cacheTokens: 0,
+                        cost: 0,
+                        messages: 0
+                    };
+                }
 
-            acc[model].totalTokens += inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens;
-            acc[model].inputTokens += inputTokens;
-            acc[model].outputTokens += outputTokens;
-            acc[model].cacheTokens += cacheCreationTokens + cacheReadTokens;
-            acc[model].cost += cost;
-            acc[model].messages += 1;
+                acc[model].totalTokens += inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens;
+                acc[model].inputTokens += inputTokens;
+                acc[model].outputTokens += outputTokens;
+                acc[model].cacheTokens += cacheCreationTokens + cacheReadTokens;
+                acc[model].cost += cost;
+                acc[model].messages += 1;
 
-            return acc;
-        }, {} as Record<string, ModelStatsData>);
+                return acc;
+            },
+            {} as Record<string, ModelStatsData>
+        );
     }
 
     get modelChartData(): ModelStatsData[] {
@@ -142,44 +150,49 @@ export class TokenStats {
     }
 
     get projectStats(): Record<string, ProjectStatsData> {
-        return this.entries.reduce((acc, entry) => {
-            const fullPath = entry.rawEntry.cwd || 'Unknown';
-            const projectName = ClaudeEntryClass.formatProjectName(fullPath);
-            const usage = entry.rawEntry.message?.usage || {};
-            const inputTokens = usage.input_tokens || 0;
-            const outputTokens = usage.output_tokens || 0;
-            const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
-            const cacheReadTokens = usage.cache_read_input_tokens || 0;
-            const cost = entry.rawEntry.costUSD || TokenInfo.calculateEstimatedCost(
-                entry.rawEntry.message?.model || 'claude-3-5-sonnet-20241022',
-                inputTokens - cacheCreationTokens - cacheReadTokens,
-                outputTokens,
-                cacheCreationTokens,
-                cacheReadTokens
-            );
+        return this.entries.reduce(
+            (acc, entry) => {
+                const fullPath = entry.rawEntry.cwd || "Unknown";
+                const projectName = ClaudeEntryClass.formatProjectName(fullPath);
+                const usage = entry.rawEntry.message?.usage || {};
+                const inputTokens = usage.input_tokens || 0;
+                const outputTokens = usage.output_tokens || 0;
+                const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
+                const cacheReadTokens = usage.cache_read_input_tokens || 0;
+                const cost =
+                    entry.rawEntry.costUSD ||
+                    TokenInfo.calculateEstimatedCost(
+                        entry.rawEntry.message?.model || "claude-3-5-sonnet-20241022",
+                        inputTokens - cacheCreationTokens - cacheReadTokens,
+                        outputTokens,
+                        cacheCreationTokens,
+                        cacheReadTokens
+                    );
 
-            if (!acc[projectName]) {
-                acc[projectName] = {
-                    name: projectName,
-                    fullPath: entry.rawEntry.cwd,
-                    totalTokens: 0,
-                    inputTokens: 0,
-                    outputTokens: 0,
-                    cacheTokens: 0,
-                    cost: 0,
-                    messages: 0
-                };
-            }
+                if (!acc[projectName]) {
+                    acc[projectName] = {
+                        name: projectName,
+                        fullPath: entry.rawEntry.cwd,
+                        totalTokens: 0,
+                        inputTokens: 0,
+                        outputTokens: 0,
+                        cacheTokens: 0,
+                        cost: 0,
+                        messages: 0
+                    };
+                }
 
-            acc[projectName].totalTokens += inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens;
-            acc[projectName].inputTokens += inputTokens;
-            acc[projectName].outputTokens += outputTokens;
-            acc[projectName].cacheTokens += cacheCreationTokens + cacheReadTokens;
-            acc[projectName].cost += cost;
-            acc[projectName].messages += 1;
+                acc[projectName].totalTokens += inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens;
+                acc[projectName].inputTokens += inputTokens;
+                acc[projectName].outputTokens += outputTokens;
+                acc[projectName].cacheTokens += cacheCreationTokens + cacheReadTokens;
+                acc[projectName].cost += cost;
+                acc[projectName].messages += 1;
 
-            return acc;
-        }, {} as Record<string, ProjectStatsData>);
+                return acc;
+            },
+            {} as Record<string, ProjectStatsData>
+        );
     }
 
     get projectChartData(): ProjectStatsData[] {
@@ -187,11 +200,13 @@ export class TokenStats {
     }
 
     get tokenEntries(): any[] {
-        return this.entries.map(entry => entry.rawEntry);
+        return this.entries.map((entry) => entry.rawEntry);
     }
 
     static fromRawEntries(rawEntries: any[]): TokenStats {
-        const entries = rawEntries.map(data => ({ rawEntry: data, project: data.cwd ? data.cwd.split('/').pop() || 'Unknown' : 'Unknown' } as ClaudeEntry));
+        const entries = rawEntries.map(
+            (data) => ({ rawEntry: data, project: data.cwd ? data.cwd.split("/").pop() || "Unknown" : "Unknown" }) as ClaudeEntry
+        );
         return new TokenStats(entries);
     }
 }

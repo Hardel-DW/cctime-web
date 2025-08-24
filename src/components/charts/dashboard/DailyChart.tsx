@@ -59,12 +59,7 @@ export function DailyChart({ data }: { data: DailyConversation[] }) {
                                     <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
                                 </linearGradient>
                             </defs>
-                            <XAxis
-                                dataKey="date"
-                                tick={{ fontSize: 12, fill: "var(--foreground)" }}
-                                tickLine={false}
-                                axisLine={false}
-                            />
+                            <XAxis dataKey="date" tick={{ fontSize: 12, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
                             <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
                             <ChartTooltip
                                 content={<ChartTooltipContent />}

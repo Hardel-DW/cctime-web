@@ -5,7 +5,7 @@ import type { UsageData } from "@/lib/types";
 
 export function DailyUsageTrendChart({ tokenEntries }: { tokenEntries: UsageData[] }) {
     const data = useMemo(() => {
-        const dailyUsage: Record<string, { inputTokens: number; outputTokens: number; cost: number; messages: number; }> = {};
+        const dailyUsage: Record<string, { inputTokens: number; outputTokens: number; cost: number; messages: number }> = {};
 
         tokenEntries.forEach((entry) => {
             const usage = entry.message?.usage;
@@ -15,13 +15,9 @@ export function DailyUsageTrendChart({ tokenEntries }: { tokenEntries: UsageData
             const outputTokens = usage?.output_tokens || 0;
             const model = entry.message?.model || "unknown";
 
-            const cost = entry.costUSD || TokenInfo.calculateEstimatedCost(
-                model,
-                baseInputTokens,
-                outputTokens,
-                cacheCreationTokens,
-                cacheReadTokens
-            );
+            const cost =
+                entry.costUSD ||
+                TokenInfo.calculateEstimatedCost(model, baseInputTokens, outputTokens, cacheCreationTokens, cacheReadTokens);
 
             const inputTokens = baseInputTokens + cacheCreationTokens + cacheReadTokens;
             const date = new Date(entry.timestamp || new Date()).toISOString().split("T")[0];
@@ -56,9 +52,7 @@ export function DailyUsageTrendChart({ tokenEntries }: { tokenEntries: UsageData
                 <XAxis
                     dataKey="date"
                     tick={{ fontSize: 12, fill: "var(--foreground)" }}
-                    tickFormatter={(date) =>
-                        new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-                    }
+                    tickFormatter={(date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                 />
                 <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} />
                 <Tooltip

@@ -5,7 +5,7 @@ import type { UsageData } from "@/lib/types";
 
 export function TokenUsageTimelineChart({ tokenEntries }: { tokenEntries: UsageData[] }) {
     const data = useMemo(() => {
-        const dailyUsage: Record<string, { inputTokens: number; outputTokens: number; cost: number; messages: number; }> = {};
+        const dailyUsage: Record<string, { inputTokens: number; outputTokens: number; cost: number; messages: number }> = {};
 
         tokenEntries.forEach((entry) => {
             const usage = entry.message?.usage;
@@ -15,13 +15,9 @@ export function TokenUsageTimelineChart({ tokenEntries }: { tokenEntries: UsageD
             const outputTokens = usage?.output_tokens || 0;
             const model = entry.message?.model || "unknown";
 
-            const cost = entry.costUSD || TokenInfo.calculateEstimatedCost(
-                model,
-                baseInputTokens,
-                outputTokens,
-                cacheCreationTokens,
-                cacheReadTokens
-            );
+            const cost =
+                entry.costUSD ||
+                TokenInfo.calculateEstimatedCost(model, baseInputTokens, outputTokens, cacheCreationTokens, cacheReadTokens);
 
             const inputTokens = baseInputTokens + cacheCreationTokens + cacheReadTokens;
             const date = new Date(entry.timestamp || new Date()).toISOString().split("T")[0];
@@ -55,9 +51,7 @@ export function TokenUsageTimelineChart({ tokenEntries }: { tokenEntries: UsageD
                 <XAxis
                     dataKey="date"
                     tick={{ fontSize: 12, fill: "var(--foreground)" }}
-                    tickFormatter={(date) =>
-                        new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-                    }
+                    tickFormatter={(date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                 />
                 <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} />
                 <Tooltip
@@ -74,20 +68,8 @@ export function TokenUsageTimelineChart({ tokenEntries }: { tokenEntries: UsageD
                         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
                     }}
                 />
-                <Bar
-                    dataKey="inputTokens"
-                    fill="var(--chart-1)"
-                    name="Input Tokens"
-                    radius={[4, 4, 0, 0]}
-                    opacity={0.9}
-                />
-                <Bar
-                    dataKey="outputTokens"
-                    fill="var(--chart-2)"
-                    name="Output Tokens"
-                    radius={[4, 4, 0, 0]}
-                    opacity={0.9}
-                />
+                <Bar dataKey="inputTokens" fill="var(--chart-1)" name="Input Tokens" radius={[4, 4, 0, 0]} opacity={0.9} />
+                <Bar dataKey="outputTokens" fill="var(--chart-2)" name="Output Tokens" radius={[4, 4, 0, 0]} opacity={0.9} />
             </BarChart>
         </ResponsiveContainer>
     );

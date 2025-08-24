@@ -5,4 +5,3 @@ export const Route = createFileRoute("/messages")({
         sessionId: (search.sessionId as string) || ""
     })
 });
-

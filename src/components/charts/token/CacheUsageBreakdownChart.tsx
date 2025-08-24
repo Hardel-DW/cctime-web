@@ -45,21 +45,9 @@ export function CacheUsageBreakdownChart({ tokenEntries }: { tokenEntries: Usage
             <ChartContainer config={{}} className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                        <Pie
-                            data={data}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={50}
-                            outerRadius={100}
-                            paddingAngle={3}
-                            dataKey="value">
+                        <Pie data={data} cx="50%" cy="50%" innerRadius={50} outerRadius={100} paddingAngle={3} dataKey="value">
                             {data.map((entry) => (
-                                <Cell
-                                    key={entry.name}
-                                    fill={entry.fill}
-                                    stroke="var(--background)"
-                                    strokeWidth={2}
-                                />
+                                <Cell key={entry.name} fill={entry.fill} stroke="var(--background)" strokeWidth={2} />
                             ))}
                         </Pie>
                         <ChartTooltip
@@ -69,9 +57,7 @@ export function CacheUsageBreakdownChart({ tokenEntries }: { tokenEntries: Usage
                                     return (
                                         <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
                                             <p className="font-semibold text-foreground">{data.name}</p>
-                                            <p className="text-sm text-muted-foreground">
-                                                Tokens: {data.value.toLocaleString()}
-                                            </p>
+                                            <p className="text-sm text-muted-foreground">Tokens: {data.value.toLocaleString()}</p>
                                         </div>
                                     );
                                 }
@@ -91,9 +77,7 @@ export function CacheUsageBreakdownChart({ tokenEntries }: { tokenEntries: Usage
                         </div>
                         <div className="flex gap-4 text-muted-foreground">
                             <span>{item.value.toLocaleString()}</span>
-                            <span>
-                                ({totalCacheTokens > 0 ? Math.round((item.value / totalCacheTokens) * 100) : 0}%)
-                            </span>
+                            <span>({totalCacheTokens > 0 ? Math.round((item.value / totalCacheTokens) * 100) : 0}%)</span>
                         </div>
                     </div>
                 ))}

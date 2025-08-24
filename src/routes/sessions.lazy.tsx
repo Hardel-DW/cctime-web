@@ -1,17 +1,16 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
 import { Bot, Calendar, Clock, MessageSquare, Users } from "lucide-react";
+import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
+import { FilterIndicator } from "@/components/layouts/FilterIndicator";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useFilterStore } from "@/lib/store";
-import { DataService } from "@/lib/models/DataService";
 import { SessionStats } from "@/lib/models/analytics/SessionStats";
-import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
-import { FilterIndicator } from "@/components/layouts/FilterIndicator";
+import { DataService } from "@/lib/models/DataService";
+import { useFilterStore } from "@/lib/store";
 
 export const Route = createLazyFileRoute("/sessions")({
     component: SessionsComponent
@@ -35,8 +34,7 @@ export function SessionsComponent() {
                 error={error}
                 loadingMessage="Loading your session data..."
                 noDirectoryIcon={<Bot className="h-12 w-12" />}
-                noDirectoryMessage="Please select your Claude data directory to view sessions."
-            >
+                noDirectoryMessage="Please select your Claude data directory to view sessions.">
                 <div className="space-y-6">
                     <div className="space-y-3">
                         <div className="space-y-2">

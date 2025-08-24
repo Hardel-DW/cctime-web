@@ -33,31 +33,35 @@ export class SessionInfo {
     }
 
     get models(): string[] {
-        const uniqueModels = new Set(this.entries.map(entry => entry.model));
+        const uniqueModels = new Set(this.entries.map((entry) => entry.model));
         return Array.from(uniqueModels);
     }
 
     get project(): string {
         // Most common project in session
-        const projects = this.entries.map(entry => entry.project);
-        const projectCounts = projects.reduce((acc, project) => {
-            acc[project] = (acc[project] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>);
-        
-        return Object.entries(projectCounts)
-            .sort(([,a], [,b]) => b - a)[0]?.[0] || "Unknown Project";
+        const projects = this.entries.map((entry) => entry.project);
+        const projectCounts = projects.reduce(
+            (acc, project) => {
+                acc[project] = (acc[project] || 0) + 1;
+                return acc;
+            },
+            {} as Record<string, number>
+        );
+
+        return Object.entries(projectCounts).sort(([, a], [, b]) => b - a)[0]?.[0] || "Unknown Project";
     }
 
     get primaryModel(): string {
-        const models = this.entries.map(entry => entry.model);
-        const modelCounts = models.reduce((acc, model) => {
-            acc[model] = (acc[model] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>);
-        
-        return Object.entries(modelCounts)
-            .sort(([,a], [,b]) => b - a)[0]?.[0] || "unknown-model";
+        const models = this.entries.map((entry) => entry.model);
+        const modelCounts = models.reduce(
+            (acc, model) => {
+                acc[model] = (acc[model] || 0) + 1;
+                return acc;
+            },
+            {} as Record<string, number>
+        );
+
+        return Object.entries(modelCounts).sort(([, a], [, b]) => b - a)[0]?.[0] || "unknown-model";
     }
 
     get averageTokensPerMessage(): number {
@@ -79,11 +83,11 @@ export class SessionInfo {
 
     // Basic filter primitives
     hasProject(projectName: string): boolean {
-        return this.entries.some(entry => entry.belongsToProject(projectName));
+        return this.entries.some((entry) => entry.belongsToProject(projectName));
     }
 
     hasModel(modelName: string): boolean {
-        return this.entries.some(entry => entry.hasModel(modelName));
+        return this.entries.some((entry) => entry.hasModel(modelName));
     }
 
     isInDateRange(start?: Date, end?: Date): boolean {
@@ -145,9 +149,7 @@ export class SessionInfo {
     }
 
     getEntriesByTimeRange(start: Date, end: Date): ClaudeEntry[] {
-        return this.entries.filter(entry => 
-            entry.timestamp >= start && entry.timestamp <= end
-        );
+        return this.entries.filter((entry) => entry.timestamp >= start && entry.timestamp <= end);
     }
 
     // Static factory methods (primitives)
@@ -157,20 +159,20 @@ export class SessionInfo {
 
     static groupBySession(entries: ClaudeEntry[]): Map<string, SessionInfo> {
         const sessionMap = new Map<string, ClaudeEntry[]>();
-        
+
         for (const entry of entries) {
             const sessionId = entry.sessionId;
             if (!sessionMap.has(sessionId)) {
                 sessionMap.set(sessionId, []);
             }
-            sessionMap.get(sessionId)!.push(entry);
+            sessionMap.get(sessionId)?.push(entry);
         }
-        
+
         const sessions = new Map<string, SessionInfo>();
         for (const [sessionId, sessionEntries] of sessionMap) {
             sessions.set(sessionId, new SessionInfo(sessionEntries));
         }
-        
+
         return sessions;
     }
 }

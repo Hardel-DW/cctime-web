@@ -2,12 +2,7 @@ import { Root } from "@radix-ui/react-separator";
 import type React from "react";
 import { cn } from "@/lib/utils";
 
-function Separator({
-    className,
-    orientation = "horizontal",
-    decorative = true,
-    ...props
-}: React.ComponentProps<typeof Root>) {
+function Separator({ className, orientation = "horizontal", decorative = true, ...props }: React.ComponentProps<typeof Root>) {
     return (
         <Root
             data-slot="separator"

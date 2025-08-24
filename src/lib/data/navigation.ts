@@ -1,5 +1,5 @@
-import { BarChart3, Calendar, Coins, DollarSign, Timer } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { BarChart3, Calendar, Coins, DollarSign, Timer } from "lucide-react";
 
 export interface NavItem {
     title: string;

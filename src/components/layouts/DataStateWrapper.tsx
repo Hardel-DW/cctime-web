@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFilterStore } from "@/lib/store";
 
@@ -55,9 +55,7 @@ export function DataStateWrapper({
             <div className="flex flex-1 items-center justify-center p-6">
                 <Card className="w-full max-w-md text-center">
                     <CardContent className="pt-6">
-                        <div className="h-12 w-12 mx-auto mb-4 text-red-500 flex items-center justify-center">
-                            {noDirectoryIcon}
-                        </div>
+                        <div className="h-12 w-12 mx-auto mb-4 text-red-500 flex items-center justify-center">{noDirectoryIcon}</div>
                         <h3 className="text-lg font-semibold mb-2">Error Loading Data</h3>
                         <p className="text-muted-foreground mb-4">Failed to load data.</p>
                     </CardContent>

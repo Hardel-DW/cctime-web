@@ -1,22 +1,22 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { Coins, Cpu, DollarSign, MessageSquare, Zap } from "lucide-react";
+import { CacheUsageBreakdownChart } from "@/components/charts/token/CacheUsageBreakdownChart";
+import { DailyUsageTrendChart } from "@/components/charts/token/DailyUsageTrendChart";
+import { TokenDistributionChart } from "@/components/charts/token/TokenDistributionChart";
+import { TokenUsageTimelineChart } from "@/components/charts/token/TokenUsageTimelineChart";
+import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
+import { FilterIndicator } from "@/components/layouts/FilterIndicator";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useFilterStore } from "@/lib/store";
-import { ClaudeDataManager } from "@/lib/models/ClaudeDataManager";
-import { TokenStats } from "@/lib/models/analytics/TokenStats";
 import { CacheStats } from "@/lib/models/analytics/CacheStats";
-import { DataFilters } from "@/lib/models/analytics/DataFilters";
-import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
-import { FilterIndicator } from "@/components/layouts/FilterIndicator";
-import { TokenDistributionChart } from "@/components/charts/token/TokenDistributionChart";
-import { DailyUsageTrendChart } from "@/components/charts/token/DailyUsageTrendChart";
-import { CacheUsageBreakdownChart } from "@/components/charts/token/CacheUsageBreakdownChart";
-import { TokenUsageTimelineChart } from "@/components/charts/token/TokenUsageTimelineChart";
+import { filterTokenEntries } from "@/lib/models/analytics/DataFilters";
+import { TokenStats } from "@/lib/models/analytics/TokenStats";
+import { ClaudeDataManager } from "@/lib/models/ClaudeDataManager";
+import { useFilterStore } from "@/lib/store";
 
 export const Route = createLazyFileRoute("/token")({
     component: TokenComponent
@@ -24,13 +24,17 @@ export const Route = createLazyFileRoute("/token")({
 
 export function TokenComponent() {
     const { selectedProject, startDate, endDate, directoryHandle } = useFilterStore();
-    const { data: allEntries, isLoading, error } = useQuery({
+    const {
+        data: allEntries,
+        isLoading,
+        error
+    } = useQuery({
         queryKey: ["token-usage-data", selectedProject, startDate, endDate],
         queryFn: () => ClaudeDataManager.loadAllUsageData(directoryHandle),
         enabled: !!directoryHandle
     });
 
-    const filteredEntries = DataFilters.filterTokenEntries(allEntries || [], selectedProject, startDate, endDate);
+    const filteredEntries = filterTokenEntries(allEntries || [], selectedProject, startDate, endDate);
     const tokenStats = TokenStats.fromRawEntries(filteredEntries);
     const cacheStats = CacheStats.fromRawEntries(filteredEntries);
     const stats = tokenStats.basicStats;
@@ -46,8 +50,7 @@ export function TokenComponent() {
                 error={error}
                 loadingMessage="Loading token usage data..."
                 noDirectoryIcon={<Coins className="h-12 w-12" />}
-                noDirectoryMessage="Please select your Claude data directory to view token usage analytics."
-            >
+                noDirectoryMessage="Please select your Claude data directory to view token usage analytics.">
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
@@ -109,7 +112,9 @@ export function TokenComponent() {
                                         ? `${(cacheBasicStats.cacheHitRate * 100).toFixed(0)}%`
                                         : "0%"}
                                 </div>
-                                <p className="text-xs text-muted-foreground">{cacheBasicStats.totalCacheReadTokens.toLocaleString()} reads</p>
+                                <p className="text-xs text-muted-foreground">
+                                    {cacheBasicStats.totalCacheReadTokens.toLocaleString()} reads
+                                </p>
                             </CardContent>
                         </Card>
 
@@ -189,31 +194,37 @@ export function TokenComponent() {
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <p className="text-sm font-medium">Cache Creation</p>
-                                                <p className="text-2xl font-bold">{cacheBasicStats.totalCacheCreationTokens.toLocaleString()}</p>
+                                                <p className="text-2xl font-bold">
+                                                    {cacheBasicStats.totalCacheCreationTokens.toLocaleString()}
+                                                </p>
                                                 <p className="text-xs text-muted-foreground">tokens created</p>
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium">Cache Reads</p>
-                                                <p className="text-2xl font-bold">{cacheBasicStats.totalCacheReadTokens.toLocaleString()}</p>
+                                                <p className="text-2xl font-bold">
+                                                    {cacheBasicStats.totalCacheReadTokens.toLocaleString()}
+                                                </p>
                                                 <p className="text-xs text-muted-foreground">tokens read</p>
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium">Ephemeral 5m</p>
-                                                <p className="text-2xl font-bold">{cacheBasicStats.totalEphemeral5mTokens.toLocaleString()}</p>
+                                                <p className="text-2xl font-bold">
+                                                    {cacheBasicStats.totalEphemeral5mTokens.toLocaleString()}
+                                                </p>
                                                 <p className="text-xs text-muted-foreground">short-term cache</p>
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium">Ephemeral 1h</p>
-                                                <p className="text-2xl font-bold">{cacheBasicStats.totalEphemeral1hTokens.toLocaleString()}</p>
+                                                <p className="text-2xl font-bold">
+                                                    {cacheBasicStats.totalEphemeral1hTokens.toLocaleString()}
+                                                </p>
                                                 <p className="text-xs text-muted-foreground">medium-term cache</p>
                                             </div>
                                         </div>
                                         {cacheBasicStats.totalCacheTokens > 0 && (
                                             <div className="pt-4 border-t">
                                                 <p className="text-sm font-medium">Cache Hit Rate</p>
-                                                <p className="text-2xl font-bold">
-                                                    {(cacheBasicStats.cacheHitRate * 100).toFixed(1)}%
-                                                </p>
+                                                <p className="text-2xl font-bold">{(cacheBasicStats.cacheHitRate * 100).toFixed(1)}%</p>
                                                 <p className="text-xs text-muted-foreground">
                                                     {cacheBasicStats.totalCacheReadTokens.toLocaleString()} reads /{" "}
                                                     {cacheBasicStats.totalCacheTokens.toLocaleString()} total
@@ -250,8 +261,12 @@ export function TokenComponent() {
                                                         <Badge variant="outline">{model.name}</Badge>
                                                     </TableCell>
                                                     <TableCell className="text-right">{model.messages.toLocaleString()}</TableCell>
-                                                    <TableCell className="text-right font-mono">{model.inputTokens.toLocaleString()}</TableCell>
-                                                    <TableCell className="text-right font-mono">{model.outputTokens.toLocaleString()}</TableCell>
+                                                    <TableCell className="text-right font-mono">
+                                                        {model.inputTokens.toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-mono">
+                                                        {model.outputTokens.toLocaleString()}
+                                                    </TableCell>
                                                     <TableCell className="text-right font-mono font-semibold">
                                                         {model.totalTokens.toLocaleString()}
                                                     </TableCell>
@@ -292,8 +307,12 @@ export function TokenComponent() {
                                                         </div>
                                                     </TableCell>
                                                     <TableCell className="text-right">{project.messages.toLocaleString()}</TableCell>
-                                                    <TableCell className="text-right font-mono">{project.inputTokens.toLocaleString()}</TableCell>
-                                                    <TableCell className="text-right font-mono">{project.outputTokens.toLocaleString()}</TableCell>
+                                                    <TableCell className="text-right font-mono">
+                                                        {project.inputTokens.toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-mono">
+                                                        {project.outputTokens.toLocaleString()}
+                                                    </TableCell>
                                                     <TableCell className="text-right font-mono font-semibold">
                                                         {project.totalTokens.toLocaleString()}
                                                     </TableCell>
@@ -310,7 +329,9 @@ export function TokenComponent() {
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Token Usage Timeline</CardTitle>
-                                    <CardDescription>Daily input and output token consumption (side by side for better visibility)</CardDescription>
+                                    <CardDescription>
+                                        Daily input and output token consumption (side by side for better visibility)
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <TokenUsageTimelineChart tokenEntries={tokenEntries} />

@@ -1,5 +1,5 @@
-import type { UsageStats } from "@/lib/types";
 import { claudeModels } from "@/lib/data/models";
+import type { UsageStats } from "@/lib/types";
 
 export class TokenInfo {
     private usage?: UsageStats;
@@ -75,13 +75,7 @@ export class TokenInfo {
     }
 
     calculateEstimatedCost(model: string): number {
-        return TokenInfo.calculateEstimatedCost(
-            model,
-            this.input,
-            this.output,
-            this.cacheCreation,
-            this.cacheRead
-        );
+        return TokenInfo.calculateEstimatedCost(model, this.input, this.output, this.cacheCreation, this.cacheRead);
     }
 
     // Static utility methods (primitives)
@@ -92,14 +86,15 @@ export class TokenInfo {
         cacheCreationTokens: number,
         cacheReadTokens: number
     ): number {
-        let modelData = claudeModels.find(m =>
-            model.toLowerCase().includes(m.name.toLowerCase().replace(/\s+/g, "-")) ||
-            model.toLowerCase().includes(m.name.toLowerCase().replace(/\s+/g, "")) ||
-            model.toLowerCase().includes(m.version)
+        let modelData = claudeModels.find(
+            (m) =>
+                model.toLowerCase().includes(m.name.toLowerCase().replace(/\s+/g, "-")) ||
+                model.toLowerCase().includes(m.name.toLowerCase().replace(/\s+/g, "")) ||
+                model.toLowerCase().includes(m.version)
         );
 
         if (!modelData) {
-            modelData = claudeModels.find(m => m.name === "Claude 3.5 Sonnet") || claudeModels[0];
+            modelData = claudeModels.find((m) => m.name === "Claude 3.5 Sonnet") || claudeModels[0];
         }
 
         const baseInputCost = (baseInputTokens * modelData.inputPrice) / 1000000;

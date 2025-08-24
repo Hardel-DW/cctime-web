@@ -1,21 +1,21 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { BarChart3, Bot, Calendar, Clock, MessageSquare, Timer } from "lucide-react";
-import { useFilterStore } from "@/lib/store";
-import { DataService } from "@/lib/models/DataService";
-import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
 import { DailyChart } from "@/components/charts/dashboard/DailyChart";
 import { HourlyChart } from "@/components/charts/dashboard/HourlyChart";
 import { ProjectChart } from "@/components/charts/dashboard/ProjectChart";
+import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
 import { FilterIndicator } from "@/components/layouts/FilterIndicator";
-import { WelcomeScreen } from "@/components/WelcomeScreen";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatDate, formatTime } from "@/lib/utils";
-import { IntensityBadge } from "@/components/ui/intensity-badge";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { IntensityBadge } from "@/components/ui/intensity-badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { WelcomeScreen } from "@/components/WelcomeScreen";
+import { DataService } from "@/lib/models/DataService";
+import { useFilterStore } from "@/lib/store";
+import { formatDate, formatTime } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/")({
     component: IndexComponent
@@ -32,12 +32,12 @@ export function IndexComponent() {
         enabled: hasDirectoryHandle // Only run query if directory is selected
     });
 
-
-    if (!hasDirectoryHandle) return (
-        <PageLayout>
-            <WelcomeScreen />
-        </PageLayout>
-    );
+    if (!hasDirectoryHandle)
+        return (
+            <PageLayout>
+                <WelcomeScreen />
+            </PageLayout>
+        );
 
     return (
         <PageLayout>
@@ -46,8 +46,7 @@ export function IndexComponent() {
                 error={error}
                 loadingMessage="Loading your conversation data..."
                 noDirectoryIcon={<Bot className="h-12 w-12" />}
-                noDirectoryMessage="Please select your Claude data directory to view analytics."
-            >
+                noDirectoryMessage="Please select your Claude data directory to view analytics.">
                 {!data ? null : (
                     <div className="flex flex-1 flex-col gap-6 px-6 py-6">
                         <div className="flex flex-col space-y-3">
@@ -158,15 +157,23 @@ export function IndexComponent() {
                                                     <TableCell>
                                                         <div className="flex gap-1 text-sm">
                                                             <span>{formatTime(conversation.firstMessage)}</span>
-                                                            <span className="text-muted-foreground">→ {formatTime(conversation.lastMessage)}</span>
+                                                            <span className="text-muted-foreground">
+                                                                → {formatTime(conversation.lastMessage)}
+                                                            </span>
                                                         </div>
                                                     </TableCell>
-                                                    <TableCell className="text-right font-mono">{conversation.messages.toLocaleString()}</TableCell>
+                                                    <TableCell className="text-right font-mono">
+                                                        {conversation.messages.toLocaleString()}
+                                                    </TableCell>
                                                     <TableCell className="text-right">
                                                         <Badge variant="outline">{conversation.sessions}</Badge>
                                                     </TableCell>
-                                                    <TableCell className="text-right font-medium">{conversation.conversationTime}</TableCell>
-                                                    <TableCell className="text-right"><IntensityBadge messages={conversation.messages} /></TableCell>
+                                                    <TableCell className="text-right font-medium">
+                                                        {conversation.conversationTime}
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        <IntensityBadge messages={conversation.messages} />
+                                                    </TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

@@ -30,7 +30,11 @@ export function TokenDistributionChart({ tokenEntries }: { tokenEntries: UsageDa
         );
 
         const pieData = [
-            { name: "Input Tokens", value: stats.totalInputTokens - stats.totalCacheCreation - stats.totalCacheRead, fill: "var(--chart-1)" },
+            {
+                name: "Input Tokens",
+                value: stats.totalInputTokens - stats.totalCacheCreation - stats.totalCacheRead,
+                fill: "var(--chart-1)"
+            },
             { name: "Output Tokens", value: stats.totalOutputTokens, fill: "var(--chart-2)" },
             { name: "Cache Creation", value: stats.totalCacheCreation, fill: "var(--chart-3)" },
             { name: "Cache Read", value: stats.totalCacheRead, fill: "var(--chart-4)" }
@@ -46,21 +50,9 @@ export function TokenDistributionChart({ tokenEntries }: { tokenEntries: UsageDa
             <ChartContainer config={{}} className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                        <Pie
-                            data={pieData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={50}
-                            outerRadius={100}
-                            paddingAngle={3}
-                            dataKey="value">
+                        <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={100} paddingAngle={3} dataKey="value">
                             {pieData.map((entry) => (
-                                <Cell
-                                    key={entry.name}
-                                    fill={entry.fill}
-                                    stroke="var(--background)"
-                                    strokeWidth={2}
-                                />
+                                <Cell key={entry.name} fill={entry.fill} stroke="var(--background)" strokeWidth={2} />
                             ))}
                         </Pie>
                         <ChartTooltip
@@ -70,9 +62,7 @@ export function TokenDistributionChart({ tokenEntries }: { tokenEntries: UsageDa
                                     return (
                                         <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
                                             <p className="font-semibold text-foreground">{data.name}</p>
-                                            <p className="text-sm text-muted-foreground">
-                                                Tokens: {data.value.toLocaleString()}
-                                            </p>
+                                            <p className="text-sm text-muted-foreground">Tokens: {data.value.toLocaleString()}</p>
                                         </div>
                                     );
                                 }

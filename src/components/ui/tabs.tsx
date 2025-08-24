@@ -1,4 +1,4 @@
-import { Root, List, Trigger, Content } from "@radix-ui/react-tabs";
+import { Content, List, Root, Trigger } from "@radix-ui/react-tabs";
 import type React from "react";
 
 import { cn } from "@/lib/utils";
