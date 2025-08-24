@@ -30,7 +30,7 @@ export function DirectorySelector() {
     };
 
     return (
-        <Button onClick={handleSelectDirectory} size="lg" className="w-full">
+        <Button onClick={handleSelectDirectory} size="lg" className="w-full cursor-pointer">
             <FolderOpen className="h-5 w-5 mr-2" />
             Select Claude Directory
         </Button>

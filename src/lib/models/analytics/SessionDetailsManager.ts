@@ -51,14 +51,15 @@ export class SessionDetailsManager {
                 timestamp: entry.timestamp || "",
                 role: entry.message?.role === "user" ? "user" : "assistant",
                 content: this.extractMessageContent(entry.message),
-                tokens: tokens && Object.keys(tokens).length > 0
-                    ? {
-                          input: tokens.input_tokens,
-                          output: tokens.output_tokens,
-                          cache_creation: tokens.cache_creation_input_tokens,
-                          cache_read: tokens.cache_read_input_tokens
-                      }
-                    : undefined,
+                tokens:
+                    tokens && Object.keys(tokens).length > 0
+                        ? {
+                              input: tokens.input_tokens,
+                              output: tokens.output_tokens,
+                              cache_creation: tokens.cache_creation_input_tokens,
+                              cache_read: tokens.cache_read_input_tokens
+                          }
+                        : undefined,
                 model: entry.message?.model
             };
         });

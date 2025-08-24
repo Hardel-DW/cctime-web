@@ -36,7 +36,7 @@ export function SettingsPopover() {
         <SidebarMenuItem>
             <Popover>
                 <PopoverTrigger asChild>
-                    <SidebarMenuButton tooltip="Settings">
+                    <SidebarMenuButton tooltip="Settings" className="cursor-pointer">
                         <Settings />
                         <span>Settings</span>
                     </SidebarMenuButton>
@@ -52,7 +52,10 @@ export function SettingsPopover() {
                             <div className="grid gap-2">
                                 <Label htmlFor="claude-path">Claude Data Directory</Label>
                                 <div className="flex gap-2">
-                                    <Button variant="outline" onClick={handleSelectDirectory} className="flex-1 justify-start">
+                                    <Button
+                                        variant="outline"
+                                        onClick={handleSelectDirectory}
+                                        className="flex-1 justify-start cursor-pointer">
                                         <FolderOpen className="h-4 w-4 mr-2" />
                                         Select Claude Directory
                                     </Button>
@@ -67,7 +70,7 @@ export function SettingsPopover() {
                         </div>
 
                         <div className="flex gap-2 pt-2">
-                            <Button onClick={() => clearDirectoryHandle()} variant="outline" size="sm" className="flex-1">
+                            <Button onClick={() => clearDirectoryHandle()} variant="outline" size="sm" className="flex-1 cursor-pointer">
                                 Reset Directory
                             </Button>
                         </div>

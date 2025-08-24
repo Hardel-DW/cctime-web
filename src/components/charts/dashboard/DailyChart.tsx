@@ -40,7 +40,7 @@ export function DailyChart({ data }: { data: DailyConversation[] }) {
                         </CardTitle>
                         <CardDescription>Message count and session activity over time</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="cursor-pointer">
                         Export
                     </Button>
                 </div>

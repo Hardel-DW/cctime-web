@@ -133,7 +133,7 @@ export function IndexComponent() {
                                             </CardTitle>
                                             <CardDescription>Latest conversation activity and session details</CardDescription>
                                         </div>
-                                        <Button variant="outline" size="sm" asChild>
+                                        <Button variant="outline" size="sm" asChild className="cursor-pointer">
                                             <a href="/daily">View All</a>
                                         </Button>
                                     </div>

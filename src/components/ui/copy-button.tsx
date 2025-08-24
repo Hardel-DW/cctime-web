@@ -18,7 +18,7 @@ export function CopyButton({ text, id, className = "" }: CopyButtonProps) {
             variant="ghost"
             size="sm"
             className={cn(
-                "h-6 w-6 p-0 transition-colors",
+                "h-6 w-6 p-0 transition-colors cursor-pointer",
                 isTextCopied &&
                     "text-green-400 bg-green-500/10 hover:bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 dark:hover:bg-green-500/20",
                 className

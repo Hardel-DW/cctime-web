@@ -44,11 +44,9 @@ export function SessionDetailsComponent() {
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
                                 <h1 className="text-3xl font-bold tracking-tight">Session Details</h1>
-                                <p className="text-muted-foreground">
-                                    Session not found
-                                </p>
+                                <p className="text-muted-foreground">Session not found</p>
                             </div>
-                            <Button variant="ghost" size="icon" onClick={() => router.history.back()} className="cursor-pointer">
+                            <Button variant="ghost" size="icon" onClick={() => router.history.back()}>
                                 <ArrowLeft className="h-4 w-4" />
                             </Button>
                         </div>
@@ -71,7 +69,7 @@ export function SessionDetailsComponent() {
                                     Conversation messages and activity for session {sessionData.sessionId.slice(0, 8)}...
                                 </p>
                             </div>
-                            <Button variant="ghost" size="icon" onClick={() => router.history.back()}>
+                            <Button variant="ghost" size="icon" onClick={() => router.history.back()} className="cursor-pointer">
                                 <ArrowLeft className="h-4 w-4" />
                             </Button>
                         </div>
@@ -173,10 +171,14 @@ export function SessionDetailsComponent() {
                                                                 <div className="mt-3 pt-3 border-t border-border/50">
                                                                     <div className="flex gap-4 text-xs text-muted-foreground">
                                                                         {(message.tokens.input ?? 0) > 0 && (
-                                                                            <span>Input: {(message.tokens.input ?? 0).toLocaleString()}</span>
+                                                                            <span>
+                                                                                Input: {(message.tokens.input ?? 0).toLocaleString()}
+                                                                            </span>
                                                                         )}
                                                                         {(message.tokens.output ?? 0) > 0 && (
-                                                                            <span>Output: {(message.tokens.output ?? 0).toLocaleString()}</span>
+                                                                            <span>
+                                                                                Output: {(message.tokens.output ?? 0).toLocaleString()}
+                                                                            </span>
                                                                         )}
                                                                         {(message.tokens.cache_read ?? 0) > 0 && (
                                                                             <span>

@@ -42,7 +42,7 @@ export function FilterBar() {
                     value={selectedProject || "all"}
                     onValueChange={(value) => setSelectedProject(value === "all" ? null : value)}
                     onOpenChange={(open) => open && loadProjects()}>
-                    <SelectTrigger className="w-[180px] h-8">
+                    <SelectTrigger className="w-[180px] h-8 cursor-pointer">
                         <div className="flex items-center gap-2">
                             <FolderOpen className="h-4 w-4" />
                             <SelectValue placeholder="All Projects" />
@@ -74,7 +74,7 @@ export function FilterBar() {
                         <Button
                             variant="outline"
                             size="sm"
-                            className={cn("h-8 justify-start text-left font-normal", !startDate && "text-muted-foreground")}>
+                            className={cn("h-8 justify-start text-left font-normal cursor-pointer", !startDate && "text-muted-foreground")}>
                             <CalendarDays className="mr-2 h-4 w-4" />
                             {startDate ? new Intl.DateTimeFormat("fr-FR").format(new Date(startDate)) : "Start date"}
                         </Button>
@@ -99,7 +99,7 @@ export function FilterBar() {
                         <Button
                             variant="outline"
                             size="sm"
-                            className={cn("h-8 justify-start text-left font-normal", !endDate && "text-muted-foreground")}>
+                            className={cn("h-8 justify-start text-left font-normal cursor-pointer", !endDate && "text-muted-foreground")}>
                             <CalendarDays className="mr-2 h-4 w-4" />
                             {endDate ? new Intl.DateTimeFormat("fr-FR").format(new Date(endDate)) : "End date"}
                         </Button>
