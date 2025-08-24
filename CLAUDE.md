@@ -1,72 +1,68 @@
-Structure du projets :
+Project Structure:
 
-- public/ -> contient les fichiers statiques (images)
-- src/ -> contient le code source
+- public/ -> contains static files (images)
+- src/ -> contains source code
 
-Structure des sources :
+Source Structure:
 
-- assets/ -> contient les fichiers statiques (images)
-- components/ -> contient les composants
-- hooks/ -> contient les hooks reacts
-- lib/ -> contient les fichiers utilitaires et qui manipules les données
-- routes/ -> contient les routes de l'application en Tanstack Router
+- assets/ -> contains static files (images)
+- components/ -> contains components
+- hooks/ -> contains React hooks
+- lib/ -> contains utility files and data manipulation
+- routes/ -> contains application routes in TanStack Router
 
-- main.tsx -> point d'entrée de l'application avec Root et App
-- App.tsx -> Contient l'initialisation de Tanstack Router et de la Query Client
-- global.css -> contient les styles globaux de l'application. Utilise Tailwind
-  CSS 4
-- routeTree.gen.ts -> Fichier auto-généré par Tanstack Router contenant les
-  routes de l'application
-- vite-env.d.ts -> contient les types de l'application
+- main.tsx -> application entry point with Root and App
+- App.tsx -> Contains TanStack Router and Query Client initialization
+- global.css -> contains global application styles. Uses Tailwind CSS 4
+- routeTree.gen.ts -> Auto-generated file by TanStack Router containing
+  application routes
+- vite-env.d.ts -> contains application types
 
-Structures du dossier components :
+Components folder structure:
 
-- charts/ -> Contient un dossier par routes. Contient les composants de recharts
-  qui sont utilisés dans l'application a chaque fois qu'ont veut afficher un
-  graphique ou créera un component, la logique TS spécifique seras présent dans
-  le composant.
-- ui/ -> Contient les composants primitives de shadcn/ui et certains composants
-  personnalisés. (Que des primitives)
+- charts/ -> Contains a folder per route. Contains recharts components used in
+  the application. Every time we want to display a chart or create a component,
+  the specific TS logic will be present in the component.
+- ui/ -> Contains shadcn/ui primitive components and some custom components.
+  (Only primitives)
 
-Structures du dossier libs :
+Libs folder structure:
 
-- data/ -> Contient des JSON notament Sidebar, les prix des modéles Claude des
-  données statiques.
-- models/ -> Contient l'orientés objets qui manipulents les données JSONL de
-  claude.
-- types/ -> Contient les types de l'application.
-- store.ts -> Contient les données primitives trouver dans claude.
-- utils.ts -> Contient notament cn.
+- data/ -> Contains JSON files notably Sidebar, Claude model prices, static
+  data.
+- models/ -> Contains object-oriented classes that manipulate Claude's JSONL
+  data.
+- types/ -> Contains application types.
+- store.ts -> Contains primitive data found in Claude.
+- utils.ts -> Contains notably cn.
 
-Processus :
+Process:
 
-- Ont récupére les données du dossier que l'utilisateur a sélectionné dans le
-  store comme primitives sans faire de modification dessus ou trés peu.
-- Ont utilise la logique orientés objets pour manipuler les données.
-- Ont créer une routes avec le dossiers routes de Tanstack Router.
-- Ont créer un composant pour chaque route. (Ces composants ne doivent contenir
-  strictement que des hooks ou des composants pas de logique TS)
-- Pour chaque graphique, ont créer un composant dans le dossier charts/ et on
-  utilise recharts pour afficher le graphique. Ce fichier auras des logiques TS
-  spécifique.
+- We retrieve data from the folder that the user selected in the store as
+  primitives without modifying them or very little.
+- We use object-oriented logic to manipulate the data.
+- We create a route with the TanStack Router routes folder.
+- We create a component for each route. (These components should strictly
+  contain only hooks or components, no TS logic)
+- For each chart, we create a component in the charts/ folder and use recharts
+  to display the chart. This file will have specific TS logic.
 
-Régles :
+Rules:
 
-- Pas de redondance de code.
-- Chaque methodes dans les classes doivent être pensés pour être réutilisable.
-- Les methodes doivent faire moins de 10 lignes de code et doivent faire un truc
-  et correctement.
-- Ont évites les finalités dans les classes. Ont préféres mettre la logique
-  dédiés dans les composants de charts.
-- Ont évite de faire des codes surperflux.
-- Ont évite le statique dans les classes exepters pour les design patterns.
-- Pas de support de Legacy ou de Deprecated.
-- Une logique simple.
+- No code redundancy.
+- Each method in classes must be designed to be reusable.
+- Methods must be less than 10 lines of code and must do one thing correctly.
+- We avoid finalities in classes. We prefer putting dedicated logic in chart
+  components.
+- We avoid superfluous code.
+- We avoid static in classes except for design patterns.
+- No Legacy or Deprecated support.
+- Simple logic.
 
-Ont veut déplacer la logique liés a chaque charts dans sont component chart a
-lui. Et pas mettre dans le composant mére.
+We want to move the logic related to each chart into its own chart component.
+And not put it in the parent component.
 
-Ont veut que les composants de chaque routes ConversationActivity Dashboard
-SessionDetails Prices Sessions TokenUsage soit a terme fusionnés dans le
-component du dossier routes, mais pour cela il faut qu'il y est que des
-composant et des hooks. Pas de logique TS.
+We want the components of each route ConversationActivity Dashboard
+SessionDetails Prices Sessions TokenUsage to eventually be merged into the
+component in the routes folder, but for this to happen there must only be
+components and hooks. No TS logic.
