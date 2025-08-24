@@ -29,24 +29,28 @@ export function DailyChart({ data }: { data: DailyConversation[] }) {
     };
 
     return (
-        <Card>
+        <Card className="@container/chart">
             <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3 @[540px]/chart:flex-row @[540px]/chart:items-center @[540px]/chart:justify-between">
                     <div>
-                        <CardTitle className="flex items-center gap-2">
+                        <CardTitle className="flex flex-wrap items-center gap-2">
                             <TrendingUp className="h-4 w-4" />
-                            Daily Activity
+                            <span className="hidden @[400px]/chart:inline">Daily Activity</span>
+                            <span className="@[400px]/chart:hidden">Daily</span>
                             <Badge variant="secondary">{data.length} days</Badge>
                         </CardTitle>
-                        <CardDescription>Message count and session activity over time</CardDescription>
+                        <CardDescription className="hidden @[540px]/chart:block">
+                            Message count and session activity over time
+                        </CardDescription>
+                        <CardDescription className="@[540px]/chart:hidden">Messages & sessions</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" className="cursor-pointer">
+                    <Button variant="outline" size="sm" className="hidden cursor-pointer @[540px]/chart:flex">
                         Export
                     </Button>
                 </div>
             </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig} className="h-[400px] w-full">
+            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full @[768px]/chart:h-[350px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={chartData.slice(-30)}>
                             <defs>
@@ -59,8 +63,15 @@ export function DailyChart({ data }: { data: DailyConversation[] }) {
                                     <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="date" tick={{ fontSize: 12, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
-                            <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} tickLine={false} axisLine={false} />
+                            <XAxis
+                                dataKey="date"
+                                tick={{ fontSize: 11, fill: "var(--foreground)" }}
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                minTickGap={32}
+                            />
+                            <YAxis tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={40} />
                             <ChartTooltip
                                 content={<ChartTooltipContent />}
                                 contentStyle={{
@@ -76,15 +87,19 @@ export function DailyChart({ data }: { data: DailyConversation[] }) {
                                 stroke="#3b82f6"
                                 fillOpacity={1}
                                 fill="url(#colorMessages)"
-                                strokeWidth={3}
+                                strokeWidth={2}
                             />
                         </AreaChart>
                     </ResponsiveContainer>
                 </ChartContainer>
 
-                <div className="mt-4 flex justify-between text-sm text-muted-foreground">
-                    <span>Peak: {Math.max(...data.map((d) => d.messages)).toLocaleString()} messages</span>
-                    <span>Avg: {Math.round(data.reduce((sum, d) => sum + d.messages, 0) / data.length).toLocaleString()} messages/day</span>
+                <div className="mt-4 grid grid-cols-1 gap-2 text-sm text-muted-foreground @[400px]/chart:grid-cols-2 @[400px]/chart:gap-4">
+                    <span className="text-center @[400px]/chart:text-left">
+                        Peak: {Math.max(...data.map((d) => d.messages)).toLocaleString()} messages
+                    </span>
+                    <span className="text-center @[400px]/chart:text-right">
+                        Avg: {Math.round(data.reduce((sum, d) => sum + d.messages, 0) / data.length).toLocaleString()} messages/day
+                    </span>
                 </div>
             </CardContent>
         </Card>

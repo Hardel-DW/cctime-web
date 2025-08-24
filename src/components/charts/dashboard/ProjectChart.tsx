@@ -31,22 +31,32 @@ export function ProjectChart({ data }: { data: ProjectActivity[] }) {
     const totalTime = data.reduce((sum, p) => sum + p.conversationTime, 0);
 
     return (
-        <Card>
+        <Card className="@container/chart">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex flex-wrap items-center gap-2">
                     <FolderOpen className="h-4 w-4" />
-                    Projects Overview
+                    <span className="hidden @[400px]/chart:inline">Projects Overview</span>
+                    <span className="@[400px]/chart:hidden">Projects</span>
                     <Badge variant="secondary">{data.length} projects</Badge>
                 </CardTitle>
-                <CardDescription>Conversation time distribution by project</CardDescription>
+                <CardDescription className="hidden @[540px]/chart:block">Conversation time distribution by project</CardDescription>
+                <CardDescription className="@[540px]/chart:hidden">Time by project</CardDescription>
             </CardHeader>
-            <CardContent>
-                <ChartContainer config={{}} className="h-[300px] w-full">
+            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+                <ChartContainer config={{}} className="aspect-square h-[200px] w-full @[400px]/chart:h-[250px] @[768px]/chart:h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                            <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={100} paddingAngle={3} dataKey="value">
+                            <Pie
+                                data={chartData}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={30}
+                                outerRadius={80}
+                                paddingAngle={2}
+                                dataKey="value"
+                                className="@[400px]/chart:innerRadius-[40] @[400px]/chart:outerRadius-[90]">
                                 {chartData.map((entry) => (
-                                    <Cell key={entry.name} fill={entry.color} stroke="var(--background)" strokeWidth={2} />
+                                    <Cell key={entry.name} fill={entry.color} stroke="var(--background)" strokeWidth={1} />
                                 ))}
                             </Pie>
                             <ChartTooltip
@@ -71,12 +81,14 @@ export function ProjectChart({ data }: { data: ProjectActivity[] }) {
 
                 <div className="mt-4 space-y-2">
                     {chartData.slice(0, 5).map((project) => (
-                        <div key={project.name} className="flex items-center justify-between text-sm">
+                        <div
+                            key={project.name}
+                            className="flex flex-col gap-1 text-sm @[400px]/chart:flex-row @[400px]/chart:items-center @[400px]/chart:justify-between">
                             <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: project.color }} />
-                                <span className="font-medium">{project.name}</span>
+                                <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: project.color }} />
+                                <span className="font-medium truncate">{project.name}</span>
                             </div>
-                            <div className="flex gap-4 text-muted-foreground">
+                            <div className="flex gap-4 text-muted-foreground pl-5 @[400px]/chart:pl-0">
                                 <span>{formatDuration(project.value)}</span>
                                 <span>({Math.round((project.value / totalTime) * 100)}%)</span>
                             </div>
@@ -86,7 +98,7 @@ export function ProjectChart({ data }: { data: ProjectActivity[] }) {
 
                 <div className="mt-4 pt-4 border-t text-center">
                     <div className="text-sm text-muted-foreground">Total Time</div>
-                    <div className="text-2xl font-bold">{formatDuration(totalTime)}</div>
+                    <div className="text-xl font-bold @[400px]/chart:text-2xl">{formatDuration(totalTime)}</div>
                 </div>
             </CardContent>
         </Card>

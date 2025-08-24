@@ -130,24 +130,30 @@ export function TokenComponent() {
                         </Card>
                     </div>
 
-                    <Tabs defaultValue="overview" className="space-y-4">
-                        <TabsList className="rounded-xl bg-zinc-800">
-                            <TabsTrigger value="overview" className="rounded-lg">
-                                Overview
-                            </TabsTrigger>
-                            <TabsTrigger value="cache" className="rounded-lg">
-                                Cache
-                            </TabsTrigger>
-                            <TabsTrigger value="models" className="rounded-lg">
-                                By Models
-                            </TabsTrigger>
-                            <TabsTrigger value="projects" className="rounded-lg">
-                                By Projects
-                            </TabsTrigger>
-                            <TabsTrigger value="timeline" className="rounded-lg">
-                                Timeline
-                            </TabsTrigger>
-                        </TabsList>
+                    <Tabs defaultValue="overview" className="@container/tabs space-y-4">
+                        <div className="overflow-x-auto">
+                            <TabsList className="flex min-w-max rounded-xl bg-zinc-800 @[640px]/tabs:w-full @[640px]/tabs:min-w-0 mx-auto @[640px]/tabs:mx-0">
+                                <TabsTrigger value="overview" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
+                                    <span className="hidden @[480px]/tabs:inline">Overview</span>
+                                    <span className="@[480px]/tabs:hidden">Over.</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="cache" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
+                                    Cache
+                                </TabsTrigger>
+                                <TabsTrigger value="models" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
+                                    <span className="hidden @[480px]/tabs:inline">Models</span>
+                                    <span className="@[480px]/tabs:hidden">Mod.</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="projects" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
+                                    <span className="hidden @[480px]/tabs:inline">Projects</span>
+                                    <span className="@[480px]/tabs:hidden">Proj.</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="timeline" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
+                                    <span className="hidden @[480px]/tabs:inline">Timeline</span>
+                                    <span className="@[480px]/tabs:hidden">Time</span>
+                                </TabsTrigger>
+                            </TabsList>
+                        </div>
 
                         <TabsContent value="overview" className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">

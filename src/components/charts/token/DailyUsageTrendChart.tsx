@@ -46,35 +46,42 @@ export function DailyUsageTrendChart({ tokenEntries }: { tokenEntries: UsageData
     }, [tokenEntries]);
 
     return (
-        <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--muted-foreground)" opacity={0.3} />
-                <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 12, fill: "var(--foreground)" }}
-                    tickFormatter={(date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                />
-                <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} />
-                <Tooltip
-                    labelFormatter={(date) => new Date(date).toLocaleDateString()}
-                    formatter={(value: number) => [value.toLocaleString(), "Tokens"]}
-                    contentStyle={{
-                        backgroundColor: "var(--popover)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "6px",
-                        color: "var(--popover-foreground)",
-                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
-                    }}
-                />
-                <Line
-                    type="monotone"
-                    dataKey="totalTokens"
-                    stroke="var(--chart-1)"
-                    strokeWidth={3}
-                    dot={{ fill: "var(--chart-1)", strokeWidth: 2, r: 5 }}
-                    activeDot={{ r: 7, stroke: "var(--chart-1)", strokeWidth: 2, fill: "var(--background)" }}
-                />
-            </LineChart>
-        </ResponsiveContainer>
+        <div className="@container/chart">
+            <ResponsiveContainer width="100%" height={250} className="@[768px]/chart:!h-[300px]">
+                <LineChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--muted-foreground)" opacity={0.3} />
+                    <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 11, fill: "var(--foreground)" }}
+                        tickFormatter={(date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        tickMargin={8}
+                        minTickGap={32}
+                        tickLine={false}
+                        axisLine={false}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={50} />
+                    <Tooltip
+                        labelFormatter={(date) => new Date(date).toLocaleDateString()}
+                        formatter={(value: number) => [value.toLocaleString(), "Tokens"]}
+                        contentStyle={{
+                            backgroundColor: "var(--popover)",
+                            border: "1px solid var(--border)",
+                            borderRadius: "6px",
+                            color: "var(--popover-foreground)",
+                            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
+                        }}
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="totalTokens"
+                        stroke="var(--chart-1)"
+                        strokeWidth={2}
+                        dot={{ fill: "var(--chart-1)", strokeWidth: 1, r: 3 }}
+                        activeDot={{ r: 5, stroke: "var(--chart-1)", strokeWidth: 2, fill: "var(--background)" }}
+                        className="@[768px]/chart:strokeWidth-3"
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
     );
 }

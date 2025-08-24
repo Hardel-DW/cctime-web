@@ -19,10 +19,15 @@ export function PricesComponent() {
     return (
         <PageLayout>
             <div className="space-y-6">
-                <div className="space-y-3">
+                <div className="@container/page space-y-3">
                     <div className="space-y-2">
-                        <h1 className="text-3xl font-bold tracking-tight">Claude API Pricing</h1>
-                        <p className="text-muted-foreground">Complete pricing information for all Claude models and features (2025)</p>
+                        <h1 className="text-2xl font-bold tracking-tight @[640px]/page:text-3xl">Claude API Pricing</h1>
+                        <p className="text-muted-foreground text-sm @[640px]/page:text-base">
+                            <span className="hidden @[480px]/page:inline">
+                                Complete pricing information for all Claude models and features (2025)
+                            </span>
+                            <span className="@[480px]/page:hidden">Claude models pricing (2025)</span>
+                        </p>
                     </div>
                 </div>
 
@@ -35,80 +40,128 @@ export function PricesComponent() {
                     </AlertDescription>
                 </Alert>
 
-                <Tabs defaultValue="models" className="space-y-4">
-                    <TabsList className="rounded-xl bg-zinc-800">
-                        <TabsTrigger value="models" className="rounded-lg">
-                            Models
-                        </TabsTrigger>
-                        <TabsTrigger value="features" className="rounded-lg">
-                            Special Features
-                        </TabsTrigger>
-                    </TabsList>
+                <Tabs defaultValue="models" className="@container/tabs space-y-4">
+                    <div className="flex justify-center">
+                        <TabsList className="rounded-xl bg-zinc-800">
+                            <TabsTrigger value="models" className="rounded-lg">
+                                Models
+                            </TabsTrigger>
+                            <TabsTrigger value="features" className="rounded-lg">
+                                <span className="hidden @[480px]/tabs:inline">Special Features</span>
+                                <span className="@[480px]/tabs:hidden">Features</span>
+                            </TabsTrigger>
+                        </TabsList>
+                    </div>
 
                     <TabsContent value="models" className="space-y-6">
-                        <Card>
+                        <Card className="@container/table">
                             <CardHeader>
-                                <CardTitle>Model Comparison Table</CardTitle>
-                                <CardDescription>Complete pricing and performance comparison for all Claude models</CardDescription>
+                                <CardTitle>
+                                    <span className="hidden @[480px]/table:inline">Model Comparison Table</span>
+                                    <span className="@[480px]/table:hidden">Models</span>
+                                </CardTitle>
+                                <CardDescription className="hidden @[640px]/table:block">
+                                    Complete pricing and performance comparison for all Claude models
+                                </CardDescription>
+                                <CardDescription className="@[640px]/table:hidden">Pricing comparison</CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Model</TableHead>
-                                            <TableHead>Version</TableHead>
-                                            <TableHead className="text-right">Input ($/MTok)</TableHead>
-                                            <TableHead className="text-right">Output ($/MTok)</TableHead>
-                                            <TableHead className="text-right">Cache 5m Write</TableHead>
-                                            <TableHead className="text-right">Cache 1h Write</TableHead>
-                                            <TableHead className="text-right">Cache Read</TableHead>
-                                            <TableHead className="text-right">Context</TableHead>
-                                            <TableHead>Tier</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {claudeModels.map((model) => (
-                                            <TableRow key={model.name}>
-                                                <TableCell className="font-medium">
-                                                    <div>
-                                                        <div className="font-semibold">{model.name}</div>
-                                                        <div className="text-xs text-muted-foreground">{model.description}</div>
-                                                        {model.special && (
-                                                            <div className="text-xs text-orange-600 mt-1">{model.special}</div>
-                                                        )}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Badge variant="outline">{model.version}</Badge>
-                                                </TableCell>
-                                                <TableCell className="text-right font-mono">${model.inputPrice}</TableCell>
-                                                <TableCell className="text-right font-mono">${model.outputPrice}</TableCell>
-                                                <TableCell className="text-right font-mono text-orange-600">
-                                                    ${(model.inputPrice * 1.25).toFixed(2)}
-                                                </TableCell>
-                                                <TableCell className="text-right font-mono text-orange-600">
-                                                    ${(model.inputPrice * 2).toFixed(2)}
-                                                </TableCell>
-                                                <TableCell className="text-right font-mono text-green-600">
-                                                    ${(model.inputPrice * model.cacheReadMultiplier).toFixed(2)}
-                                                </TableCell>
-                                                <TableCell className="text-right">{model.contextWindow}</TableCell>
-                                                <TableCell>
-                                                    <Badge
-                                                        variant={
-                                                            model.tier === "Premium" || model.tier === "Premium Long Context"
-                                                                ? "default"
-                                                                : model.tier === "Balanced"
-                                                                  ? "secondary"
-                                                                  : "outline"
-                                                        }>
-                                                        {model.tier}
-                                                    </Badge>
-                                                </TableCell>
+                            <CardContent className="px-2 @[640px]/table:px-6">
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead className="min-w-[200px]">Model</TableHead>
+                                                <TableHead className="hidden @[480px]/table:table-cell min-w-[80px]">Version</TableHead>
+                                                <TableHead className="text-right min-w-[80px]">Input</TableHead>
+                                                <TableHead className="text-right min-w-[80px]">Output</TableHead>
+                                                <TableHead className="text-right hidden @[640px]/table:table-cell min-w-[80px]">
+                                                    5m Write
+                                                </TableHead>
+                                                <TableHead className="text-right hidden @[768px]/table:table-cell min-w-[80px]">
+                                                    1h Write
+                                                </TableHead>
+                                                <TableHead className="text-right hidden @[896px]/table:table-cell min-w-[80px]">
+                                                    Read
+                                                </TableHead>
+                                                <TableHead className="text-right hidden @[640px]/table:table-cell min-w-[80px]">
+                                                    Context
+                                                </TableHead>
+                                                <TableHead className="min-w-[80px]">Tier</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {claudeModels.map((model) => (
+                                                <TableRow key={model.name}>
+                                                    <TableCell className="font-medium">
+                                                        <div className="space-y-1">
+                                                            <div className="font-semibold text-sm">{model.name}</div>
+                                                            <div className="text-xs text-muted-foreground line-clamp-2 @[640px]/table:line-clamp-none">
+                                                                {model.description}
+                                                            </div>
+                                                            {model.special && (
+                                                                <div className="text-xs text-orange-600">{model.special}</div>
+                                                            )}
+                                                            <div className="@[640px]/table:hidden text-xs text-muted-foreground">
+                                                                Context: {model.contextWindow}
+                                                            </div>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="hidden @[480px]/table:table-cell">
+                                                        <Badge variant="outline">{model.version}</Badge>
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        <div className="font-mono text-sm">${model.inputPrice}</div>
+                                                        <div className="@[640px]/table:hidden text-xs text-muted-foreground">
+                                                            Write: ${(model.inputPrice * 1.25).toFixed(1)}
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        <div className="font-mono text-sm">${model.outputPrice}</div>
+                                                        <div className="@[896px]/table:hidden text-xs text-green-600">
+                                                            Read: ${(model.inputPrice * model.cacheReadMultiplier).toFixed(2)}
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-mono text-orange-600 hidden @[640px]/table:table-cell">
+                                                        <div className="text-sm">${(model.inputPrice * 1.25).toFixed(2)}</div>
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-mono text-orange-600 hidden @[768px]/table:table-cell">
+                                                        <div className="text-sm">${(model.inputPrice * 2).toFixed(2)}</div>
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-mono text-green-600 hidden @[896px]/table:table-cell">
+                                                        <div className="text-sm">
+                                                            ${(model.inputPrice * model.cacheReadMultiplier).toFixed(2)}
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="text-right hidden @[640px]/table:table-cell">
+                                                        {model.contextWindow}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge
+                                                            variant={
+                                                                model.tier === "Premium" || model.tier === "Premium Long Context"
+                                                                    ? "default"
+                                                                    : model.tier === "Balanced"
+                                                                      ? "secondary"
+                                                                      : "outline"
+                                                            }
+                                                            className="text-xs">
+                                                            <span className="hidden @[480px]/table:inline">{model.tier}</span>
+                                                            <span className="@[480px]/table:hidden">
+                                                                {model.tier === "Premium Long Context"
+                                                                    ? "P.Long"
+                                                                    : model.tier === "Premium"
+                                                                      ? "Prem"
+                                                                      : model.tier === "Balanced"
+                                                                        ? "Bal"
+                                                                        : "Fast"}
+                                                            </span>
+                                                        </Badge>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
                             </CardContent>
                         </Card>
 

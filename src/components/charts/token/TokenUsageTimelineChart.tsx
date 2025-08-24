@@ -45,32 +45,52 @@ export function TokenUsageTimelineChart({ tokenEntries }: { tokenEntries: UsageD
             .slice(-30); // Last 30 days
     }, [tokenEntries]);
     return (
-        <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--muted-foreground)" opacity={0.3} />
-                <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 12, fill: "var(--foreground)" }}
-                    tickFormatter={(date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                />
-                <YAxis tick={{ fontSize: 12, fill: "var(--foreground)" }} />
-                <Tooltip
-                    labelFormatter={(date) => new Date(date).toLocaleDateString()}
-                    formatter={(value: number, name: string) => [
-                        value.toLocaleString(),
-                        name === "inputTokens" ? "Input Tokens" : "Output Tokens"
-                    ]}
-                    contentStyle={{
-                        backgroundColor: "var(--popover)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "6px",
-                        color: "var(--popover-foreground)",
-                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
-                    }}
-                />
-                <Bar dataKey="inputTokens" fill="var(--chart-1)" name="Input Tokens" radius={[4, 4, 0, 0]} opacity={0.9} />
-                <Bar dataKey="outputTokens" fill="var(--chart-2)" name="Output Tokens" radius={[4, 4, 0, 0]} opacity={0.9} />
-            </BarChart>
-        </ResponsiveContainer>
+        <div className="@container/chart">
+            <ResponsiveContainer width="100%" height={300} className="@[768px]/chart:!h-[400px]">
+                <BarChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--muted-foreground)" opacity={0.3} />
+                    <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 11, fill: "var(--foreground)" }}
+                        tickFormatter={(date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        tickMargin={8}
+                        minTickGap={32}
+                        tickLine={false}
+                        axisLine={false}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={50} />
+                    <Tooltip
+                        labelFormatter={(date) => new Date(date).toLocaleDateString()}
+                        formatter={(value: number, name: string) => [
+                            value.toLocaleString(),
+                            name === "inputTokens" ? "Input Tokens" : "Output Tokens"
+                        ]}
+                        contentStyle={{
+                            backgroundColor: "var(--popover)",
+                            border: "1px solid var(--border)",
+                            borderRadius: "6px",
+                            color: "var(--popover-foreground)",
+                            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
+                        }}
+                    />
+                    <Bar
+                        dataKey="inputTokens"
+                        fill="var(--chart-1)"
+                        name="Input Tokens"
+                        radius={[2, 2, 0, 0]}
+                        opacity={0.9}
+                        className="@[768px]/chart:radius-[4,4,0,0]"
+                    />
+                    <Bar
+                        dataKey="outputTokens"
+                        fill="var(--chart-2)"
+                        name="Output Tokens"
+                        radius={[2, 2, 0, 0]}
+                        opacity={0.9}
+                        className="@[768px]/chart:radius-[4,4,0,0]"
+                    />
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
     );
 }

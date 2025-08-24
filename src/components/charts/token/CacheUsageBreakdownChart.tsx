@@ -41,13 +41,21 @@ export function CacheUsageBreakdownChart({ tokenEntries }: { tokenEntries: Usage
     }, [tokenEntries]);
 
     return (
-        <>
-            <ChartContainer config={{}} className="h-[300px] w-full">
+        <div className="@container/chart">
+            <ChartContainer config={{}} className="aspect-square h-[200px] w-full @[400px]/chart:h-[250px] @[768px]/chart:h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                        <Pie data={data} cx="50%" cy="50%" innerRadius={50} outerRadius={100} paddingAngle={3} dataKey="value">
+                        <Pie
+                            data={data}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={30}
+                            outerRadius={80}
+                            paddingAngle={2}
+                            dataKey="value"
+                            className="@[400px]/chart:innerRadius-[40] @[400px]/chart:outerRadius-[90]">
                             {data.map((entry) => (
-                                <Cell key={entry.name} fill={entry.fill} stroke="var(--background)" strokeWidth={2} />
+                                <Cell key={entry.name} fill={entry.fill} stroke="var(--background)" strokeWidth={1} />
                             ))}
                         </Pie>
                         <ChartTooltip
@@ -70,18 +78,20 @@ export function CacheUsageBreakdownChart({ tokenEntries }: { tokenEntries: Usage
 
             <div className="mt-4 space-y-2">
                 {data.map((item) => (
-                    <div key={item.name} className="flex items-center justify-between text-sm">
+                    <div
+                        key={item.name}
+                        className="flex flex-col gap-1 text-sm @[400px]/chart:flex-row @[400px]/chart:items-center @[400px]/chart:justify-between">
                         <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.fill }} />
+                            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: item.fill }} />
                             <span className="font-medium">{item.name}</span>
                         </div>
-                        <div className="flex gap-4 text-muted-foreground">
+                        <div className="flex gap-4 text-muted-foreground pl-5 @[400px]/chart:pl-0">
                             <span>{item.value.toLocaleString()}</span>
                             <span>({totalCacheTokens > 0 ? Math.round((item.value / totalCacheTokens) * 100) : 0}%)</span>
                         </div>
                     </div>
                 ))}
             </div>
-        </>
+        </div>
     );
 }

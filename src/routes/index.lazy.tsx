@@ -122,62 +122,89 @@ export function IndexComponent() {
                                 <ProjectChart data={data.projectActivity} />
                             </div>
 
-                            <Card>
+                            <Card className="@container/table">
                                 <CardHeader>
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex flex-col gap-3 @[540px]/table:flex-row @[540px]/table:items-center @[540px]/table:justify-between">
                                         <div>
-                                            <CardTitle className="flex items-center gap-2">
+                                            <CardTitle className="flex flex-wrap items-center gap-2">
                                                 <MessageSquare className="h-4 w-4" />
-                                                Recent Conversations
+                                                <span className="hidden @[400px]/table:inline">Recent Conversations</span>
+                                                <span className="@[400px]/table:hidden">Conversations</span>
                                                 <Badge variant="outline">{data.conversations.length} days</Badge>
                                             </CardTitle>
-                                            <CardDescription>Latest conversation activity and session details</CardDescription>
+                                            <CardDescription className="hidden @[540px]/table:block">
+                                                Latest conversation activity and session details
+                                            </CardDescription>
+                                            <CardDescription className="@[540px]/table:hidden">Recent activity</CardDescription>
                                         </div>
-                                        <Button variant="outline" size="sm" asChild className="cursor-pointer">
+                                        <Button variant="outline" size="sm" asChild className="hidden cursor-pointer @[540px]/table:flex">
                                             <a href="/daily">View All</a>
                                         </Button>
                                     </div>
                                 </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Date</TableHead>
-                                                <TableHead>Time Range</TableHead>
-                                                <TableHead className="text-right">Messages</TableHead>
-                                                <TableHead className="text-right">Sessions</TableHead>
-                                                <TableHead className="text-right">Duration</TableHead>
-                                                <TableHead className="text-right">Intensity</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {data.conversations.map((conversation) => (
-                                                <TableRow key={conversation.date} className="hover:bg-muted/50">
-                                                    <TableCell className="font-medium">{formatDate(conversation.date)}</TableCell>
-                                                    <TableCell>
-                                                        <div className="flex gap-1 text-sm">
-                                                            <span>{formatTime(conversation.firstMessage)}</span>
-                                                            <span className="text-muted-foreground">
-                                                                → {formatTime(conversation.lastMessage)}
-                                                            </span>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="text-right font-mono">
-                                                        {conversation.messages.toLocaleString()}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        <Badge variant="outline">{conversation.sessions}</Badge>
-                                                    </TableCell>
-                                                    <TableCell className="text-right font-medium">
-                                                        {conversation.conversationTime}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        <IntensityBadge messages={conversation.messages} />
-                                                    </TableCell>
+                                <CardContent className="px-2 sm:px-6">
+                                    <div className="overflow-x-auto">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead className="min-w-[120px]">Date</TableHead>
+                                                    <TableHead className="hidden @[640px]/table:table-cell min-w-[140px]">
+                                                        Time Range
+                                                    </TableHead>
+                                                    <TableHead className="text-right min-w-[80px]">Messages</TableHead>
+                                                    <TableHead className="text-right hidden @[480px]/table:table-cell min-w-[80px]">
+                                                        Sessions
+                                                    </TableHead>
+                                                    <TableHead className="text-right hidden @[768px]/table:table-cell min-w-[100px]">
+                                                        Duration
+                                                    </TableHead>
+                                                    <TableHead className="text-right min-w-[80px]">Intensity</TableHead>
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {data.conversations.map((conversation) => (
+                                                    <TableRow key={conversation.date} className="hover:bg-muted/50">
+                                                        <TableCell className="font-medium">
+                                                            <div className="flex flex-col">
+                                                                <span>{formatDate(conversation.date)}</span>
+                                                                <span className="@[640px]/table:hidden text-xs text-muted-foreground">
+                                                                    {formatTime(conversation.firstMessage)} →{" "}
+                                                                    {formatTime(conversation.lastMessage)}
+                                                                </span>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell className="hidden @[640px]/table:table-cell">
+                                                            <div className="flex gap-1 text-sm">
+                                                                <span>{formatTime(conversation.firstMessage)}</span>
+                                                                <span className="text-muted-foreground">
+                                                                    → {formatTime(conversation.lastMessage)}
+                                                                </span>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell className="text-right">
+                                                            <div className="flex flex-col items-end">
+                                                                <span className="font-mono text-sm">
+                                                                    {conversation.messages.toLocaleString()}
+                                                                </span>
+                                                                <span className="@[480px]/table:hidden text-xs text-muted-foreground">
+                                                                    {conversation.sessions} sessions
+                                                                </span>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell className="text-right hidden @[480px]/table:table-cell">
+                                                            <Badge variant="outline">{conversation.sessions}</Badge>
+                                                        </TableCell>
+                                                        <TableCell className="text-right font-medium hidden @[768px]/table:table-cell">
+                                                            {conversation.conversationTime}
+                                                        </TableCell>
+                                                        <TableCell className="text-right">
+                                                            <IntensityBadge messages={conversation.messages} />
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
 
                                     {data.conversations.length === 0 && (
                                         <div className="text-center py-8 text-muted-foreground">
@@ -187,6 +214,12 @@ export function IndexComponent() {
                                             </Button>
                                         </div>
                                     )}
+
+                                    <div className="@[540px]/table:hidden mt-4">
+                                        <Button variant="outline" size="sm" asChild className="w-full cursor-pointer">
+                                            <a href="/daily">View All Conversations</a>
+                                        </Button>
+                                    </div>
                                 </CardContent>
                             </Card>
                         </div>

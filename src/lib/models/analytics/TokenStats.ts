@@ -159,11 +159,12 @@ export class TokenStats {
                 const outputTokens = usage.output_tokens || 0;
                 const cacheCreationTokens = usage.cache_creation_input_tokens || 0;
                 const cacheReadTokens = usage.cache_read_input_tokens || 0;
+                const baseInputTokens = Math.max(0, inputTokens - cacheCreationTokens - cacheReadTokens);
                 const cost =
                     entry.rawEntry.costUSD ||
                     TokenInfo.calculateEstimatedCost(
                         entry.rawEntry.message?.model || "claude-3-5-sonnet-20241022",
-                        inputTokens - cacheCreationTokens - cacheReadTokens,
+                        baseInputTokens,
                         outputTokens,
                         cacheCreationTokens,
                         cacheReadTokens

@@ -3,7 +3,6 @@ import { Github, Heart } from "lucide-react";
 import type React from "react";
 import { NavMain } from "@/components/layouts/sidebar/NavMain";
 import { SettingsPopover } from "@/components/layouts/sidebar/SettingsPopover";
-import { Button } from "@/components/ui/button";
 import {
     Sidebar,
     SidebarContent,
@@ -42,12 +41,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <Button asChild variant="ghost" className="w-full justify-start p-2">
-                            <a href=" https://github.com/sponsors/Hardel-DW" target="_blank" rel="noopener noreferrer">
+                        <SidebarMenuButton asChild>
+                            <a
+                                href=" https://github.com/sponsors/Hardel-DW"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 cursor-pointer border border-zinc-900">
                                 <Heart className="size-4 animate-pulse" />
-                                <span className="font-medium">Donation</span>
+                                <span>Donation</span>
                             </a>
-                        </Button>
+                        </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
