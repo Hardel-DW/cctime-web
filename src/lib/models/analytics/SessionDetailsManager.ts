@@ -33,7 +33,7 @@ export class SessionDetailsManager {
         // Calculate token totals
         const totalTokens = sessionEntries.reduce(
             (acc, entry) => {
-                const tokens = entry.usage || {};
+                const tokens = entry.message?.usage || entry.usage || {};
                 acc.input += tokens.input_tokens || 0;
                 acc.output += tokens.output_tokens || 0;
                 acc.cacheCreation += tokens.cache_creation_input_tokens || 0;
@@ -45,20 +45,23 @@ export class SessionDetailsManager {
         totalTokens.total = totalTokens.input + totalTokens.output + totalTokens.cacheCreation + totalTokens.cacheRead;
 
         // Transform entries to messages
-        const messages: MessageData[] = sessionEntries.map((entry) => ({
-            timestamp: entry.timestamp || "",
-            role: entry.message?.role === "user" ? "user" : "assistant",
-            content: this.extractMessageContent(entry.message),
-            tokens: entry.usage
-                ? {
-                      input: entry.usage.input_tokens,
-                      output: entry.usage.output_tokens,
-                      cache_creation: entry.usage.cache_creation_input_tokens,
-                      cache_read: entry.usage.cache_read_input_tokens
-                  }
-                : undefined,
-            model: entry.message?.model
-        }));
+        const messages: MessageData[] = sessionEntries.map((entry) => {
+            const tokens = entry.message?.usage || entry.usage || {};
+            return {
+                timestamp: entry.timestamp || "",
+                role: entry.message?.role === "user" ? "user" : "assistant",
+                content: this.extractMessageContent(entry.message),
+                tokens: tokens && Object.keys(tokens).length > 0
+                    ? {
+                          input: tokens.input_tokens,
+                          output: tokens.output_tokens,
+                          cache_creation: tokens.cache_creation_input_tokens,
+                          cache_read: tokens.cache_read_input_tokens
+                      }
+                    : undefined,
+                model: entry.message?.model
+            };
+        });
 
         return {
             sessionId,

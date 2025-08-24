@@ -7,10 +7,7 @@ export function filterTokenEntries(
     endDate?: string | null
 ): any[] {
     return (allEntries || []).filter((entry) => {
-        // Filter by timestamp (must have valid timestamp)
         if (!entry.timestamp) return false;
-
-        // Filter by project
         if (selectedProject) {
             if (!entry.cwd) return false;
             const projectName = ClaudeEntry.formatProjectName(entry.cwd);

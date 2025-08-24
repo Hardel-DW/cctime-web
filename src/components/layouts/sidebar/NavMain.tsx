@@ -1,9 +1,8 @@
-import { useRouter, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import type { NavItem } from "@/lib/data/navigation";
 
 export function NavMain({ items }: { items: NavItem[] }) {
-    const router = useRouter();
     const routerState = useRouterState();
     const currentPath = routerState.location.pathname;
 
@@ -13,13 +12,11 @@ export function NavMain({ items }: { items: NavItem[] }) {
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton
-                            tooltip={item.title}
-                            isActive={currentPath === item.url}
-                            onClick={item.url !== "#" ? () => router.navigate({ to: item.url }) : undefined}
-                            className={item.url === "#" ? "cursor-not-allowed opacity-50" : "cursor-pointer"}>
-                            {item.icon && <item.icon />}
-                            <span>{item.title}</span>
+                        <SidebarMenuButton tooltip={item.title} isActive={currentPath === item.url} asChild>
+                            <Link to={item.url}>
+                                {item.icon && <item.icon />}
+                                <span>{item.title}</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 ))}

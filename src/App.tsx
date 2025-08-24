@@ -19,7 +19,8 @@ const router = createRouter({
         queryClient
     },
     defaultPreload: "intent",
-    defaultPreloadStaleTime: 0
+    defaultPreloadDelay: 10,
+    defaultPreloadStaleTime: 1000 * 60 * 5 // 5 minutes
 });
 
 // Register things for typesafety
