@@ -21,7 +21,7 @@ export function DataStateWrapper({
 }: DataStateWrapperProps) {
     const { directoryHandle } = useFilterStore();
 
-    if (!directoryHandle !== null) {
+    if (!directoryHandle) {
         return (
             <div className="flex flex-1 items-center justify-center p-6">
                 <Card className="w-full max-w-md text-center">

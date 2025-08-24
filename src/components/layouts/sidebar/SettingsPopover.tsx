@@ -7,7 +7,7 @@ import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useFilterStore } from "@/lib/store";
 
 export function SettingsPopover() {
-    const { clearDirectoryHandle } = useFilterStore();
+    const { clearDirectoryHandle, setDirectoryHandle } = useFilterStore();
     const queryClient = useQueryClient();
 
     const handleSelectDirectory = async () => {
@@ -18,8 +18,8 @@ export function SettingsPopover() {
                     startIn: "documents"
                 });
 
-                useFilterStore.setState({ directoryHandle });
-                queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+                setDirectoryHandle(directoryHandle);
+                queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
                 queryClient.invalidateQueries({ queryKey: ["projects"] });
             } else {
                 alert("File System Access API not supported in this browser. Please use Chrome, Edge, or another compatible browser.");

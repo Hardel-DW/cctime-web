@@ -24,12 +24,14 @@ export const Route = createFileRoute("/")({
 export function IndexComponent() {
     const { dataRefreshKey, selectedProject, startDate, endDate, directoryHandle } = useFilterStore();
     const hasDirectoryHandle = directoryHandle !== null;
+
     const { data, isLoading, error } = useQuery({
         queryKey: ["dashboard-data", dataRefreshKey, selectedProject, startDate, endDate],
         queryFn: () => DataService.create(directoryHandle).loadDashboardData(selectedProject, startDate, endDate),
         staleTime: 5 * 60 * 1000, // 5 minutes
         enabled: hasDirectoryHandle // Only run query if directory is selected
     });
+
 
     if (!hasDirectoryHandle) return (
         <PageLayout>
