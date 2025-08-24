@@ -52,7 +52,7 @@ export function IndexComponent() {
                         <div className="flex flex-col space-y-3">
                             <div className="space-y-2">
                                 <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                                <p className="text-muted-foreground">Overview of your Claude Code conversation analytics</p>
+                                <p className="text-muted-foreground">Overview of your Claude Code analytics</p>
                             </div>
                             <FilterIndicator />
                         </div>

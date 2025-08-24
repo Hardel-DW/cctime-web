@@ -22,7 +22,7 @@ export function WelcomeScreen() {
                 <div className="text-center space-y-12">
                     <div className="space-y-2">
                         <h1 className="text-4xl font-bold">Welcome</h1>
-                        <p className="text-muted-foreground">Claude Code Conversation Analytics</p>
+                        <p className="text-muted-foreground">Claude Code Analytics</p>
                     </div>
 
                     <div className="text-muted-foreground text-sm space-y-2 text-left">

@@ -40,7 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <Button asChild variant="ghost" className="w-full justify-start p-2">
-                            <a href="https://www.buymeacoffee.com/hardel">
+                            <a href=" https://github.com/sponsors/Hardel-DW" target="_blank" rel="noopener noreferrer">
                                 <Heart className="size-4 animate-pulse" />
                                 <span className="font-medium">Donation</span>
                             </a>
@@ -49,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <a
-                                href="https://github.com/Hardel-DW/cctime-web"
+                                href="https://github.com/Hardel-DW/ctime.hardel.io"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2">

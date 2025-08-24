@@ -32,7 +32,9 @@ export function DonationBar() {
             <Button
                 variant="white-shimmer"
                 className="text-sm font-bold text-black bg-white rounded-full px-4 py-2 shadow-none cursor-pointer">
-                <span className="font-medium leading-none">Support me</span>
+                <a href=" https://github.com/sponsors/Hardel-DW" target="_blank" rel="noopener noreferrer" className="font-medium leading-none">
+                    Support me
+                </a>
             </Button>
         </div>
     );
