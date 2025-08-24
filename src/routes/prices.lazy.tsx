@@ -41,12 +41,12 @@ export function PricesComponent() {
                 </Alert>
 
                 <Tabs defaultValue="models" className="@container/tabs space-y-4">
-                    <div className="flex justify-center">
-                        <TabsList className="rounded-xl bg-zinc-800">
-                            <TabsTrigger value="models" className="rounded-lg">
+                    <div className="overflow-x-auto">
+                        <TabsList className="flex min-w-max rounded-xl bg-zinc-800 @[640px]/tabs:w-full @[640px]/tabs:min-w-0 mx-auto @[640px]/tabs:mx-0">
+                            <TabsTrigger value="models" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
                                 Models
                             </TabsTrigger>
-                            <TabsTrigger value="features" className="rounded-lg">
+                            <TabsTrigger value="features" className="rounded-lg whitespace-nowrap px-3 @[640px]/tabs:px-4">
                                 <span className="hidden @[480px]/tabs:inline">Special Features</span>
                                 <span className="@[480px]/tabs:hidden">Features</span>
                             </TabsTrigger>
