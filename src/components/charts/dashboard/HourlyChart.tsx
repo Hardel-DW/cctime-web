@@ -27,7 +27,7 @@ export function HourlyChart({ data }: { data: HourlyActivity[] }) {
     const peakHour = data.reduce((max, hour) => (hour.messageCount > max.messageCount ? hour : max));
 
     return (
-        <Card className="@container/chart">
+        <Card className="@container/chart flex flex-col h-full">
             <CardHeader>
                 <div className="flex flex-col gap-3 @[540px]/chart:flex-row @[540px]/chart:items-center @[540px]/chart:justify-between">
                     <div>
@@ -45,42 +45,44 @@ export function HourlyChart({ data }: { data: HourlyActivity[] }) {
                     </Badge>
                 </div>
             </CardHeader>
-            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full @[768px]/chart:h-[350px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData}>
-                            <XAxis
-                                dataKey="hour"
-                                tick={{ fontSize: 10, fill: "var(--foreground)" }}
-                                tickLine={false}
-                                axisLine={false}
-                                interval={1}
-                                tickMargin={8}
-                            />
-                            <YAxis tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={40} />
-                            <ChartTooltip
-                                content={<ChartTooltipContent />}
-                                labelFormatter={(label) => `Time: ${label}`}
-                                contentStyle={{
-                                    backgroundColor: "var(--background)",
-                                    border: "1px solid var(--border)",
-                                    borderRadius: "var(--radius)",
-                                    color: "var(--foreground)"
-                                }}
-                            />
-                            <Bar
-                                dataKey="messages"
-                                fill="#10b981"
-                                radius={[2, 2, 0, 0]}
-                                fillOpacity={0.8}
-                                stroke="#0d9488"
-                                strokeWidth={1}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </ChartContainer>
+            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6 flex flex-col h-full">
+                <div className="flex-grow flex items-center">
+                    <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full @[768px]/chart:h-[350px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={chartData}>
+                                <XAxis
+                                    dataKey="hour"
+                                    tick={{ fontSize: 10, fill: "var(--foreground)" }}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    interval={1}
+                                    tickMargin={8}
+                                />
+                                <YAxis tick={{ fontSize: 11, fill: "var(--foreground)" }} tickLine={false} axisLine={false} width={40} />
+                                <ChartTooltip
+                                    content={<ChartTooltipContent />}
+                                    labelFormatter={(label) => `Time: ${label}`}
+                                    contentStyle={{
+                                        backgroundColor: "var(--background)",
+                                        border: "1px solid var(--border)",
+                                        borderRadius: "var(--radius)",
+                                        color: "var(--foreground)"
+                                    }}
+                                />
+                                <Bar
+                                    dataKey="messages"
+                                    fill="#10b981"
+                                    radius={[2, 2, 0, 0]}
+                                    fillOpacity={0.8}
+                                    stroke="#0d9488"
+                                    strokeWidth={1}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </ChartContainer>
+                </div>
 
-                <div className="mt-4 grid grid-cols-1 gap-3 text-sm @[400px]/chart:grid-cols-3 @[400px]/chart:gap-4">
+                <div className="mt-auto pt-4 border-t grid grid-cols-1 gap-3 text-sm @[400px]/chart:grid-cols-3 @[400px]/chart:gap-4">
                     <div className="text-center">
                         <div className="font-semibold text-muted-foreground">Most Active</div>
                         <div className="text-lg font-bold">{peakHour.hour}:00</div>

@@ -39,32 +39,20 @@ export function WelcomeScreen() {
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors min-w-0">
-                                <Badge variant="outline" className="shrink-0">
-                                    Windows
-                                </Badge>
-                                <code className="text-xs sm:text-sm font-mono flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                                    C:\Users\{username}\.claude
-                                </code>
-                                <CopyButton text={`C:\\Users\\${username}\\.claude`} id="windows" className="shrink-0" />
+                            <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
+                                <Badge variant="outline">Windows</Badge>
+                                <code className="text-xs sm:text-sm font-mono flex-1 truncate">C:\Users\{username}\.claude</code>
+                                <CopyButton text={`C:\\Users\\${username}\\.claude`} id="windows" />
                             </div>
-                            <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors min-w-0">
-                                <Badge variant="outline" className="shrink-0">
-                                    macOS
-                                </Badge>
-                                <code className="text-xs sm:text-sm font-mono flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                                    /Users/{username}/.claude
-                                </code>
-                                <CopyButton text={`/Users/${username}/.claude`} id="macos" className="shrink-0" />
+                            <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
+                                <Badge variant="outline">macOS</Badge>
+                                <code className="text-xs sm:text-sm font-mono flex-1 truncate">/Users/{username}/.claude</code>
+                                <CopyButton text={`/Users/${username}/.claude`} id="macos" />
                             </div>
-                            <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors min-w-0">
-                                <Badge variant="outline" className="shrink-0">
-                                    Linux
-                                </Badge>
-                                <code className="text-xs sm:text-sm font-mono flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                                    /home/{username.toLowerCase()}/.claude
-                                </code>
-                                <CopyButton text={`/home/${username.toLowerCase()}/.claude`} id="linux" className="shrink-0" />
+                            <div className="flex items-center gap-2 p-2 rounded-md border border-dashed hover:bg-accent/50 transition-colors">
+                                <Badge variant="outline">Linux</Badge>
+                                <code className="text-xs sm:text-sm font-mono flex-1 truncate">/home/{username.toLowerCase()}/.claude</code>
+                                <CopyButton text={`/home/${username.toLowerCase()}/.claude`} id="linux" />
                             </div>
                         </div>
                     </div>
