@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
 import { useFilterStore } from "@/lib/store";
@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MessageSquare } from "lucide-react";
 
-export const Route = createFileRoute("/daily")({
+export const Route = createLazyFileRoute("/daily")({
     component: DailyComponent
 });
 

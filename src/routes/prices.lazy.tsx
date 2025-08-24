@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import React from "react";
 import { Clock, Info, Layers, TrendingDown, TrendingUp } from "lucide-react";
@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { claudeModels } from "@/lib/data/models";
 import { specialFeatures } from "@/lib/data/features";
 
-export const Route = createFileRoute("/prices")({
+export const Route = createLazyFileRoute("/prices")({
     component: PricesComponent
 });
 

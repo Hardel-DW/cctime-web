@@ -8,92 +8,95 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as TokenRouteImport } from './routes/token'
-import { Route as SessionsRouteImport } from './routes/sessions'
-import { Route as PricesRouteImport } from './routes/prices'
-import { Route as MessagesRouteImport } from './routes/messages'
-import { Route as DailyRouteImport } from './routes/daily'
-import { Route as IndexRouteImport } from './routes/index'
+import { createFileRoute } from '@tanstack/react-router'
 
-const TokenRoute = TokenRouteImport.update({
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as MessagesRouteImport } from './routes/messages'
+
+const TokenLazyRouteImport = createFileRoute('/token')()
+const SessionsLazyRouteImport = createFileRoute('/sessions')()
+const PricesLazyRouteImport = createFileRoute('/prices')()
+const DailyLazyRouteImport = createFileRoute('/daily')()
+const IndexLazyRouteImport = createFileRoute('/')()
+
+const TokenLazyRoute = TokenLazyRouteImport.update({
   id: '/token',
   path: '/token',
   getParentRoute: () => rootRouteImport,
-} as any)
-const SessionsRoute = SessionsRouteImport.update({
+} as any).lazy(() => import('./routes/token.lazy').then((d) => d.Route))
+const SessionsLazyRoute = SessionsLazyRouteImport.update({
   id: '/sessions',
   path: '/sessions',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PricesRoute = PricesRouteImport.update({
+} as any).lazy(() => import('./routes/sessions.lazy').then((d) => d.Route))
+const PricesLazyRoute = PricesLazyRouteImport.update({
   id: '/prices',
   path: '/prices',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/prices.lazy').then((d) => d.Route))
+const DailyLazyRoute = DailyLazyRouteImport.update({
+  id: '/daily',
+  path: '/daily',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/daily.lazy').then((d) => d.Route))
 const MessagesRoute = MessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
   getParentRoute: () => rootRouteImport,
-} as any)
-const DailyRoute = DailyRouteImport.update({
-  id: '/daily',
-  path: '/daily',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+} as any).lazy(() => import('./routes/messages.lazy').then((d) => d.Route))
+const IndexLazyRoute = IndexLazyRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/daily': typeof DailyRoute
+  '/': typeof IndexLazyRoute
   '/messages': typeof MessagesRoute
-  '/prices': typeof PricesRoute
-  '/sessions': typeof SessionsRoute
-  '/token': typeof TokenRoute
+  '/daily': typeof DailyLazyRoute
+  '/prices': typeof PricesLazyRoute
+  '/sessions': typeof SessionsLazyRoute
+  '/token': typeof TokenLazyRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/daily': typeof DailyRoute
+  '/': typeof IndexLazyRoute
   '/messages': typeof MessagesRoute
-  '/prices': typeof PricesRoute
-  '/sessions': typeof SessionsRoute
-  '/token': typeof TokenRoute
+  '/daily': typeof DailyLazyRoute
+  '/prices': typeof PricesLazyRoute
+  '/sessions': typeof SessionsLazyRoute
+  '/token': typeof TokenLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/daily': typeof DailyRoute
+  '/': typeof IndexLazyRoute
   '/messages': typeof MessagesRoute
-  '/prices': typeof PricesRoute
-  '/sessions': typeof SessionsRoute
-  '/token': typeof TokenRoute
+  '/daily': typeof DailyLazyRoute
+  '/prices': typeof PricesLazyRoute
+  '/sessions': typeof SessionsLazyRoute
+  '/token': typeof TokenLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/daily' | '/messages' | '/prices' | '/sessions' | '/token'
+  fullPaths: '/' | '/messages' | '/daily' | '/prices' | '/sessions' | '/token'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/daily' | '/messages' | '/prices' | '/sessions' | '/token'
+  to: '/' | '/messages' | '/daily' | '/prices' | '/sessions' | '/token'
   id:
     | '__root__'
     | '/'
-    | '/daily'
     | '/messages'
+    | '/daily'
     | '/prices'
     | '/sessions'
     | '/token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DailyRoute: typeof DailyRoute
+  IndexLazyRoute: typeof IndexLazyRoute
   MessagesRoute: typeof MessagesRoute
-  PricesRoute: typeof PricesRoute
-  SessionsRoute: typeof SessionsRoute
-  TokenRoute: typeof TokenRoute
+  DailyLazyRoute: typeof DailyLazyRoute
+  PricesLazyRoute: typeof PricesLazyRoute
+  SessionsLazyRoute: typeof SessionsLazyRoute
+  TokenLazyRoute: typeof TokenLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -102,21 +105,28 @@ declare module '@tanstack/react-router' {
       id: '/token'
       path: '/token'
       fullPath: '/token'
-      preLoaderRoute: typeof TokenRouteImport
+      preLoaderRoute: typeof TokenLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sessions': {
       id: '/sessions'
       path: '/sessions'
       fullPath: '/sessions'
-      preLoaderRoute: typeof SessionsRouteImport
+      preLoaderRoute: typeof SessionsLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prices': {
       id: '/prices'
       path: '/prices'
       fullPath: '/prices'
-      preLoaderRoute: typeof PricesRouteImport
+      preLoaderRoute: typeof PricesLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daily': {
+      id: '/daily'
+      path: '/daily'
+      fullPath: '/daily'
+      preLoaderRoute: typeof DailyLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/messages': {
@@ -126,30 +136,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/daily': {
-      id: '/daily'
-      path: '/daily'
-      fullPath: '/daily'
-      preLoaderRoute: typeof DailyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DailyRoute: DailyRoute,
+  IndexLazyRoute: IndexLazyRoute,
   MessagesRoute: MessagesRoute,
-  PricesRoute: PricesRoute,
-  SessionsRoute: SessionsRoute,
-  TokenRoute: TokenRoute,
+  DailyLazyRoute: DailyLazyRoute,
+  PricesLazyRoute: PricesLazyRoute,
+  SessionsLazyRoute: SessionsLazyRoute,
+  TokenLazyRoute: TokenLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
 import { Coins, Cpu, DollarSign, MessageSquare, Zap } from "lucide-react";
@@ -18,7 +18,7 @@ import { DailyUsageTrendChart } from "@/components/charts/token/DailyUsageTrendC
 import { CacheUsageBreakdownChart } from "@/components/charts/token/CacheUsageBreakdownChart";
 import { TokenUsageTimelineChart } from "@/components/charts/token/TokenUsageTimelineChart";
 
-export const Route = createFileRoute("/token")({
+export const Route = createLazyFileRoute("/token")({
     component: TokenComponent
 });
 

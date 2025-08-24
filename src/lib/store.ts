@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Project } from "./models/ClaudeDataManager";
+import { ClaudeDataManager, type Project } from "./models/ClaudeDataManager";
 
 export interface FilterState {
     // Filtres
@@ -77,7 +77,6 @@ export const useFilterStore = create<FilterState>((set, get) => ({
 
         set({ isLoadingProjects: true });
         try {
-            const { ClaudeDataManager } = await import("./models/ClaudeDataManager");
             const projectsData = await ClaudeDataManager.loadProjectsFromDirectory(directoryHandle);
             set({ projects: projectsData, isLoadingProjects: false });
         } catch (error) {

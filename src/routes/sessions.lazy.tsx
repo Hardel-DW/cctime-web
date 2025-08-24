@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -13,7 +13,7 @@ import { SessionStats } from "@/lib/models/analytics/SessionStats";
 import { DataStateWrapper } from "@/components/layouts/DataStateWrapper";
 import { FilterIndicator } from "@/components/layouts/FilterIndicator";
 
-export const Route = createFileRoute("/sessions")({
+export const Route = createLazyFileRoute("/sessions")({
     component: SessionsComponent
 });
 

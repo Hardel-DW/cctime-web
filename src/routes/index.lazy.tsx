@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart3, Bot, Calendar, Clock, MessageSquare, Timer } from "lucide-react";
@@ -17,7 +17,7 @@ import { IntensityBadge } from "@/components/ui/intensity-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/")({
+export const Route = createLazyFileRoute("/")({
     component: IndexComponent
 });
 
