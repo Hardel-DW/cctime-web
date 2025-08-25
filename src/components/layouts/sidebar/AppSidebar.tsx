@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Github, Heart } from "lucide-react";
+import { Bug, Github, Heart } from "lucide-react";
 import type React from "react";
 import { NavMain } from "@/components/layouts/sidebar/NavMain";
 import { SettingsPopover } from "@/components/layouts/sidebar/SettingsPopover";
@@ -50,6 +50,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 <Heart className="size-4 animate-pulse" />
                                 <span>Donation</span>
                             </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link to="/debug" className="flex items-center gap-2 cursor-pointer">
+                                <Bug className="size-4" />
+                                <span>Debug</span>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>

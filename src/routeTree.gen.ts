@@ -16,6 +16,7 @@ import { Route as MessagesRouteImport } from './routes/messages'
 const TokenLazyRouteImport = createFileRoute('/token')()
 const SessionsLazyRouteImport = createFileRoute('/sessions')()
 const PricesLazyRouteImport = createFileRoute('/prices')()
+const DebugLazyRouteImport = createFileRoute('/debug')()
 const DailyLazyRouteImport = createFileRoute('/daily')()
 const IndexLazyRouteImport = createFileRoute('/')()
 
@@ -34,6 +35,11 @@ const PricesLazyRoute = PricesLazyRouteImport.update({
   path: '/prices',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/prices.lazy').then((d) => d.Route))
+const DebugLazyRoute = DebugLazyRouteImport.update({
+  id: '/debug',
+  path: '/debug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/debug.lazy').then((d) => d.Route))
 const DailyLazyRoute = DailyLazyRouteImport.update({
   id: '/daily',
   path: '/daily',
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/messages': typeof MessagesRoute
   '/daily': typeof DailyLazyRoute
+  '/debug': typeof DebugLazyRoute
   '/prices': typeof PricesLazyRoute
   '/sessions': typeof SessionsLazyRoute
   '/token': typeof TokenLazyRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/messages': typeof MessagesRoute
   '/daily': typeof DailyLazyRoute
+  '/debug': typeof DebugLazyRoute
   '/prices': typeof PricesLazyRoute
   '/sessions': typeof SessionsLazyRoute
   '/token': typeof TokenLazyRoute
@@ -71,20 +79,36 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/messages': typeof MessagesRoute
   '/daily': typeof DailyLazyRoute
+  '/debug': typeof DebugLazyRoute
   '/prices': typeof PricesLazyRoute
   '/sessions': typeof SessionsLazyRoute
   '/token': typeof TokenLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/messages' | '/daily' | '/prices' | '/sessions' | '/token'
+  fullPaths:
+    | '/'
+    | '/messages'
+    | '/daily'
+    | '/debug'
+    | '/prices'
+    | '/sessions'
+    | '/token'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/messages' | '/daily' | '/prices' | '/sessions' | '/token'
+  to:
+    | '/'
+    | '/messages'
+    | '/daily'
+    | '/debug'
+    | '/prices'
+    | '/sessions'
+    | '/token'
   id:
     | '__root__'
     | '/'
     | '/messages'
     | '/daily'
+    | '/debug'
     | '/prices'
     | '/sessions'
     | '/token'
@@ -94,6 +118,7 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   MessagesRoute: typeof MessagesRoute
   DailyLazyRoute: typeof DailyLazyRoute
+  DebugLazyRoute: typeof DebugLazyRoute
   PricesLazyRoute: typeof PricesLazyRoute
   SessionsLazyRoute: typeof SessionsLazyRoute
   TokenLazyRoute: typeof TokenLazyRoute
@@ -120,6 +145,13 @@ declare module '@tanstack/react-router' {
       path: '/prices'
       fullPath: '/prices'
       preLoaderRoute: typeof PricesLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/debug': {
+      id: '/debug'
+      path: '/debug'
+      fullPath: '/debug'
+      preLoaderRoute: typeof DebugLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily': {
@@ -150,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   MessagesRoute: MessagesRoute,
   DailyLazyRoute: DailyLazyRoute,
+  DebugLazyRoute: DebugLazyRoute,
   PricesLazyRoute: PricesLazyRoute,
   SessionsLazyRoute: SessionsLazyRoute,
   TokenLazyRoute: TokenLazyRoute,
